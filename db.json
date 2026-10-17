@@ -1,0 +1,340 @@
+﻿{
+  "hostels": [
+    {
+      "id": "h1",
+      "name": "StayInKochi Kakkanad",
+      "location": "Kakkanad, Kochi",
+      "description": "Quiet, modern branch near the IT corridor with Wi-Fi and 24/7 security.",
+      "image": "https://picsum.photos/seed/greennest/800/500",
+      "rentPerMonth": 8500,
+      "amenities": [
+        "Wi-Fi",
+        "Laundry",
+        "Common kitchen",
+        "Power backup"
+      ]
+    },
+    {
+      "id": "h2",
+      "name": "StayInKochi Vytilla",
+      "location": "Vytilla, Kochi",
+      "description": "Cozy branch overlooking the backwaters, close to public transport.",
+      "image": "https://picsum.photos/seed/backwater/800/500",
+      "rentPerMonth": 7000,
+      "amenities": [
+        "Wi-Fi",
+        "Parking",
+        "Housekeeping"
+      ]
+    }
+  ],
+  "rooms": [
+    {
+      "id": "r1",
+      "hostelId": "h1",
+      "roomNumber": "101",
+      "floor": 1,
+      "rentPerMonth": 8500,
+      "bedCount": 2
+    },
+    {
+      "id": "r2",
+      "hostelId": "h1",
+      "roomNumber": "102",
+      "floor": 1,
+      "rentPerMonth": 9000,
+      "bedCount": 1
+    },
+    {
+      "id": "r3",
+      "hostelId": "h2",
+      "roomNumber": "201",
+      "floor": 2,
+      "rentPerMonth": 7000,
+      "bedCount": 3
+    }
+  ],
+  "beds": [
+    {
+      "id": "b1",
+      "roomId": "r1",
+      "hostelId": "h1",
+      "bedNumber": "A",
+      "status": "occupied",
+      "tenantId": "t1"
+    },
+    {
+      "id": "b2",
+      "roomId": "r1",
+      "hostelId": "h1",
+      "bedNumber": "B",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b3",
+      "roomId": "r2",
+      "hostelId": "h1",
+      "bedNumber": "A",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b4",
+      "roomId": "r3",
+      "hostelId": "h2",
+      "bedNumber": "A",
+      "status": "available",
+      "tenantId": null
+    }
+  ],
+  "tenants": [
+    {
+      "id": "t1",
+      "uid": "firebase-uid-1",
+      "name": "Arun Das",
+      "email": "arun@example.com",
+      "phone": "9876543210",
+      "hostelId": "h1",
+      "hostelName": "StayInKochi Kakkanad",
+      "roomId": "r1",
+      "roomNumber": "101",
+      "bedId": "b1",
+      "bedNumber": "A",
+      "rentPerMonth": 8500,
+      "rentStatus": "paid",
+      "joinedOn": "2026-01-05"
+    },
+    {
+      "rentPerMonth": null,
+      "bedNumber": null,
+      "bedId": null,
+      "hostelId": "h1",
+      "uid": "JzT5tcsl4yMdyJl78zWYpJN2sfS2",
+      "roomNumber": null,
+      "name": "ajin ",
+      "hostelName": "StayInKochi Kakkanad",
+      "joinedOn": "2026-10-16",
+      "phone": "1234567890",
+      "roomId": null,
+      "rentStatus": "unpaid",
+      "email": "ajin1@gmail.com",
+      "id": "mrkB7wSUnNw"
+    }
+  ],
+  "foodPlans": [
+    {
+      "id": "f1",
+      "hostelId": "h1",
+      "name": "Full Meal Plan",
+      "pricePerMonth": 3000,
+      "includes": [
+        "Breakfast",
+        "Lunch",
+        "Dinner"
+      ]
+    },
+    {
+      "id": "f2",
+      "hostelId": "h2",
+      "name": "Veg Meal Plan",
+      "pricePerMonth": 2500,
+      "includes": [
+        "Breakfast",
+        "Dinner"
+      ]
+    }
+  ],
+  "meals": [
+    {
+      "id": "m1",
+      "hostelId": "h1",
+      "name": "Breakfast",
+      "price": 80
+    },
+    {
+      "id": "m2",
+      "hostelId": "h1",
+      "name": "Lunch",
+      "price": 120
+    },
+    {
+      "id": "m3",
+      "hostelId": "h1",
+      "name": "Dinner",
+      "price": 130
+    },
+    {
+      "id": "m4",
+      "hostelId": "h2",
+      "name": "Lunch",
+      "price": 100
+    }
+  ],
+  "stayRequests": [
+    {
+      "id": "s1",
+      "hostelId": "h1",
+      "hostelName": "StayInKochi Kakkanad",
+      "tenantUid": "firebase-uid-2",
+      "tenantName": "Priya Nair",
+      "tenantEmail": "priya@example.com",
+      "phone": "9876501234",
+      "message": "Looking for a quiet place near work.",
+      "status": "pending",
+      "requestedOn": "2026-02-01"
+    },
+    {
+      "id": "s2",
+      "hostelId": "h1",
+      "hostelName": "StayInKochi Kakkanad",
+      "tenantUid": "firebase-uid-1",
+      "tenantName": "Arun Das",
+      "tenantEmail": "arun@example.com",
+      "phone": "9876543210",
+      "message": "",
+      "status": "approved",
+      "requestedOn": "2026-01-01",
+      "decidedOn": "2026-01-02"
+    },
+    {
+      "hostelId": "h1",
+      "hostelName": "StayInKochi Kakkanad",
+      "tenantUid": "JzT5tcsl4yMdyJl78zWYpJN2sfS2",
+      "tenantName": "ajin ",
+      "tenantEmail": "ajin1@gmail.com",
+      "phone": "1234567890",
+      "message": "dasd",
+      "status": "approved",
+      "requestedOn": "2026-10-16",
+      "id": "Y8wBBZeboUU",
+      "decidedOn": "2026-10-16"
+    }
+  ],
+  "maintenanceRequests": [
+    {
+      "id": "mr1",
+      "hostelId": "h1",
+      "hostelName": "StayInKochi Kakkanad",
+      "tenantUid": "firebase-uid-1",
+      "tenantName": "Arun Das",
+      "title": "Broken ceiling fan",
+      "description": "Fan in room 101 is not working.",
+      "imageUrl": "",
+      "status": "open",
+      "createdAt": "2026-02-10T09:00:00.000Z"
+    },
+    {
+      "id": "mr2",
+      "hostelId": "h1",
+      "hostelName": "StayInKochi Kakkanad",
+      "tenantUid": "firebase-uid-1",
+      "tenantName": "Arun Das",
+      "title": "Leaking tap in bathroom",
+      "description": "Tap drips constantly.",
+      "imageUrl": "",
+      "status": "resolved",
+      "createdAt": "2026-02-05T11:30:00.000Z",
+      "updatedAt": "2026-02-06T08:00:00.000Z"
+    }
+  ],
+  "payments": [
+    {
+      "id": "p1",
+      "hostelId": "h1",
+      "hostelName": "StayInKochi Kakkanad",
+      "tenantId": "t1",
+      "tenantUid": "firebase-uid-1",
+      "tenantName": "Arun Das",
+      "amount": 8500,
+      "month": "2026-01",
+      "status": "paid",
+      "razorpayPaymentId": "",
+      "paidOn": "2026-01-05",
+      "createdAt": "2026-01-05"
+    },
+    {
+      "id": "p2",
+      "hostelId": "h1",
+      "hostelName": "StayInKochi Kakkanad",
+      "tenantId": "t1",
+      "tenantUid": "firebase-uid-1",
+      "tenantName": "Arun Das",
+      "amount": 8500,
+      "month": "2026-02",
+      "status": "pending",
+      "razorpayPaymentId": "",
+      "paidOn": "",
+      "createdAt": "2026-02-01"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "n1",
+      "uid": "firebase-uid-1",
+      "message": "Your rent for January has been received.",
+      "read": false,
+      "createdAt": "2026-01-05T10:00:00.000Z"
+    },
+    {
+      "id": "n2",
+      "uid": "owner",
+      "message": "Priya Nair requested a stay at Green Nest Hostel.",
+      "read": false,
+      "createdAt": "2026-02-01T09:00:00.000Z"
+    },
+    {
+      "uid": "JzT5tcsl4yMdyJl78zWYpJN2sfS2",
+      "message": "Your stay request for Green Nest Hostel was approved.",
+      "read": false,
+      "createdAt": "2026-10-16T18:21:34.351Z",
+      "id": "zQ8Y-CiZ3KE"
+    }
+  ],
+  "planSubscriptions": [
+    {
+      "id": "ps1",
+      "hostelId": "h1",
+      "foodPlanId": "f1",
+      "planName": "Full Meal Plan",
+      "pricePerMonth": 3000,
+      "tenantUid": "firebase-uid-1",
+      "tenantName": "Arun Das",
+      "status": "active",
+      "startedOn": "2026-01-05"
+    }
+  ],
+  "mealBookings": [
+    {
+      "id": "mb1",
+      "hostelId": "h1",
+      "mealId": "m2",
+      "mealName": "Lunch",
+      "price": 120,
+      "date": "2026-02-15",
+      "tenantUid": "firebase-uid-1",
+      "tenantName": "Arun Das",
+      "status": "booked",
+      "createdAt": "2026-02-14"
+    }
+  ],
+  "switchRequests": [
+    {
+      "id": "sw1",
+      "tenantId": "t1",
+      "tenantUid": "firebase-uid-1",
+      "tenantName": "Arun Das",
+      "fromHostelId": "h1",
+      "fromHostelName": "StayInKochi Kakkanad",
+      "toHostelId": "h2",
+      "toHostelName": "StayInKochi Vytilla",
+      "amount": 500,
+      "status": "pending",
+      "razorpayPaymentId": "pay_seed_001",
+      "paidOn": "2026-02-10",
+      "createdAt": "2026-02-10",
+      "decidedOn": ""
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
