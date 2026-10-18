@@ -121,7 +121,7 @@ export default function TenantChatPage() {
                     className="flex size-9 shrink-0 items-center justify-center rounded-card bg-sage text-forest"
                     aria-hidden="true"
                   >
-                    <Icon size={18} strokeWidth={1.75} />
+                    <Icon size={18} strokeWidth={1.75} aria-hidden="true" />
                   </span>
 
                   <div className="min-w-0 flex-1">

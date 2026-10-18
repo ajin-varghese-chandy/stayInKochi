@@ -99,7 +99,7 @@ export default function TenantProfilePage() {
                 variant="secondary"
                 onClick={() => setEditing(true)}
               >
-                <Pencil size={14} strokeWidth={1.75} aria-hidden="true" />
+                <Pencil size={16} strokeWidth={1.75} aria-hidden="true" />
                 Edit
               </Button>
             )}

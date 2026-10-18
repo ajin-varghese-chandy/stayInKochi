@@ -133,6 +133,19 @@
       "rentStatus": "unpaid",
       "joinedOn": "2026-10-18",
       "id": "bvhXMZofMS0"
+    },
+    {
+      "uid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
+      "name": "ajin",
+      "email": "ajin1@gmail.com",
+      "phone": "8921613233",
+      "hostelId": "h1",
+      "hostelName": "StayInKochi Kakkanad",
+      "roomId": null,
+      "bedId": null,
+      "rentStatus": "unpaid",
+      "joinedOn": "2026-10-18",
+      "id": "td9vPOG25po"
     }
   ],
   "foodPlans": [
@@ -223,6 +236,19 @@
       "requestedOn": "2026-10-16",
       "id": "Y8wBBZeboUU",
       "decidedOn": "2026-10-16"
+    },
+    {
+      "hostelId": "h1",
+      "hostelName": "StayInKochi Kakkanad",
+      "tenantUid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
+      "tenantName": "ajin",
+      "tenantEmail": "ajin1@gmail.com",
+      "phone": "8921613233",
+      "message": "dasd d",
+      "status": "approved",
+      "requestedOn": "2026-10-18",
+      "id": "v4CpEkb8iGg",
+      "decidedOn": "2026-10-18"
     }
   ],
   "maintenanceRequests": [
@@ -280,6 +306,18 @@
       "razorpayPaymentId": "",
       "paidOn": "",
       "createdAt": "2026-02-01"
+    },
+    {
+      "hostelId": "h1",
+      "hostelName": "StayInKochi Kakkanad",
+      "tenantId": "td9vPOG25po",
+      "tenantUid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
+      "tenantName": "ajin",
+      "amount": 0,
+      "month": "2026-10",
+      "status": "pending",
+      "createdAt": "2026-10-18",
+      "id": "sw-B6lmwXv0"
     }
   ],
   "notifications": [
@@ -317,6 +355,20 @@
       "read": false,
       "createdAt": "2026-10-18T04:17:46.463Z",
       "id": "nriigXz6SHs"
+    },
+    {
+      "uid": "owner",
+      "message": "ajin requested a stay at StayInKochi Kakkanad.",
+      "read": false,
+      "createdAt": "2026-10-18T06:56:38.361Z",
+      "id": "0CxF7sN-6VM"
+    },
+    {
+      "uid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
+      "message": "Your stay request for StayInKochi Kakkanad was approved.",
+      "read": false,
+      "createdAt": "2026-10-18T06:56:56.082Z",
+      "id": "aD4Dse5YbAA"
     }
   ],
   "planSubscriptions": [
@@ -330,6 +382,17 @@
       "tenantName": "Arun Das",
       "status": "active",
       "startedOn": "2026-01-05"
+    },
+    {
+      "hostelId": "h1",
+      "foodPlanId": "f1",
+      "planName": "Full Meal Plan",
+      "pricePerMonth": 3000,
+      "tenantUid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
+      "tenantName": "ajin",
+      "status": "active",
+      "startedOn": "2026-10-18",
+      "id": "IKHEnPpFPR8"
     }
   ],
   "mealBookings": [
@@ -362,6 +425,20 @@
       "paidOn": "2026-02-10",
       "createdAt": "2026-02-10",
       "decidedOn": "2026-10-18"
+    },
+    {
+      "tenantId": "td9vPOG25po",
+      "tenantUid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
+      "tenantName": "ajin",
+      "fromHostelId": "h1",
+      "fromHostelName": "StayInKochi Kakkanad",
+      "toHostelId": "h2",
+      "toHostelName": "StayInKochi Vytilla",
+      "amount": 500,
+      "status": "unpaid",
+      "razorpayPaymentId": "",
+      "createdAt": "2026-10-18",
+      "id": "WjcwocKsRJY"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
