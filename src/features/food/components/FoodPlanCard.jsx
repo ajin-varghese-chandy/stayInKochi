@@ -1,52 +1,54 @@
-import formatRupees from '../../../utils/formatRupees'
+import Button from "../../../components/ui/Button";
+import formatRupees from "../../../utils/formatRupees";
 
 // One food plan on the owner's food management screen.
 export default function FoodPlanCard({ foodPlan, isSaving, onEdit, onDelete }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-4">
+    <div className="card p-5">
       <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="font-semibold text-slate-900">{foodPlan.name}</h3>
-          <p className="text-sm text-slate-500">
-            {foodPlan.hostelName ?? 'Branch assigned'}
+        <div className="min-w-0">
+          <h3 className="text-sm font-semibold text-charcoal">
+            {foodPlan.name}
+          </h3>
+          <p className="mt-0.5 text-xs text-charcoal/55">
+            {foodPlan.hostelName ?? "Branch assigned"}
           </p>
-          <p className="mt-1 font-semibold text-indigo-600">
-            {formatRupees(foodPlan.pricePerMonth)}
-            <span className="font-normal text-slate-500"> /month</span>
-          </p>
-        </div>
-
-        <div className="flex gap-2 text-sm">
-          <button
-            type="button"
-            onClick={onEdit}
-            className="rounded-md border border-slate-300 px-3 py-1.5 text-slate-700 hover:bg-slate-100"
-          >
-            Edit
-          </button>
-          <button
-            type="button"
-            onClick={onDelete}
-            disabled={isSaving}
-            className="rounded-md border border-red-300 px-3 py-1.5 text-red-600 hover:bg-red-50 disabled:opacity-60"
-          >
-            Delete
-          </button>
         </div>
       </div>
 
+      <p className="mt-3 text-base font-semibold tabular-nums text-forest">
+        {formatRupees(foodPlan.pricePerMonth)}
+        <span className="ml-1 text-xs font-normal text-charcoal/55">
+          /month
+        </span>
+      </p>
+
       {foodPlan.includes?.length > 0 && (
-        <ul className="mt-3 flex flex-wrap gap-2">
+        <ul className="mt-4 flex flex-wrap gap-1.5">
           {foodPlan.includes.map((item) => (
             <li
               key={item}
-              className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700"
+              className="rounded-card border border-line bg-ivory px-2 py-0.5 text-xs text-charcoal/70"
             >
               {item}
             </li>
           ))}
         </ul>
       )}
+
+      <div className="mt-4 flex flex-wrap justify-end gap-2 border-t border-line pt-3">
+        <Button size="sm" variant="secondary" onClick={onEdit}>
+          Edit
+        </Button>
+        <Button
+          size="sm"
+          variant="danger"
+          onClick={onDelete}
+          disabled={isSaving}
+        >
+          Delete
+        </Button>
+      </div>
     </div>
-  )
+  );
 }

@@ -1,96 +1,125 @@
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { LogOut, Menu, X } from 'lucide-react'
+import Brand from '../ui/Brand'
+import Button from '../ui/Button'
+import NotificationBell from '../common/NotificationBell'
 import { logout, selectCurrentUser } from '../../features/auth/authSlice'
-import { useEffect } from 'react'
-import { fetchMyNotifications, selectUnreadCount } from '../../features/notifications/notificationSlice'
-import { OWNER_INBOX } from '../../features/notifications/notificationService'
 
-function navLinkClass({ isActive }) {
+function linkClass({ isActive }) {
   return isActive
-    ? 'text-indigo-600 font-semibold'
-    : 'text-slate-600 hover:text-indigo-600'
+    ? 'text-forest font-semibold'
+    : 'text-charcoal/65 hover:text-forest'
 }
 
-// Top navigation bar. Shows different links depending on the signed-in role.
+// Public navigation: restrained bar, wordmark left, actions right.
+// Collapses into a tap-friendly panel on small screens.
 export default function Navbar() {
   const user = useSelector(selectCurrentUser)
-  const unreadCount = useSelector(selectUnreadCount)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const location = useLocation()
+  const [menuOpen, setMenuOpen] = useState(false)
 
-  // Keep the unread badge live whenever the user is signed in.
+  // Close the mobile panel whenever the route changes.
   useEffect(() => {
-    if (!user) return
-    const recipientId = user.role === 'owner' ? OWNER_INBOX : user.uid
-    dispatch(fetchMyNotifications(recipientId))
-  }, [dispatch, user])
+    setMenuOpen(false)
+  }, [location.pathname])
 
   function handleLogout() {
     dispatch(logout())
     navigate('/')
   }
 
+  const dashboardPath = user?.role === 'owner' ? '/owner' : '/tenant'
+
+  const navLinks = (
+    <>
+      <NavLink to="/hostels" className={linkClass}>
+        Branches
+      </NavLink>
+      {user && (
+        <NavLink to={dashboardPath} className={linkClass}>
+          {user.role === 'owner' ? 'Owner console' : 'My stay'}
+        </NavLink>
+      )}
+      {!user && (
+        <NavLink to="/login" className={linkClass}>
+          Login
+        </NavLink>
+      )}
+    </>
+  )
+
   return (
-    <header className="bg-white border-b border-slate-200">
-      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link to="/" className="text-xl font-bold text-indigo-600">
-          StayInKochi
-        </Link>
+    <header className="border-b border-line bg-white">
+      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-4 sm:px-6">
+        <Brand />
 
-        <div className="flex items-center gap-6">
-          <NavLink to="/hostels" className={navLinkClass}>
-            Branches
-          </NavLink>
-
-          {user?.role === 'owner' && (
-            <NavLink to="/owner" className={navLinkClass}>
-              Dashboard
-            </NavLink>
-          )}
-          {user?.role === 'tenant' && (
-            <NavLink to="/tenant" className={navLinkClass}>
-              Dashboard
-            </NavLink>
-          )}
+        {/* Desktop */}
+        <div className="hidden items-center gap-7 md:flex">
+          {navLinks}
 
           {user ? (
-            <div className="flex items-center gap-4">
-              {/* Notification bell with unread badge */}
-              <NavLink
-                to={user.role === 'owner' ? '/owner' : '/tenant'}
-                className="relative text-slate-600 hover:text-indigo-600"
-                title="Notifications"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-bold text-white">
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
-                )}
-              </NavLink>
-
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="text-slate-600 hover:text-indigo-600"
-              >
+            <div className="flex items-center gap-2">
+              <NotificationBell user={user} to={dashboardPath} />
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
+                <LogOut size={15} strokeWidth={1.75} aria-hidden="true" />
                 Logout
-              </button>
+              </Button>
             </div>
           ) : (
-            <>
-              <NavLink to="/login" className={navLinkClass}>
+            <div className="flex items-center gap-2">
+              <Button variant="secondary" size="sm" to="/login">
                 Login
-              </NavLink>
-              <NavLink to="/register" className={navLinkClass}>
-                Register
-              </NavLink>
-            </>
+              </Button>
+              <Button size="sm" to="/register">
+                Create account
+              </Button>
+            </div>
           )}
         </div>
+
+        {/* Mobile trigger */}
+        <button
+          type="button"
+          onClick={() => setMenuOpen((open) => !open)}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={menuOpen}
+          className="-mr-2 flex h-10 w-10 items-center justify-center rounded-card text-charcoal/70 hover:bg-charcoal/5 md:hidden"
+        >
+          {menuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
       </nav>
+
+      {/* Mobile panel */}
+      {menuOpen && (
+        <div className="border-t border-line bg-white md:hidden">
+          <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-3 sm:px-6">
+            {navLinks}
+
+            {user ? (
+              <div className="mt-1 flex items-center justify-between border-t border-line pt-3">
+                <NotificationBell user={user} to={dashboardPath} />
+                <Button variant="secondary" size="sm" onClick={handleLogout}>
+                  <LogOut size={15} strokeWidth={1.75} aria-hidden="true" />
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <div className="mt-1 flex gap-2 border-t border-line pt-3">
+                <Button variant="secondary" size="sm" to="/login" className="flex-1">
+                  Login
+                </Button>
+                <Button size="sm" to="/register" className="flex-1">
+                  Create account
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   )
 }

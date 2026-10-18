@@ -1,38 +1,46 @@
-import { useState } from 'react'
+import { useState } from "react";
+import { Send } from "lucide-react";
+import Button from "../../../components/ui/Button";
 
 // Text box + send button for a chat room.
 export default function MessageComposer({ isSaving, onSend }) {
-  const [text, setText] = useState('')
+  const [text, setText] = useState("");
 
   function handleSubmit(event) {
-    event.preventDefault()
-    const trimmed = text.trim()
-    if (!trimmed || isSaving) return
+    event.preventDefault();
+    const trimmed = text.trim();
+    if (!trimmed || isSaving) return;
 
-    onSend(trimmed)
+    onSend(trimmed);
     // Cleared right away; the live subscription shows the message once stored.
-    setText('')
+    setText("");
+  }
+
+  // Enter still sends (exactly like the old single-line box); Shift+Enter
+  // starts a new line inside the textarea.
+  function handleKeyDown(event) {
+    if (event.key !== "Enter" || event.shiftKey) return;
+    event.preventDefault();
+    handleSubmit(event);
   }
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex gap-2 border-t border-slate-200 p-3"
+      className="flex items-end gap-2 border-t border-line p-3"
     >
-      <input
-        type="text"
+      <textarea
         value={text}
         onChange={(event) => setText(event.target.value)}
+        onKeyDown={handleKeyDown}
+        rows={2}
         placeholder="Type a message..."
-        className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-slate-800 focus:border-indigo-500 focus:outline-none"
+        className="field min-w-0 flex-1 resize-none"
       />
-      <button
-        type="submit"
-        disabled={isSaving || !text.trim()}
-        className="rounded-md bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
-      >
-        {isSaving ? 'Sending...' : 'Send'}
-      </button>
+      <Button type="submit" size="sm" disabled={isSaving || !text.trim()}>
+        <Send size={16} strokeWidth={1.75} aria-hidden="true" />
+        {isSaving ? "Sending..." : "Send"}
+      </Button>
     </form>
-  )
+  );
 }

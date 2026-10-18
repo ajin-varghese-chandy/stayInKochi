@@ -1,22 +1,32 @@
-// One chat message. Your own messages sit on the right in indigo.
+// One chat message. Your own messages sit on the right, everyone else's on
+// the left, with the timestamp just under the bubble.
 export default function MessageBubble({ message, isOwnMessage }) {
   return (
-    <div className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
+    <div
+      className={`flex flex-col ${isOwnMessage ? "items-end" : "items-start"}`}
+    >
       <div
-        className={`max-w-[75%] rounded-lg px-3 py-2 ${
-          isOwnMessage ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-800'
+        className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-sm ${
+          isOwnMessage
+            ? "bg-forest text-ivory"
+            : "border border-line bg-white text-charcoal"
         }`}
       >
-        <p className={`text-xs font-semibold ${isOwnMessage ? 'text-indigo-100' : 'text-slate-500'}`}>
-          {isOwnMessage ? 'You' : `${message.senderName} · ${message.senderRole}`}
-        </p>
-        <p className="whitespace-pre-wrap break-words">{message.text}</p>
         <p
-          className={`mt-1 text-right text-[10px] ${isOwnMessage ? 'text-indigo-200' : 'text-slate-400'}`}
+          className={`text-[11px] font-semibold ${
+            isOwnMessage ? "text-ivory/75" : "text-charcoal/55"
+          }`}
         >
-          {message.createdAt?.slice(11, 16)}
+          {isOwnMessage
+            ? "You"
+            : `${message.senderName} · ${message.senderRole}`}
         </p>
+        <p className="mt-0.5 whitespace-pre-wrap break-words">{message.text}</p>
       </div>
+
+      <p className="mt-1 text-[11px] text-charcoal/45">
+        {message.createdAt?.slice(11, 16)}
+      </p>
     </div>
-  )
+  );
 }

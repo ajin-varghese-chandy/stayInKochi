@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import Alert from '../../../components/ui/Alert'
+import Button from '../../../components/ui/Button'
 import FormField from '../../../components/common/FormField'
 import {
   clearRoomSaveFeedback,
@@ -52,11 +54,8 @@ export default function RoomForm({ hostelId, room, onDone }) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4 rounded-lg border border-slate-200 bg-white p-4"
-    >
-      <h2 className="text-lg font-semibold text-slate-900">
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <h2 className="text-base font-semibold text-charcoal">
         {room ? 'Edit room' : 'Add room'}
       </h2>
 
@@ -89,23 +88,15 @@ export default function RoomForm({ hostelId, room, onDone }) {
         />
       )}
 
-      {saveError && <p className="text-sm text-red-600">{saveError}</p>}
+      {saveError && <Alert tone="error">{saveError}</Alert>}
 
-      <div className="flex gap-3">
-        <button
-          type="submit"
-          disabled={isSaving}
-          className="rounded-md bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
-        >
+      <div className="mt-5 flex justify-end gap-2">
+        <Button type="submit" disabled={isSaving}>
           {isSaving ? 'Saving...' : room ? 'Save changes' : 'Add room'}
-        </button>
-        <button
-          type="button"
-          onClick={onDone}
-          className="rounded-md border border-slate-300 px-4 py-2 text-slate-700 hover:bg-slate-100"
-        >
+        </Button>
+        <Button type="button" variant="secondary" onClick={onDone}>
           Cancel
-        </button>
+        </Button>
       </div>
     </form>
   )

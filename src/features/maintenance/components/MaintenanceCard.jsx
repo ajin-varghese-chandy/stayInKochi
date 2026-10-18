@@ -1,8 +1,13 @@
-const STATUS_STYLES = {
-  open: 'bg-amber-100 text-amber-700',
-  'in-progress': 'bg-blue-100 text-blue-700',
-  resolved: 'bg-green-100 text-green-700',
-}
+import Button from '../../../components/ui/Button'
+import StatusBadge from '../../../components/ui/StatusBadge'
+
+// Statuses the owner can move a request between. The current one renders as
+// the active (primary) action.
+const STATUS_OPTIONS = [
+  { value: 'open', label: 'Open' },
+  { value: 'in-progress', label: 'In progress' },
+  { value: 'resolved', label: 'Resolved' },
+]
 
 // One maintenance request. Pass `onStatusChange` (owner view) to allow the
 // status to be updated; otherwise the status is only displayed.
@@ -12,25 +17,23 @@ export default function MaintenanceCard({
   onStatusChange,
 }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h3 className="font-semibold text-slate-900">{request.title}</h3>
-          <p className="text-sm text-slate-500">
-            {request.hostelName ?? 'Branch'} · {request.tenantName ?? 'Tenant'}{' '}
-            · {request.createdAt?.slice(0, 10)}
+    <div className="card p-5">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h3 className="text-sm font-semibold text-charcoal">{request.title}</h3>
+          <p className="mt-0.5 text-xs text-charcoal/55">
+            {request.hostelName ?? 'Branch'} · {request.tenantName ?? 'Tenant'} ·{' '}
+            {request.createdAt?.slice(0, 10)}
           </p>
         </div>
 
-        <span
-          className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold capitalize ${STATUS_STYLES[request.status] ?? 'bg-slate-100 text-slate-600'}`}
-        >
-          {request.status?.replace('-', ' ')}
-        </span>
+        <StatusBadge status={request.status} />
       </div>
 
       {request.description && (
-        <p className="mt-3 text-slate-600">{request.description}</p>
+        <p className="mt-3 text-sm leading-relaxed text-charcoal/70">
+          {request.description}
+        </p>
       )}
 
       {request.imageUrl && (
@@ -38,32 +41,31 @@ export default function MaintenanceCard({
           href={request.imageUrl}
           target="_blank"
           rel="noreferrer"
-          className="mt-3 inline-block"
+          className="mt-3 block"
         >
           <img
             src={request.imageUrl}
             alt="Maintenance photo"
-            className="h-40 rounded-md object-cover"
+            className="h-40 w-full rounded-card border border-line object-cover"
           />
         </a>
       )}
 
       {onStatusChange && (
-        <div className="mt-4 flex items-center gap-2 text-sm">
-          <label htmlFor={`status-${request.id}`} className="text-slate-500">
-            Status:
-          </label>
-          <select
-            id={`status-${request.id}`}
-            value={request.status}
-            onChange={(event) => onStatusChange(event.target.value)}
-            disabled={isSaving}
-            className="rounded-md border border-slate-300 px-2 py-1 text-slate-800 focus:border-indigo-500 focus:outline-none disabled:opacity-60"
-          >
-            <option value="open">Open</option>
-            <option value="in-progress">In progress</option>
-            <option value="resolved">Resolved</option>
-          </select>
+        <div className="mt-4 flex flex-wrap justify-end gap-2 border-t border-line pt-3">
+          {STATUS_OPTIONS.map((option) => (
+            <Button
+              key={option.value}
+              size="sm"
+              variant={
+                request.status === option.value ? 'primary' : 'secondary'
+              }
+              onClick={() => onStatusChange(option.value)}
+              disabled={isSaving}
+            >
+              {option.label}
+            </Button>
+          ))}
         </div>
       )}
     </div>

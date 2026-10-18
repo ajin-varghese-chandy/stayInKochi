@@ -1,5 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import AppLayout from '../components/layout/AppLayout'
+import OwnerLayout from '../components/layout/OwnerLayout'
+import TenantLayout from '../components/layout/TenantLayout'
 import HostelDetailsPage from '../pages/HostelDetailsPage'
 import HostelListPage from '../pages/HostelListPage'
 import LandingPage from '../pages/LandingPage'
@@ -24,8 +26,10 @@ import TenantProfilePage from '../pages/tenant/TenantProfilePage'
 import TenantSwitchPage from '../pages/tenant/TenantSwitchPage'
 import ProtectedRoute from './ProtectedRoute'
 
-// All app routes. Public pages live under the shared layout; owner/tenant pages
-// are wrapped in a ProtectedRoute that enforces the required role.
+// All app routes, split by shell:
+//   public  -> AppLayout (navbar + footer)
+//   owner   -> ProtectedRoute -> OwnerLayout (forest sidebar console)
+//   tenant  -> ProtectedRoute -> TenantLayout (compact portal header + tabs)
 export default function AppRoutes() {
   return (
     <Routes>
@@ -35,8 +39,11 @@ export default function AppRoutes() {
         <Route path="hostels/:hostelId" element={<HostelDetailsPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
 
-        <Route element={<ProtectedRoute requiredRole="owner" />}>
+      <Route element={<ProtectedRoute requiredRole="owner" />}>
+        <Route element={<OwnerLayout />}>
           <Route path="owner" element={<OwnerDashboardPage />} />
           <Route path="owner/hostels" element={<OwnerHostelsPage />} />
           <Route path="owner/hostels/:hostelId" element={<OwnerRoomsPage />} />
@@ -47,8 +54,10 @@ export default function AppRoutes() {
           <Route path="owner/tenants" element={<OwnerTenantsPage />} />
           <Route path="owner/switches" element={<OwnerSwitchesPage />} />
         </Route>
+      </Route>
 
-        <Route element={<ProtectedRoute requiredRole="tenant" />}>
+      <Route element={<ProtectedRoute requiredRole="tenant" />}>
+        <Route element={<TenantLayout />}>
           <Route path="tenant" element={<TenantDashboardPage />} />
           <Route path="tenant/food" element={<TenantFoodPage />} />
           <Route path="tenant/chat" element={<TenantChatPage />} />
@@ -57,8 +66,6 @@ export default function AppRoutes() {
           <Route path="tenant/switch" element={<TenantSwitchPage />} />
           <Route path="tenant/profile" element={<TenantProfilePage />} />
         </Route>
-
-        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   )

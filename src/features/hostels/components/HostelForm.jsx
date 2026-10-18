@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import Alert from '../../../components/ui/Alert'
+import Button from '../../../components/ui/Button'
 import FormField from '../../../components/common/FormField'
 import {
   clearHostelSaveFeedback,
@@ -65,24 +67,21 @@ export default function HostelForm({ hostel, onDone }) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4 rounded-lg border border-slate-200 bg-white p-4"
-    >
-      <h2 className="text-lg font-semibold text-slate-900">
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <h2 className="text-base font-semibold text-charcoal">
         {hostel ? 'Edit branch' : 'Add branch'}
       </h2>
 
       {/* Branch name preview */}
-      <div>
-        <label className="block text-sm font-medium text-slate-700">
-          Branch label
-          <span className="ml-1 font-normal text-slate-400">
+      <label className="block">
+        <span className="field-label">
+          Branch label{' '}
+          <span className="font-normal text-charcoal/55">
             (shown as "StayInKochi &lt;label&gt;")
           </span>
-        </label>
-        <div className="mt-1 flex items-center rounded-md border border-slate-300 focus-within:border-indigo-500">
-          <span className="rounded-l-md border-r border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-500 select-none">
+        </span>
+        <span className="flex items-stretch overflow-hidden rounded-card border border-line-strong bg-white focus-within:border-forest">
+          <span className="flex shrink-0 select-none items-center border-r border-line bg-ivory px-3 text-sm text-charcoal/55">
             StayInKochi
           </span>
           <input
@@ -91,15 +90,15 @@ export default function HostelForm({ hostel, onDone }) {
             value={branchLabel}
             onChange={(e) => setBranchLabel(e.target.value)}
             placeholder="Kakkanad"
-            className="flex-1 rounded-r-md px-3 py-2 text-slate-800 focus:outline-none"
+            className="min-w-0 flex-1 border-0 bg-transparent px-3 py-2 text-sm text-charcoal focus:outline-none"
           />
-        </div>
-        {branchLabel.trim() && (
-          <p className="mt-1 text-xs text-slate-400">
+        </span>
+        {branchLabel.trim() ? (
+          <span className="field-hint block">
             Full name: <strong>StayInKochi {branchLabel.trim()}</strong>
-          </p>
-        )}
-      </div>
+          </span>
+        ) : null}
+      </label>
 
       <FormField
         label="Location (address)"
@@ -127,34 +126,24 @@ export default function HostelForm({ hostel, onDone }) {
       />
 
       <label className="block">
-        <span className="block text-sm font-medium text-slate-700">
-          Description
-        </span>
+        <span className="field-label">Description</span>
         <textarea
           value={description}
           onChange={(event) => setDescription(event.target.value)}
           rows={3}
-          className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-800 focus:border-indigo-500 focus:outline-none"
+          className="field"
         />
       </label>
 
-      {saveError && <p className="text-sm text-red-600">{saveError}</p>}
+      {saveError && <Alert tone="error">{saveError}</Alert>}
 
-      <div className="flex gap-3">
-        <button
-          type="submit"
-          disabled={isSaving}
-          className="rounded-md bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
-        >
+      <div className="mt-5 flex justify-end gap-2">
+        <Button type="submit" disabled={isSaving}>
           {isSaving ? 'Saving...' : hostel ? 'Save changes' : 'Add branch'}
-        </button>
-        <button
-          type="button"
-          onClick={onDone}
-          className="rounded-md border border-slate-300 px-4 py-2 text-slate-700 hover:bg-slate-100"
-        >
+        </Button>
+        <Button type="button" variant="secondary" onClick={onDone}>
           Cancel
-        </button>
+        </Button>
       </div>
     </form>
   )

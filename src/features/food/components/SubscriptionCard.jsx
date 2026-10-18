@@ -1,4 +1,6 @@
-import formatRupees from '../../../utils/formatRupees'
+import Button from "../../../components/ui/Button";
+import StatusBadge from "../../../components/ui/StatusBadge";
+import formatRupees from "../../../utils/formatRupees";
 
 // A food plan a tenant can subscribe to (or cancel if already subscribed).
 // If they're already on another plan, this one can't be subscribed to until
@@ -12,52 +14,57 @@ export default function SubscriptionCard({
   onUnsubscribe,
 }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-4">
+    <div className="card p-5">
       <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="font-semibold text-slate-900">{foodPlan.name}</h3>
-          <p className="mt-1 font-semibold text-indigo-600">
-            {formatRupees(foodPlan.pricePerMonth)}
-            <span className="font-normal text-slate-500"> /month</span>
-          </p>
+        <div className="min-w-0">
+          <h3 className="text-sm font-semibold text-charcoal">
+            {foodPlan.name}
+          </h3>
         </div>
 
-        {isActive && (
-          <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-            Subscribed
-          </span>
-        )}
+        {isActive && <StatusBadge status="subscribed" />}
       </div>
 
       {foodPlan.includes?.length > 0 && (
-        <p className="mt-2 text-sm text-slate-600">
-          Includes: {foodPlan.includes.join(', ')}
-        </p>
+        <ul className="mt-4 flex flex-wrap gap-1.5">
+          {foodPlan.includes.map((item) => (
+            <li
+              key={item}
+              className="rounded-card border border-line bg-ivory px-2 py-0.5 text-xs text-charcoal/70"
+            >
+              {item}
+            </li>
+          ))}
+        </ul>
       )}
 
-      {isActive ? (
-        <button
-          type="button"
-          onClick={onUnsubscribe}
-          disabled={isSaving}
-          className="mt-4 rounded-md border border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-60"
-        >
-          {isSaving ? 'Cancelling...' : 'Cancel plan'}
-        </button>
-      ) : hasActiveSubscription ? (
-        <p className="mt-4 text-sm text-slate-500">
-          Cancel your current plan to switch to this one.
-        </p>
-      ) : (
-        <button
-          type="button"
-          onClick={onSubscribe}
-          disabled={isSaving}
-          className="mt-4 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
-        >
-          {isSaving ? 'Subscribing...' : 'Subscribe'}
-        </button>
-      )}
+      <p className="mt-3 text-base font-semibold tabular-nums text-forest">
+        {formatRupees(foodPlan.pricePerMonth)}
+        <span className="ml-1 text-xs font-normal text-charcoal/55">
+          /month
+        </span>
+      </p>
+
+      <div className="mt-4 border-t border-line pt-3">
+        {isActive ? (
+          <Button
+            variant="danger"
+            block
+            onClick={onUnsubscribe}
+            disabled={isSaving}
+          >
+            {isSaving ? "Cancelling..." : "Cancel plan"}
+          </Button>
+        ) : hasActiveSubscription ? (
+          <p className="text-sm leading-relaxed text-charcoal/60">
+            Cancel your current plan to switch to this one.
+          </p>
+        ) : (
+          <Button block onClick={onSubscribe} disabled={isSaving}>
+            {isSaving ? "Subscribing..." : "Subscribe"}
+          </Button>
+        )}
+      </div>
     </div>
-  )
+  );
 }

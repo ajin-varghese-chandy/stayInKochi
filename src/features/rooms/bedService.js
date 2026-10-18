@@ -1,5 +1,10 @@
 import { apiRequest } from '../../services/api'
 
+// Every bed (public availability filter + list counts).
+export function getAllBeds() {
+  return apiRequest('/beds')
+}
+
 // Beds for one hostel or one room.
 export function getBedsByHostel(hostelId) {
   return apiRequest(`/beds?hostelId=${hostelId}`)

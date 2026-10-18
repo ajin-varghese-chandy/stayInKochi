@@ -1,3 +1,7 @@
+import Alert from '../../../components/ui/Alert'
+import Button from '../../../components/ui/Button'
+import Spinner from '../../../components/common/Spinner'
+
 // The signed-in user's inbox: newest first, unread highlighted.
 export default function NotificationList({
   notifications,
@@ -7,50 +11,57 @@ export default function NotificationList({
   onMarkRead,
 }) {
   if (isLoading) {
-    return <p className="text-slate-500">Loading notifications...</p>
+    return <Spinner compact label="Loading notifications…" />
   }
 
   if (error) {
-    return <p className="text-red-600">Could not load notifications: {error}</p>
+    return <Alert tone="error">Could not load notifications: {error}</Alert>
   }
 
   if (notifications.length === 0) {
-    return <p className="text-slate-500">No notifications yet.</p>
+    return <p className="px-3 py-4 text-sm text-charcoal/55">No notifications yet.</p>
   }
 
   return (
-    <ul className="space-y-2">
+    <ul className="divide-y divide-line">
       {notifications.map((notification) => (
         <li
           key={notification.id}
-          className={`flex flex-wrap items-start justify-between gap-3 rounded-lg border p-3 ${
-            notification.read
-              ? 'border-slate-200 bg-white'
-              : 'border-indigo-200 bg-indigo-50'
+          className={`flex flex-wrap items-start justify-between gap-3 px-3 py-3 ${
+            notification.read ? '' : 'bg-sage/40'
           }`}
         >
-          <div>
-            <p
-              className={
-                notification.read ? 'text-slate-600' : 'text-slate-900'
-              }
-            >
-              {notification.message}
-            </p>
-            <p className="mt-1 text-xs text-slate-400">
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <div className="flex items-start gap-2">
+              {!notification.read && (
+                <span
+                  className="mt-1.5 size-1.5 shrink-0 rounded-full bg-forest"
+                  aria-hidden="true"
+                />
+              )}
+              <p
+                className={`text-sm leading-relaxed ${
+                  notification.read ? 'text-charcoal/70' : 'font-medium text-charcoal'
+                }`}
+              >
+                {notification.message}
+              </p>
+            </div>
+            <p className="text-xs text-charcoal/55">
               {notification.createdAt?.slice(0, 16).replace('T', ' ')}
             </p>
           </div>
 
           {!notification.read && (
-            <button
-              type="button"
+            <Button
+              size="sm"
+              variant="ghost"
+              className="ml-auto shrink-0"
               onClick={() => onMarkRead(notification)}
               disabled={isSaving}
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-700 disabled:opacity-60"
             >
-              Mark as read
-            </button>
+              Mark read
+            </Button>
           )}
         </li>
       ))}

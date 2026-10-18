@@ -1,6 +1,474 @@
 @import "tailwindcss";
 
-/* Global styles layered on top of Tailwind's defaults. */
-body {
-  @apply bg-slate-50 text-slate-800 antialiased;
+/* ==========================================================================
+   Earth & Canopy — Contemporary Kerala Hospitality
+   Design tokens for StayInKochi (Tailwind v4 CSS-first theme).
+
+   Palette (used everywhere, no ad-hoc colours):
+     Forest    #244C3A  primary brand + important actions
+     Ivory     #F7F4EC  public background
+     Sage      #DCE5D8  secondary surfaces
+     Sand      #E8DDC9  supporting surfaces
+     Terracotta #B96548 accent only (sparingly, never decoration)
+     Charcoal  #292D29  text
+   ========================================================================== */
+
+@theme {
+  /* Brand & materials */
+  --color-forest: #244c3a;
+  --color-forest-deep: #1a3a2c;
+  --color-forest-soft: #3a6a53;
+  --color-ivory: #f7f4ec;
+  --color-ivory-deep: #efe9db;
+  --color-sage: #dce5d8;
+  --color-sand: #e8ddc9;
+  --color-terracotta: #b96548;
+  --color-terracotta-soft: #d3896f;
+  --color-charcoal: #292d29;
+
+  /* Hairlines — warm, never grey-blue */
+  --color-line: #e4dfd1;
+  --color-line-strong: #cfc8b6;
+
+  /* Semantic statuses */
+  --color-success: #2f6b4c;
+  --color-success-soft: #e4efe7;
+  --color-warning: #8a6116;
+  --color-warning-soft: #f6ebd1;
+  --color-danger: #a33c2c;
+  --color-danger-deep: #8a3124;
+  --color-danger-soft: #f7e4de;
+
+  /* Typography */
+  --font-sans:
+    "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --font-serif:
+    "DM Serif Display", ui-serif, Georgia, Cambria, "Times New Roman", serif;
+
+  /* Restrained radii — architectural, not pill-shaped */
+  --radius-card: 4px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-ivory);
+    color: var(--color-charcoal);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: var(--color-sage);
+    color: var(--color-charcoal);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-forest);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* ---------- Buttons ---------------------------------------------------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-card);
+    padding: 0.55rem 1.1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-primary {
+    background: var(--color-forest);
+    color: #fff;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-forest-deep);
+  }
+
+  .btn-secondary {
+    background: #fff;
+    color: var(--color-charcoal);
+    border-color: var(--color-line-strong);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--color-ivory);
+    border-color: var(--color-charcoal);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: rgba(41, 45, 41, 0.75);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background: rgba(41, 45, 41, 0.06);
+    color: var(--color-charcoal);
+  }
+
+  .btn-danger {
+    background: var(--color-danger);
+    color: #fff;
+  }
+  .btn-danger:hover:not(:disabled) {
+    background: var(--color-danger-deep);
+  }
+
+  /* For use on forest / charcoal backgrounds. */
+  .btn-light {
+    background: var(--color-ivory);
+    color: var(--color-forest);
+  }
+  .btn-light:hover:not(:disabled) {
+    background: #fff;
+  }
+
+  .btn-outline-light {
+    background: transparent;
+    color: var(--color-ivory);
+    border-color: rgba(247, 244, 236, 0.4);
+  }
+  .btn-outline-light:hover:not(:disabled) {
+    background: rgba(247, 244, 236, 0.1);
+    border-color: var(--color-ivory);
+  }
+
+  .btn-sm {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+  }
+  .btn-lg {
+    padding: 0.8rem 1.6rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+  .btn-block {
+    width: 100%;
+  }
+
+  /* ---------- Form fields ------------------------------------------------ */
+  .field {
+    display: block;
+    width: 100%;
+    background: #fff;
+    color: var(--color-charcoal);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-card);
+    padding: 0.55rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-family: inherit;
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  .field::placeholder {
+    color: rgba(41, 45, 41, 0.4);
+  }
+  .field:hover:not(:disabled):not(:focus) {
+    border-color: #b5ad97;
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-forest);
+    box-shadow: 0 0 0 3px rgba(36, 76, 58, 0.14);
+  }
+  .field:disabled {
+    background: var(--color-ivory);
+    color: rgba(41, 45, 41, 0.55);
+    cursor: not-allowed;
+  }
+  textarea.field {
+    min-height: 5rem;
+    resize: vertical;
+    line-height: 1.55;
+  }
+  select.field {
+    appearance: none;
+    padding-right: 2.25rem;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23292D29' stroke-width='1.5' stroke-linecap='round'><path d='m4 6.5 4 4 4-4'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0.6rem center;
+    background-size: 1rem;
+  }
+
+  .field-label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: rgba(41, 45, 41, 0.8);
+  }
+  .field-hint {
+    margin-top: 0.3rem;
+    font-size: 0.75rem;
+    line-height: 1.35rem;
+    color: rgba(41, 45, 41, 0.55);
+  }
+  .field-error {
+    margin-top: 0.3rem;
+    font-size: 0.75rem;
+    line-height: 1.35rem;
+    color: var(--color-danger);
+  }
+
+  /* ---------- Surfaces ---------------------------------------------------- */
+  .card {
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+  }
+
+  /* ---------- Status badges (rectangular tags, never pills) -------------- */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    padding: 0.1rem 0.45rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    line-height: 1.2rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .badge-success {
+    background: var(--color-success-soft);
+    color: var(--color-success);
+    border-color: rgba(47, 107, 76, 0.22);
+  }
+  .badge-warning {
+    background: var(--color-warning-soft);
+    color: var(--color-warning);
+    border-color: rgba(138, 97, 22, 0.22);
+  }
+  .badge-danger {
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
+    border-color: rgba(163, 60, 44, 0.22);
+  }
+  .badge-neutral {
+    background: rgba(41, 45, 41, 0.06);
+    color: rgba(41, 45, 41, 0.72);
+    border-color: rgba(41, 45, 41, 0.14);
+  }
+  .badge-accent {
+    background: var(--color-sand);
+    color: #7c5233;
+    border-color: rgba(185, 101, 72, 0.3);
+  }
+
+  /* ---------- Inline feedback -------------------------------------------- */
+  .alert {
+    display: flex;
+    gap: 0.6rem;
+    border: 1px solid;
+    border-radius: var(--radius-card);
+    padding: 0.7rem 0.9rem;
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+  .alert-error {
+    background: var(--color-danger-soft);
+    border-color: rgba(163, 60, 44, 0.28);
+    color: #7d2c20;
+  }
+  .alert-success {
+    background: var(--color-success-soft);
+    border-color: rgba(47, 107, 76, 0.28);
+    color: #245440;
+  }
+  .alert-warning {
+    background: var(--color-warning-soft);
+    border-color: rgba(138, 97, 22, 0.28);
+    color: #6f4e11;
+  }
+  .alert-info {
+    background: var(--color-sage);
+    border-color: rgba(36, 76, 58, 0.2);
+    color: var(--color-forest);
+  }
+
+  /* ---------- Editorial helpers ------------------------------------------ */
+  .eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(41, 45, 41, 0.55);
+  }
+  .eyebrow-light {
+    color: rgba(247, 244, 236, 0.7);
+  }
+
+  .link {
+    color: var(--color-forest);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* ---------- Data tables -------------------------------------------------- */
+  .table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  .table th {
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--color-line);
+    background: var(--color-ivory);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-align: left;
+    text-transform: uppercase;
+    color: rgba(41, 45, 41, 0.55);
+    white-space: nowrap;
+  }
+  .table td {
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--color-line);
+    vertical-align: middle;
+    color: rgba(41, 45, 41, 0.9);
+  }
+  .table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .table tbody tr:hover {
+    background: rgba(220, 229, 216, 0.32);
+  }
+  .table .num {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .table .align-right {
+    text-align: right;
+  }
+
+  /* ---------- Navigation ---------------------------------------------------- */
+  /* Horizontally scrollable tab strips (mobile-friendly, no wrapping). */
+  .nav-scroll {
+    display: flex;
+    gap: 1.4rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    position: relative;
+    padding: 0.7rem 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgba(41, 45, 41, 0.65);
+    white-space: nowrap;
+  }
+  .tab:hover {
+    color: var(--color-forest);
+  }
+  .tab.is-active {
+    color: var(--color-forest);
+    font-weight: 600;
+  }
+  .tab.is-active::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: -1px;
+    height: 2px;
+    background: var(--color-forest);
+  }
+
+  /* Sidebar links (legacy vertical nav, still used by portal panels). */
+  .side-link {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: var(--radius-card);
+    font-size: 0.875rem;
+    color: rgba(247, 244, 236, 0.72);
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+  .side-link:hover {
+    background: rgba(247, 244, 236, 0.09);
+    color: var(--color-ivory);
+  }
+  .side-link.is-active {
+    background: rgba(247, 244, 236, 0.15);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  /* Centered bottom tab menu (owner console). */
+  .tabbar-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    min-height: 48px;
+    padding: 0.45rem 0.1rem;
+    border-radius: var(--radius-card);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: rgba(247, 244, 236, 0.66);
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+  .tabbar-link:hover {
+    background: rgba(247, 244, 236, 0.09);
+    color: var(--color-ivory);
+  }
+  .tabbar-link.is-active {
+    background: rgba(247, 244, 236, 0.16);
+    color: #fff;
+    font-weight: 600;
+  }
 }

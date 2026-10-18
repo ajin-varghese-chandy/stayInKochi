@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import FormField from '../../../components/common/FormField'
+import Alert from '../../../components/ui/Alert'
+import Button from '../../../components/ui/Button'
 import { selectCurrentUser } from '../../auth/authSlice'
 import {
   clearSaveFeedback,
@@ -11,6 +13,7 @@ import {
 } from '../stayRequestSlice'
 
 // Form a signed-in tenant uses to request a stay at one hostel.
+// Rendered inside a card on the branch detail page, so it carries no border.
 export default function StayRequestForm({ hostel }) {
   const [phone, setPhone] = useState('')
   const [message, setMessage] = useState('')
@@ -49,20 +52,16 @@ export default function StayRequestForm({ hostel }) {
 
   if (submitted) {
     return (
-      <div className="rounded-md border border-green-200 bg-green-50 p-4 text-green-800">
+      <Alert tone="success">
         {saveSuccess ?? 'Your stay request has been sent to the owner.'}
-      </div>
+      </Alert>
     )
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="rounded-lg border border-slate-200 bg-white p-4"
-    >
-      <h2 className="text-lg font-semibold text-slate-900">Request a stay</h2>
-      <p className="text-sm text-slate-500">
-        The owner will review and approve your request.
+    <form onSubmit={handleSubmit}>
+      <p className="text-sm text-charcoal/65">
+        The owner reviews every request before a bed is assigned.
       </p>
 
       <div className="mt-4 space-y-4">
@@ -72,31 +71,30 @@ export default function StayRequestForm({ hostel }) {
           value={phone}
           onChange={(event) => setPhone(event.target.value)}
           autoComplete="tel"
+          placeholder="How the owner can reach you"
         />
 
         <label className="block">
-          <span className="block text-sm font-medium text-slate-700">
-            Message (optional)
-          </span>
+          <span className="field-label">Message (optional)</span>
           <textarea
             value={message}
             onChange={(event) => setMessage(event.target.value)}
             rows={3}
             placeholder="Anything the owner should know"
-            className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-800 focus:border-indigo-500 focus:outline-none"
+            className="field"
           />
         </label>
       </div>
 
-      {saveError && <p className="mt-3 text-sm text-red-600">{saveError}</p>}
+      {saveError && (
+        <Alert tone="error" className="mt-4">
+          {saveError}
+        </Alert>
+      )}
 
-      <button
-        type="submit"
-        disabled={isSaving}
-        className="mt-4 w-full rounded-md bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
-      >
-        {isSaving ? 'Sending request...' : 'Send stay request'}
-      </button>
+      <Button type="submit" block disabled={isSaving} className="mt-5">
+        {isSaving ? 'Sending request…' : 'Send stay request'}
+      </Button>
     </form>
   )
 }

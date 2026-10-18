@@ -2,22 +2,26 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import FormField from '../components/common/FormField'
+import Brand from '../components/ui/Brand'
+import Alert from '../components/ui/Alert'
+import Button from '../components/ui/Button'
+import Spinner from '../components/common/Spinner'
 import {
   clearAuthError,
   register,
   selectAuthError,
-  selectAuthSubmitting,
+  selectAuthLoading,
 } from '../features/auth/authSlice'
 
-// Registration form for new tenants. There is only one owner, and that account
-// is set up outside the app, so this form always creates a tenant.
+// Registration for new tenants. There is only one owner, and that account is
+// set up outside the app, so this form always creates a tenant.
 export default function RegisterPage() {
   const [displayName, setDisplayName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const dispatch = useDispatch()
-  const isSubmitting = useSelector(selectAuthSubmitting)
+  const isLoading = useSelector(selectAuthLoading)
   const error = useSelector(selectAuthError)
   const navigate = useNavigate()
 
@@ -35,48 +39,72 @@ export default function RegisterPage() {
     })
   }
 
+  const waitingForSession = isLoading && !email && !password
+
   return (
-    <section className="mx-auto max-w-md px-4 py-16">
-      <h1 className="text-3xl font-bold text-slate-900">Create an account</h1>
-      <p className="mt-2 text-slate-600">Join StayInKochi as a tenant.</p>
+    <section className="mx-auto flex max-w-md flex-col justify-center px-4 py-12 sm:py-16">
+      <div className="mb-7 flex justify-center">
+        <Brand />
+      </div>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-        <FormField
-          label="Full name"
-          value={displayName}
-          onChange={(event) => setDisplayName(event.target.value)}
-          autoComplete="name"
-        />
-        <FormField
-          label="Email"
-          type="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          autoComplete="email"
-        />
-        <FormField
-          label="Password"
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          autoComplete="new-password"
-        />
+      <div className="card p-6 sm:p-8">
+        <p className="eyebrow text-terracotta">Join StayInKochi</p>
+        <h1 className="mt-2 font-serif text-[1.75rem] leading-tight text-charcoal">
+          Create your account
+        </h1>
+        <p className="mt-2 text-sm leading-relaxed text-charcoal/65">
+          Accounts are for tenants. Once the owner approves your stay request,
+          your branch, bed, and rent all show up here.
+        </p>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && (
+          <Alert tone="error" className="mt-5">
+            {error}
+          </Alert>
+        )}
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full rounded-md bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
-        >
-          {isSubmitting ? 'Creating account...' : 'Register'}
-        </button>
-      </form>
+        {waitingForSession ? (
+          <div className="mt-6">
+            <Spinner compact label="Checking your session…" />
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            <FormField
+              label="Full name"
+              value={displayName}
+              onChange={(event) => setDisplayName(event.target.value)}
+              autoComplete="name"
+              placeholder="Your name"
+            />
+            <FormField
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              autoComplete="email"
+              placeholder="you@example.com"
+            />
+            <FormField
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              autoComplete="new-password"
+              placeholder="At least 6 characters"
+              hint="Used to sign in to your tenant portal."
+            />
 
-      <p className="mt-6 text-center text-sm text-slate-600">
+            <Button type="submit" block disabled={isLoading}>
+              {isLoading ? 'Creating account…' : 'Create account'}
+            </Button>
+          </form>
+        )}
+      </div>
+
+      <p className="mt-5 text-center text-sm text-charcoal/65">
         Already have an account?{' '}
-        <Link to="/login" className="font-medium text-indigo-600">
-          Login
+        <Link to="/login" className="link">
+          Sign in
         </Link>
       </p>
     </section>

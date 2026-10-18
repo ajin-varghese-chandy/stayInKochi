@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import Alert from '../../../components/ui/Alert'
+import Button from '../../../components/ui/Button'
 import FormField from '../../../components/common/FormField'
 import { selectCurrentUser } from '../../auth/authSlice'
 import {
@@ -54,11 +56,8 @@ export default function MaintenanceForm({ tenancy }) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4 rounded-lg border border-slate-200 bg-white p-4"
-    >
-      <h2 className="text-lg font-semibold text-slate-900">
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <h2 className="text-base font-semibold text-charcoal">
         Raise a maintenance request
       </h2>
 
@@ -69,39 +68,33 @@ export default function MaintenanceForm({ tenancy }) {
       />
 
       <label className="block">
-        <span className="block text-sm font-medium text-slate-700">
-          Description
-        </span>
+        <span className="field-label">Description</span>
         <textarea
           value={description}
           onChange={(event) => setDescription(event.target.value)}
           rows={3}
-          className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-800 focus:border-indigo-500 focus:outline-none"
+          className="field"
         />
       </label>
 
       <label className="block">
-        <span className="block text-sm font-medium text-slate-700">
-          Photo (optional)
-        </span>
+        <span className="field-label">Photo (optional)</span>
         <input
           ref={photoInputRef}
           type="file"
           accept="image/*"
           onChange={(event) => setPhotoFile(event.target.files?.[0] ?? null)}
-          className="mt-1 w-full text-sm text-slate-600"
+          className="mt-1 block w-full text-sm text-charcoal/70 file:mr-3 file:cursor-pointer file:rounded-card file:border file:border-line-strong file:bg-white file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-charcoal"
         />
       </label>
 
-      {saveError && <p className="text-sm text-red-600">{saveError}</p>}
+      {saveError && <Alert tone="error">{saveError}</Alert>}
 
-      <button
-        type="submit"
-        disabled={isSaving}
-        className="rounded-md bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
-      >
-        {isSaving ? 'Submitting...' : 'Submit request'}
-      </button>
+      <div className="mt-5 flex justify-end gap-2">
+        <Button type="submit" disabled={isSaving}>
+          {isSaving ? 'Submitting...' : 'Submit request'}
+        </Button>
+      </div>
     </form>
   )
 }

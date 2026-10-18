@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import Alert from '../../../components/ui/Alert'
+import Spinner from '../../../components/common/Spinner'
 import {
   fetchFinancialSummary,
   selectFinanceError,
@@ -7,14 +9,14 @@ import {
   selectFinancialSummary,
 } from '../financeSlice'
 
-const TILES = [
-  { key: 'collected', label: 'Rent collected', tone: 'text-green-700' },
-  { key: 'pending', label: 'Rent pending', tone: 'text-amber-700' },
-  { key: 'food', label: 'Food income', tone: 'text-indigo-700' },
-  { key: 'switchFees', label: 'Switch fees', tone: 'text-slate-700' },
+const METRICS = [
+  { key: 'collected', label: 'Rent collected' },
+  { key: 'pending', label: 'Rent pending' },
+  { key: 'food', label: 'Food income' },
+  { key: 'switchFees', label: 'Switch fees' },
 ]
 
-// Owner's money overview: rent, food and switching income in four tiles.
+// Owner's money overview: rent, food and switching income in one metric strip.
 export default function FinancialSummary() {
   const dispatch = useDispatch()
   const summary = useSelector(selectFinancialSummary)
@@ -26,25 +28,22 @@ export default function FinancialSummary() {
   }, [dispatch])
 
   if (isLoading) {
-    return <p className="text-slate-500">Loading totals...</p>
+    return <Spinner compact label="Loading totals…" />
   }
 
   if (error) {
-    return <p className="text-red-600">Could not load totals: {error}</p>
+    return <Alert tone="error">Could not load totals: {error}</Alert>
   }
 
   if (!summary) return null
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      {TILES.map((tile) => (
-        <div
-          key={tile.key}
-          className="rounded-lg border border-slate-200 bg-white p-4"
-        >
-          <p className="text-sm text-slate-500">{tile.label}</p>
-          <p className={`mt-1 text-2xl font-bold ${tile.tone}`}>
-            ₹{(summary[tile.key] ?? 0).toLocaleString('en-IN')}
+    <div className="card grid grid-cols-2 divide-x divide-y divide-line sm:grid-cols-4">
+      {METRICS.map((metric) => (
+        <div key={metric.key} className="p-4">
+          <p className="eyebrow">{metric.label}</p>
+          <p className="mt-1.5 text-lg font-semibold tabular-nums text-charcoal">
+            ₹{(summary[metric.key] ?? 0).toLocaleString('en-IN')}
           </p>
         </div>
       ))}

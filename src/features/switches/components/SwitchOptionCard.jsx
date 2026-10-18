@@ -1,3 +1,5 @@
+import Button from "../../../components/ui/Button";
+
 // One hostel the tenant could switch into, with the pay button.
 export default function SwitchOptionCard({
   hostel,
@@ -7,23 +9,28 @@ export default function SwitchOptionCard({
   onSwitch,
 }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white p-4">
-      <div>
-        <p className="font-medium text-slate-900">{hostel.name}</p>
-        <p className="text-sm text-slate-500">
-          {hostel.location ?? 'Kochi'} · ₹
-          {hostel.rentPerMonth?.toLocaleString('en-IN') ?? 0}/month
+    <div className="card flex flex-wrap items-center justify-between gap-3 p-5">
+      <div className="min-w-0">
+        <p className="text-sm font-semibold text-charcoal">{hostel.name}</p>
+        <p className="mt-0.5 text-xs text-charcoal/55">
+          {hostel.location ?? "Kochi"} · ₹
+          {hostel.rentPerMonth?.toLocaleString("en-IN") ?? 0}/month
+        </p>
+        <p className="mt-1.5 text-base font-semibold tabular-nums text-forest">
+          ₹{feeRupees}
+          <span className="ml-1.5 text-xs font-normal text-charcoal/55">
+            switch fee
+          </span>
         </p>
       </div>
 
-      <button
-        type="button"
+      <Button
+        size="sm"
         onClick={() => onSwitch(hostel)}
         disabled={disabled || isSaving}
-        className="rounded-md bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
       >
-        {isSaving ? 'Processing...' : `Switch · ₹${feeRupees}`}
-      </button>
+        {isSaving ? "Processing..." : `Switch · ₹${feeRupees}`}
+      </Button>
     </div>
-  )
+  );
 }

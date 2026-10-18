@@ -1,49 +1,47 @@
-import { Link } from 'react-router-dom'
+import Button from '../../../components/ui/Button'
 import formatRupees from '../../../utils/formatRupees'
 
 // One branch row on the owner's branch management screen.
 export default function OwnerHostelCard({ hostel, isSaving, onEdit, onDelete }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-4">
+    <div className="card p-5">
       <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="font-semibold text-slate-900">{hostel.name}</h3>
-          <p className="text-sm text-slate-500">{hostel.location}</p>
-          {hostel.description && (
-            <p className="mt-1 line-clamp-1 text-sm text-slate-500">{hostel.description}</p>
-          )}
-          <p className="mt-1 font-semibold text-indigo-600">
-            {formatRupees(hostel.rentPerMonth)}
-            <span className="font-normal text-slate-500"> /month</span>
+        <div className="min-w-0">
+          <h3 className="text-sm font-semibold text-charcoal">{hostel.name}</h3>
+          <p className="mt-0.5 text-xs text-charcoal/55">
+            {hostel.location} · {hostel.amenities?.length ?? 0} amenities
           </p>
         </div>
-        <div className="shrink-0 text-right text-sm text-slate-500">
-          <p>{hostel.amenities?.length ?? 0} amenities</p>
-        </div>
+
+        <p className="shrink-0 text-right">
+          <span className="text-sm font-semibold tabular-nums text-forest">
+            {formatRupees(hostel.rentPerMonth)}
+          </span>
+          <span className="block text-xs text-charcoal/55">per month</span>
+        </p>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-3 text-sm">
-        <Link
-          to={`/owner/hostels/${hostel.id}`}
-          className="rounded-md bg-indigo-600 px-3 py-1.5 font-medium text-white hover:bg-indigo-700"
-        >
+      {hostel.description && (
+        <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-charcoal/70">
+          {hostel.description}
+        </p>
+      )}
+
+      <div className="mt-4 flex flex-wrap justify-end gap-2 border-t border-line pt-3">
+        <Button to={`/owner/hostels/${hostel.id}`} size="sm">
           Manage rooms
-        </Link>
-        <button
-          type="button"
-          onClick={onEdit}
-          className="rounded-md border border-slate-300 px-3 py-1.5 text-slate-700 hover:bg-slate-100"
-        >
+        </Button>
+        <Button size="sm" variant="secondary" onClick={onEdit}>
           Edit
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
+          size="sm"
+          variant="danger"
           onClick={onDelete}
           disabled={isSaving}
-          className="rounded-md border border-red-300 px-3 py-1.5 text-red-600 hover:bg-red-50 disabled:opacity-60"
         >
           Delete
-        </button>
+        </Button>
       </div>
     </div>
   )

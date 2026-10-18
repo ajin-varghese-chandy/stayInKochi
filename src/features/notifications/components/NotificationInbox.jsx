@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Bell } from 'lucide-react'
+import Alert from '../../../components/ui/Alert'
 import {
   fetchMyNotifications,
   markNotificationRead,
@@ -25,24 +27,30 @@ export default function NotificationInbox({ recipientId }) {
   }, [dispatch, recipientId])
 
   return (
-    <div>
-      <div className="flex items-baseline justify-between">
-        <h2 className="text-xl font-semibold text-slate-900">Notifications</h2>
+    <div className="card p-4">
+      <div className="flex items-center justify-between gap-3 px-3">
+        <div className="flex items-center gap-2">
+          <Bell size={16} strokeWidth={1.75} aria-hidden="true" className="text-forest" />
+          <h3 className="text-sm font-semibold text-charcoal">Notifications</h3>
+        </div>
+
         {unreadCount > 0 && (
-          <span className="rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700">
-            {unreadCount} new
-          </span>
+          <span className="badge badge-accent">{unreadCount} new</span>
         )}
       </div>
 
-      <div className="mt-3">
-        <NotificationList
-          notifications={notifications}
-          isLoading={isLoading}
-          error={error}
-          isSaving={isSaving}
-          onMarkRead={(item) => dispatch(markNotificationRead(item))}
-        />
+      <div className="mt-2">
+        {error ? (
+          <Alert tone="error">Could not load notifications: {error}</Alert>
+        ) : (
+          <NotificationList
+            notifications={notifications}
+            isLoading={isLoading}
+            error={error}
+            isSaving={isSaving}
+            onMarkRead={(item) => dispatch(markNotificationRead(item))}
+          />
+        )}
       </div>
     </div>
   )
