@@ -1,54 +1,44 @@
-import { useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  conversationOpened,
-  sendChatMessage,
-  selectChatError,
-  selectChatLoading,
-  selectChatMessages,
-  selectChatSaving,
-  selectChatSaveError,
-  messagesLoadFailed,
-  messagesReceived,
-} from "../chatSlice";
-import { subscribeToConversation } from "../chatService";
-import MessageBubble from "./MessageBubble";
-import MessageComposer from "./MessageComposer";
+import { useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { conversationOpened, sendChatMessage, selectChatError, selectChatLoading, selectChatMessages, selectChatSaving, selectChatSaveError, messagesLoadFailed, messagesReceived } from '../chatSlice'
+import { subscribeToConversation } from '../chatService'
+import MessageBubble from './MessageBubble'
+import MessageComposer from './MessageComposer'
 
 // The open chat room: listens to Firebase for the current conversation and
 // renders its messages plus the send box.
 export default function ChatWindow({ conversation, sender }) {
-  const dispatch = useDispatch();
-  const messages = useSelector(selectChatMessages);
-  const isLoading = useSelector(selectChatLoading);
-  const error = useSelector(selectChatError);
-  const isSaving = useSelector(selectChatSaving);
-  const saveError = useSelector(selectChatSaveError);
+  const dispatch = useDispatch()
+  const messages = useSelector(selectChatMessages)
+  const isLoading = useSelector(selectChatLoading)
+  const error = useSelector(selectChatError)
+  const isSaving = useSelector(selectChatSaving)
+  const saveError = useSelector(selectChatSaveError)
 
-  const scrollAnchorRef = useRef(null);
+  const scrollAnchorRef = useRef(null)
 
   // Re-join the room whenever a different conversation is opened, and detach
   // the old listener when the component unmounts.
   useEffect(() => {
-    if (!conversation) return undefined;
+    if (!conversation) return undefined
 
-    dispatch(conversationOpened());
+    dispatch(conversationOpened())
     const unsubscribe = subscribeToConversation(
       conversation,
       (incoming) => dispatch(messagesReceived(incoming)),
       (readError) => dispatch(messagesLoadFailed(readError.message)),
-    );
+    )
 
-    return unsubscribe;
-  }, [conversation, dispatch]);
+    return unsubscribe
+  }, [conversation, dispatch])
 
   // Keep the newest message in view as messages arrive.
   useEffect(() => {
-    scrollAnchorRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    scrollAnchorRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
 
   function handleSend(text) {
-    dispatch(sendChatMessage({ conversation, sender, text }));
+    dispatch(sendChatMessage({ conversation, sender, text }))
   }
 
   if (!conversation) {
@@ -56,7 +46,7 @@ export default function ChatWindow({ conversation, sender }) {
       <div className="card flex h-96 items-center justify-center px-6 text-center text-sm text-charcoal/55">
         Choose a conversation to start chatting.
       </div>
-    );
+    )
   }
 
   return (
@@ -100,5 +90,5 @@ export default function ChatWindow({ conversation, sender }) {
 
       <MessageComposer isSaving={isSaving} onSend={handleSend} />
     </div>
-  );
+  )
 }

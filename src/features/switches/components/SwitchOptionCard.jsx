@@ -1,4 +1,4 @@
-import Button from "../../../components/ui/Button";
+import Button from '../../../components/ui/Button'
 
 // One hostel the tenant could switch into, with the pay button.
 export default function SwitchOptionCard({
@@ -13,8 +13,8 @@ export default function SwitchOptionCard({
       <div className="min-w-0">
         <p className="text-sm font-semibold text-charcoal">{hostel.name}</p>
         <p className="mt-0.5 text-xs text-charcoal/55">
-          {hostel.location ?? "Kochi"} · ₹
-          {hostel.rentPerMonth?.toLocaleString("en-IN") ?? 0}/month
+          {hostel.location ?? 'Kochi'} · ₹
+          {hostel.rentPerMonth?.toLocaleString('en-IN') ?? 0}/month
         </p>
         <p className="mt-1.5 text-base font-semibold tabular-nums text-forest">
           ₹{feeRupees}
@@ -29,8 +29,8 @@ export default function SwitchOptionCard({
         onClick={() => onSwitch(hostel)}
         disabled={disabled || isSaving}
       >
-        {isSaving ? "Processing..." : `Switch · ₹${feeRupees}`}
+        {isSaving ? 'Processing...' : `Switch · ₹${feeRupees}`}
       </Button>
     </div>
-  );
+  )
 }

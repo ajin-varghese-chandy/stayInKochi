@@ -1,5 +1,5 @@
-import Button from "../../../components/ui/Button";
-import formatRupees from "../../../utils/formatRupees";
+import Button from '../../../components/ui/Button'
+import formatRupees from '../../../utils/formatRupees'
 
 // One food plan on the owner's food management screen.
 export default function FoodPlanCard({ foodPlan, isSaving, onEdit, onDelete }) {
@@ -7,11 +7,9 @@ export default function FoodPlanCard({ foodPlan, isSaving, onEdit, onDelete }) {
     <div className="card p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-charcoal">
-            {foodPlan.name}
-          </h3>
+          <h3 className="text-sm font-semibold text-charcoal">{foodPlan.name}</h3>
           <p className="mt-0.5 text-xs text-charcoal/55">
-            {foodPlan.hostelName ?? "Branch assigned"}
+            {foodPlan.hostelName ?? 'Branch assigned'}
           </p>
         </div>
       </div>
@@ -50,5 +48,5 @@ export default function FoodPlanCard({ foodPlan, isSaving, onEdit, onDelete }) {
         </Button>
       </div>
     </div>
-  );
+  )
 }

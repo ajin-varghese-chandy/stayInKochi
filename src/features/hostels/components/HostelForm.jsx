@@ -80,7 +80,7 @@ export default function HostelForm({ hostel, onDone }) {
             (shown as "StayInKochi &lt;label&gt;")
           </span>
         </span>
-        <span className="flex items-stretch overflow-hidden rounded-card border border-line-strong bg-white focus-within:border-forest">
+        <span className="flex items-stretch overflow-hidden rounded-card border border-line-strong bg-white focus-within:border-forest focus-within:shadow-[0_0_0_3px_rgba(36,76,58,0.14)]">
           <span className="flex shrink-0 select-none items-center border-r border-line bg-ivory px-3 text-sm text-charcoal/55">
             StayInKochi
           </span>

@@ -3,23 +3,21 @@
 export default function MessageBubble({ message, isOwnMessage }) {
   return (
     <div
-      className={`flex flex-col ${isOwnMessage ? "items-end" : "items-start"}`}
+      className={`flex flex-col ${isOwnMessage ? 'items-end' : 'items-start'}`}
     >
       <div
         className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-sm ${
           isOwnMessage
-            ? "bg-forest text-ivory"
-            : "border border-line bg-white text-charcoal"
+            ? 'bg-forest text-ivory'
+            : 'border border-line bg-white text-charcoal'
         }`}
       >
         <p
           className={`text-[11px] font-semibold ${
-            isOwnMessage ? "text-ivory/75" : "text-charcoal/55"
+            isOwnMessage ? 'text-ivory/75' : 'text-charcoal/55'
           }`}
         >
-          {isOwnMessage
-            ? "You"
-            : `${message.senderName} · ${message.senderRole}`}
+          {isOwnMessage ? 'You' : `${message.senderName} · ${message.senderRole}`}
         </p>
         <p className="mt-0.5 whitespace-pre-wrap break-words">{message.text}</p>
       </div>
@@ -28,5 +26,5 @@ export default function MessageBubble({ message, isOwnMessage }) {
         {message.createdAt?.slice(11, 16)}
       </p>
     </div>
-  );
+  )
 }

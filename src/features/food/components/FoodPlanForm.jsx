@@ -1,66 +1,66 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import Alert from "../../../components/ui/Alert";
-import Button from "../../../components/ui/Button";
-import FormField from "../../../components/common/FormField";
-import { selectHostels } from "../../hostels/hostelSlice";
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import Alert from '../../../components/ui/Alert'
+import Button from '../../../components/ui/Button'
+import FormField from '../../../components/common/FormField'
+import { selectHostels } from '../../hostels/hostelSlice'
 import {
   clearFoodSaveFeedback,
   saveFoodPlan,
   selectFoodSaveError,
   selectFoodSaving,
-} from "../foodPlanSlice";
+} from '../foodPlanSlice'
 
 // Add or edit a food plan. Pass `foodPlan` to edit, leave it out to create.
 export default function FoodPlanForm({ foodPlan, onDone }) {
-  const [hostelId, setHostelId] = useState(foodPlan?.hostelId ?? "");
-  const [name, setName] = useState(foodPlan?.name ?? "");
+  const [hostelId, setHostelId] = useState(foodPlan?.hostelId ?? '')
+  const [name, setName] = useState(foodPlan?.name ?? '')
   const [pricePerMonth, setPricePerMonth] = useState(
-    foodPlan?.pricePerMonth ?? "",
-  );
+    foodPlan?.pricePerMonth ?? '',
+  )
   const [includes, setIncludes] = useState(
-    (foodPlan?.includes ?? []).join(", "),
-  );
+    (foodPlan?.includes ?? []).join(', '),
+  )
 
-  const dispatch = useDispatch();
-  const hostels = useSelector(selectHostels);
-  const isSaving = useSelector(selectFoodSaving);
-  const saveError = useSelector(selectFoodSaveError);
+  const dispatch = useDispatch()
+  const hostels = useSelector(selectHostels)
+  const isSaving = useSelector(selectFoodSaving)
+  const saveError = useSelector(selectFoodSaveError)
 
   useEffect(() => {
-    dispatch(clearFoodSaveFeedback());
-  }, [dispatch]);
+    dispatch(clearFoodSaveFeedback())
+  }, [dispatch])
 
   function handleSubmit(event) {
-    event.preventDefault();
+    event.preventDefault()
 
-    const hostel = hostels.find((candidate) => candidate.id === hostelId);
+    const hostel = hostels.find((candidate) => candidate.id === hostelId)
 
     dispatch(
       saveFoodPlan({
         foodPlanId: foodPlan?.id,
         foodPlan: {
           hostelId,
-          hostelName: hostel?.name ?? "",
+          hostelName: hostel?.name ?? '',
           name,
           pricePerMonth: Number(pricePerMonth),
           includes: includes
-            .split(",")
+            .split(',')
             .map((item) => item.trim())
             .filter(Boolean),
         },
       }),
     ).then((result) => {
-      if (result.meta.requestStatus === "fulfilled") {
-        onDone();
+      if (result.meta.requestStatus === 'fulfilled') {
+        onDone()
       }
-    });
+    })
   }
 
   return (
     <form onSubmit={handleSubmit} className="card space-y-4 p-5">
       <h2 className="text-base font-semibold text-charcoal">
-        {foodPlan ? "Edit food plan" : "Add food plan"}
+        {foodPlan ? 'Edit food plan' : 'Add food plan'}
       </h2>
 
       <label className="block">
@@ -106,9 +106,13 @@ export default function FoodPlanForm({ foodPlan, onDone }) {
           Cancel
         </Button>
         <Button type="submit" disabled={isSaving}>
-          {isSaving ? "Saving..." : foodPlan ? "Save changes" : "Add food plan"}
+          {isSaving
+            ? 'Saving...'
+            : foodPlan
+              ? 'Save changes'
+              : 'Add food plan'}
         </Button>
       </div>
     </form>
-  );
+  )
 }

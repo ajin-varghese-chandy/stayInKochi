@@ -1,6 +1,6 @@
-import Button from "../../../components/ui/Button";
-import StatusBadge from "../../../components/ui/StatusBadge";
-import formatRupees from "../../../utils/formatRupees";
+import Button from '../../../components/ui/Button'
+import StatusBadge from '../../../components/ui/StatusBadge'
+import formatRupees from '../../../utils/formatRupees'
 
 // A food plan a tenant can subscribe to (or cancel if already subscribed).
 // If they're already on another plan, this one can't be subscribed to until
@@ -17,9 +17,7 @@ export default function SubscriptionCard({
     <div className="card p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-charcoal">
-            {foodPlan.name}
-          </h3>
+          <h3 className="text-sm font-semibold text-charcoal">{foodPlan.name}</h3>
         </div>
 
         {isActive && <StatusBadge status="subscribed" />}
@@ -53,7 +51,7 @@ export default function SubscriptionCard({
             onClick={onUnsubscribe}
             disabled={isSaving}
           >
-            {isSaving ? "Cancelling..." : "Cancel plan"}
+            {isSaving ? 'Cancelling...' : 'Cancel plan'}
           </Button>
         ) : hasActiveSubscription ? (
           <p className="text-sm leading-relaxed text-charcoal/60">
@@ -61,10 +59,10 @@ export default function SubscriptionCard({
           </p>
         ) : (
           <Button block onClick={onSubscribe} disabled={isSaving}>
-            {isSaving ? "Subscribing..." : "Subscribe"}
+            {isSaving ? 'Subscribing...' : 'Subscribe'}
           </Button>
         )}
       </div>
     </div>
-  );
+  )
 }

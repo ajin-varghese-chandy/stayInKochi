@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { BedDouble, FileText } from 'lucide-react'
+import Alert from '../../components/ui/Alert'
+import Button from '../../components/ui/Button'
+import EmptyState from '../../components/ui/EmptyState'
+import PageHeader from '../../components/ui/PageHeader'
+import StatusBadge from '../../components/ui/StatusBadge'
 import Spinner from '../../components/common/Spinner'
-import TenantNav from '../../components/layout/TenantNav'
 import { selectCurrentUser } from '../../features/auth/authSlice'
 import NotificationInbox from '../../features/notifications/components/NotificationInbox'
 import StayRequestCard from '../../features/stayRequests/components/StayRequestCard'
@@ -13,6 +17,7 @@ import {
   selectStayRequestsLoading,
 } from '../../features/stayRequests/stayRequestSlice'
 import { getTenantsByUser } from '../../features/tenants/tenantService'
+import formatRupees from '../../utils/formatRupees'
 
 // Tenant home base: active tenancy status plus this user's stay requests.
 export default function TenantDashboardPage() {
@@ -52,50 +57,53 @@ export default function TenantDashboardPage() {
   }, [dispatch, user?.uid])
 
   return (
-    <section className="mx-auto max-w-4xl px-4 py-12">
-      <h1 className="text-3xl font-bold text-slate-900">Tenant dashboard</h1>
-      <p className="mt-2 text-slate-600">
-        Welcome back, {user?.displayName ?? 'tenant'}.
-      </p>
+    <section>
+      <PageHeader
+        eyebrow="Tenant portal"
+        title="Overview"
+        description={`Welcome back, ${user?.displayName ?? 'tenant'}.`}
+      />
 
-      <div className="mt-6">
-        <TenantNav />
-      </div>
+      <div className="mt-6 space-y-6">
+        <TenancyBanner tenancy={tenancy} isLoading={tenancyLoading} />
 
-      <TenancyBanner tenancy={tenancy} isLoading={tenancyLoading} />
-
-      <div className="mt-8">
         <NotificationInbox recipientId={user?.uid} />
-      </div>
 
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold text-slate-900">
-          My stay requests
-        </h2>
+        <section aria-labelledby="stay-requests-heading">
+          <h2
+            id="stay-requests-heading"
+            className="text-base font-semibold text-charcoal"
+          >
+            My stay requests
+          </h2>
 
-        {isLoading && <Spinner label="Loading your stay requests..." />}
+          <div className="mt-3">
+            {isLoading && <Spinner compact label="Loading your stay requests…" />}
 
-        {error && (
-          <p className="mt-4 text-red-600">
-            Could not load your requests: {error}
-          </p>
-        )}
+            {error && (
+              <Alert tone="error">Could not load your requests: {error}</Alert>
+            )}
 
-        {!isLoading && !error && requests.length === 0 && (
-          <p className="mt-4 text-slate-600">
-            You have not requested a stay yet.{' '}
-            <Link to="/hostels" className="font-medium text-indigo-600 underline">
-              Browse branches
-            </Link>{' '}
-            to get started.
-          </p>
-        )}
+            {!isLoading && !error && requests.length === 0 && (
+              <EmptyState
+                icon={FileText}
+                title="No stay requests yet"
+                hint="Request a stay at any branch and the owner will review it."
+                action={
+                  <Button to="/hostels" variant="secondary">
+                    Browse branches
+                  </Button>
+                }
+              />
+            )}
 
-        <div className="mt-4 space-y-4">
-          {requests.map((request) => (
-            <StayRequestCard key={request.id} request={request} />
-          ))}
-        </div>
+            <div className="mt-3 space-y-4">
+              {requests.map((request) => (
+                <StayRequestCard key={request.id} request={request} />
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
     </section>
   )
@@ -104,54 +112,74 @@ export default function TenantDashboardPage() {
 // Shows whether the user is an active tenant yet, plus the next useful step.
 function TenancyBanner({ tenancy, isLoading }) {
   if (isLoading) {
-    return <Spinner label="Checking your tenancy..." />
+    return <Spinner compact label="Checking your tenancy…" />
   }
 
-  if (tenancy) {
+  if (!tenancy) {
     return (
-      <div className="mt-6 rounded-md border border-green-200 bg-green-50 p-4 text-green-800">
-        <p>
-          Active tenant at <strong>{tenancy.hostelName}</strong>
-          {tenancy.joinedOn ? ` · joined ${tenancy.joinedOn}` : ''}.
-        </p>
-
-        <div className="mt-3 flex flex-wrap gap-3 text-sm">
-          <Link
-            to="/tenant/payments"
-            className="rounded-md border border-green-300 px-3 py-1.5 font-medium text-green-800 hover:bg-green-100"
-          >
-            Pay rent
-          </Link>
-          <Link
-            to="/tenant/food"
-            className="rounded-md border border-green-300 px-3 py-1.5 font-medium text-green-800 hover:bg-green-100"
-          >
-            Food plans
-          </Link>
-          <Link
-            to="/tenant/maintenance"
-            className="rounded-md border border-green-300 px-3 py-1.5 font-medium text-green-800 hover:bg-green-100"
-          >
-            Raise an issue
-          </Link>
-          <Link
-            to="/tenant/switch"
-            className="rounded-md border border-green-300 px-3 py-1.5 font-medium text-green-800 hover:bg-green-100"
-          >
-            Switch hostel
-          </Link>
-        </div>
-      </div>
+      <EmptyState
+        icon={BedDouble}
+        title="You are not an active tenant yet"
+        hint="Browse branches and submit a stay request — the owner approves it before you can move in."
+        action={<Button to="/hostels">Browse branches</Button>}
+      />
     )
   }
 
   return (
-    <div className="mt-6 rounded-md border border-slate-200 bg-slate-100 p-4 text-slate-600">
-      You are not an active tenant yet.{' '}
-      <Link to="/hostels" className="font-medium text-indigo-600 underline">
-        Browse branches
-      </Link>{' '}
-      and submit a stay request — the owner approves it before you can move in.
-    </div>
+    <section className="card p-5" aria-labelledby="tenancy-heading">
+      <p id="tenancy-heading" className="eyebrow">
+        Active tenancy
+      </p>
+
+      <dl className="mt-3">
+        <div className="flex justify-between border-b border-line py-2 text-sm last:border-0">
+          <dt className="text-charcoal/55">Branch</dt>
+          <dd className="font-medium text-charcoal">{tenancy.hostelName}</dd>
+        </div>
+        <div className="flex justify-between border-b border-line py-2 text-sm last:border-0">
+          <dt className="text-charcoal/55">Room</dt>
+          <dd className="font-medium text-charcoal">
+            {tenancy.roomNumber ?? '—'}
+          </dd>
+        </div>
+        <div className="flex justify-between border-b border-line py-2 text-sm last:border-0">
+          <dt className="text-charcoal/55">Bed</dt>
+          <dd className="font-medium text-charcoal">
+            {tenancy.bedNumber ?? '—'}
+          </dd>
+        </div>
+        <div className="flex justify-between border-b border-line py-2 text-sm last:border-0">
+          <dt className="text-charcoal/55">Joined on</dt>
+          <dd className="font-medium text-charcoal">
+            {tenancy.joinedOn ?? '—'}
+          </dd>
+        </div>
+        <div className="flex justify-between border-b border-line py-2 text-sm last:border-0">
+          <dt className="text-charcoal/55">Rent</dt>
+          <dd className="flex items-center gap-2">
+            <span className="font-semibold tabular-nums text-forest">
+              {formatRupees(tenancy.rentPerMonth)}
+            </span>
+            <StatusBadge status={tenancy.rentStatus ?? 'unpaid'} />
+          </dd>
+        </div>
+      </dl>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Button to="/tenant/payments" size="sm" variant="secondary">
+          Pay rent
+        </Button>
+        <Button to="/tenant/food" size="sm" variant="secondary">
+          Food plans
+        </Button>
+        <Button to="/tenant/maintenance" size="sm" variant="secondary">
+          Raise an issue
+        </Button>
+        <Button to="/tenant/switch" size="sm" variant="secondary">
+          Switch branch
+        </Button>
+      </div>
+    </section>
   )
 }

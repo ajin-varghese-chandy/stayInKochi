@@ -1,10 +1,10 @@
-import { useState } from "react";
-import Button from "../../../components/ui/Button";
+import { useState } from 'react'
+import Button from '../../../components/ui/Button'
 
 // A bookable individual meal: pick a date and book it.
 export default function MealBookingCard({ meal, isSaving, onBook }) {
   // Default the picker to today (YYYY-MM-DD).
-  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10))
 
   return (
     <div className="card p-5">
@@ -37,9 +37,9 @@ export default function MealBookingCard({ meal, isSaving, onBook }) {
           onClick={() => onBook(meal, date)}
           disabled={isSaving || !date}
         >
-          {isSaving ? "Booking..." : "Book meal"}
+          {isSaving ? 'Booking...' : 'Book meal'}
         </Button>
       </div>
     </div>
-  );
+  )
 }

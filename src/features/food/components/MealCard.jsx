@@ -1,4 +1,4 @@
-import Button from "../../../components/ui/Button";
+import Button from '../../../components/ui/Button'
 
 // One individual meal on the owner's food management screen.
 export default function MealCard({ meal, isSaving, onEdit, onDelete }) {
@@ -8,7 +8,7 @@ export default function MealCard({ meal, isSaving, onEdit, onDelete }) {
         <div className="min-w-0">
           <h3 className="text-sm font-semibold text-charcoal">{meal.name}</h3>
           <p className="mt-0.5 text-xs text-charcoal/55">
-            {meal.hostelName ?? "Branch assigned"}
+            {meal.hostelName ?? 'Branch assigned'}
           </p>
         </div>
       </div>
@@ -34,5 +34,5 @@ export default function MealCard({ meal, isSaving, onEdit, onDelete }) {
         </Button>
       </div>
     </div>
-  );
+  )
 }
