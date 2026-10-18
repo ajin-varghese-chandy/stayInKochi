@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Receipt } from 'lucide-react'
+import Alert from '../../components/ui/Alert'
+import Button from '../../components/ui/Button'
+import EmptyState from '../../components/ui/EmptyState'
+import PageHeader from '../../components/ui/PageHeader'
+import StatusBadge from '../../components/ui/StatusBadge'
 import Spinner from '../../components/common/Spinner'
-import TenantNav from '../../components/layout/TenantNav'
 import { selectCurrentUser } from '../../features/auth/authSlice'
 import PaymentSummary from '../../features/payments/components/PaymentSummary'
 import {
@@ -14,12 +19,14 @@ import {
   selectPaymentsSaving,
 } from '../../features/payments/paymentSlice'
 import { getTenantsByUser } from '../../features/tenants/tenantService'
+import formatRupees from '../../utils/formatRupees'
 
-const STATUS_STYLES = {
-  paid: 'bg-green-100 text-green-700',
-  pending: 'bg-amber-100 text-amber-700',
-  failed: 'bg-red-100 text-red-700',
-  cancelled: 'bg-slate-100 text-slate-600',
+// "2026-10" -> "October 2026" for the due-month line.
+function monthLabel(month) {
+  const date = new Date(`${month}-01T00:00:00`)
+  return Number.isNaN(date.getTime())
+    ? month
+    : date.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
 }
 
 // Tenant screen for paying rent through Razorpay and viewing payment history.
@@ -64,19 +71,40 @@ export default function TenantPaymentsPage() {
   }
 
   if (tenancyLoading) {
-    return <Spinner label="Checking your tenancy..." />
+    return (
+      <section>
+        <PageHeader
+          eyebrow="Tenant portal"
+          title="Rent"
+          description="Pay your rent and track every payment."
+        />
+        <div className="mt-6">
+          <Spinner compact label="Checking your tenancy…" />
+        </div>
+      </section>
+    )
   }
 
   if (!tenancy) {
     return (
-      <section className="mx-auto max-w-4xl px-4 py-12">
-        <h1 className="text-3xl font-bold text-slate-900">Rent</h1>
+      <section>
+        <PageHeader
+          eyebrow="Tenant portal"
+          title="Rent"
+          description="Pay your rent and track every payment."
+        />
         <div className="mt-6">
-          <TenantNav />
+          <EmptyState
+            icon={Receipt}
+            title="Only active tenants can pay rent"
+            hint="Once the owner approves a stay request, rent and receipts appear here."
+            action={
+              <Button to="/hostels" variant="secondary">
+                Browse branches
+              </Button>
+            }
+          />
         </div>
-        <p className="mt-6 text-slate-600">
-          Only active tenants can pay rent.
-        </p>
       </section>
     )
   }
@@ -85,65 +113,158 @@ export default function TenantPaymentsPage() {
   const paidThisMonth = payments.some(
     (payment) => payment.month === currentMonth && payment.status === 'paid',
   )
+  const rentAmount = tenancy.rentPerMonth ?? 0
 
   return (
-    <section className="mx-auto max-w-4xl px-4 py-12">
-      <h1 className="text-3xl font-bold text-slate-900">Rent</h1>
-      <p className="mt-1 text-slate-600">{tenancy.hostelName}</p>
+    <section>
+      <PageHeader
+        eyebrow="Tenant portal"
+        title="Rent"
+        description={tenancy.hostelName}
+      />
 
-      <div className="mt-6">
-        <TenantNav />
-      </div>
+      <div className="mt-6 space-y-6">
+        {/* Rent due */}
+        <section className="card p-5" aria-label="Rent due">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="eyebrow">Rent due</p>
+              <p className="mt-2 text-2xl font-semibold tabular-nums text-charcoal">
+                {formatRupees(rentAmount)}
+              </p>
+              <p className="mt-1 text-sm text-charcoal/55">
+                For {monthLabel(currentMonth)}
+              </p>
+            </div>
 
-      <div className="mt-6">
+            <StatusBadge status={paidThisMonth ? 'paid' : 'unpaid'} />
+          </div>
+
+          <div className="mt-4">
+            <Button
+              size="lg"
+              block
+              onClick={() => handlePay(currentMonth)}
+              disabled={isSaving}
+            >
+              {isSaving
+                ? 'Processing payment…'
+                : `Pay ${formatRupees(rentAmount)}`}
+            </Button>
+          </div>
+        </section>
+
+        {saveError && <Alert tone="error">{saveError}</Alert>}
+
         <PaymentSummary
           tenant={tenancy}
           paidThisMonth={paidThisMonth}
           isSaving={isSaving}
           onPay={handlePay}
         />
-      </div>
 
-      {saveError && <p className="mt-4 text-red-600">{saveError}</p>}
+        {/* Payment history */}
+        <section aria-labelledby="payment-history-heading">
+          <h2
+            id="payment-history-heading"
+            className="text-base font-semibold text-charcoal"
+          >
+            Payment history
+          </h2>
 
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold text-slate-900">Payment history</h2>
+          <div className="mt-3">
+            {isLoading && <Spinner compact label="Loading payments…" />}
 
-        {isLoading && <Spinner label="Loading payments..." />}
+            {error && (
+              <Alert tone="error">Could not load payments: {error}</Alert>
+            )}
 
-        {error && (
-          <p className="mt-4 text-red-600">Could not load payments: {error}</p>
-        )}
+            {!isLoading && !error && payments.length === 0 && (
+              <EmptyState
+                icon={Receipt}
+                title="No payments yet"
+                hint="Every rent payment you make will show up here with its receipt details."
+              />
+            )}
 
-        {!isLoading && !error && payments.length === 0 && (
-          <p className="mt-4 text-slate-600">No payments yet.</p>
-        )}
+            {!isLoading && !error && payments.length > 0 && (
+              <>
+                {/* Stacked cards — the mobile view */}
+                <div className="space-y-3 sm:hidden">
+                  {payments.map((payment) => (
+                    <div key={payment.id} className="card p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="text-sm font-semibold text-charcoal">
+                          {payment.month}
+                        </p>
 
-        <div className="mt-4 space-y-3">
-          {payments.map((payment) => (
-            <div
-              key={payment.id}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white p-4"
-            >
-              <div>
-                <p className="font-medium text-slate-900">
-                  {payment.month} · ₹{payment.amount?.toLocaleString('en-IN')}
-                </p>
-                <p className="text-sm text-slate-500">
-                  {payment.status === 'paid' && payment.paidOn
-                    ? `Paid on ${payment.paidOn}`
-                    : `Created on ${payment.createdAt}`}
-                </p>
-              </div>
+                        <StatusBadge status={payment.status} />
+                      </div>
 
-              <span
-                className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${STATUS_STYLES[payment.status] ?? 'bg-slate-100 text-slate-600'}`}
-              >
-                {payment.status}
-              </span>
-            </div>
-          ))}
-        </div>
+                      <p className="mt-2 text-base font-semibold tabular-nums text-forest">
+                        {formatRupees(payment.amount)}
+                      </p>
+
+                      <p className="mt-1 text-xs text-charcoal/55">
+                        {payment.status === 'paid' && payment.paidOn
+                          ? `Paid on ${payment.paidOn}`
+                          : `Created on ${payment.createdAt}`}
+                        {payment.razorpayPaymentId
+                          ? ` · ${payment.razorpayPaymentId}`
+                          : ''}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Table — from sm up */}
+                <div className="table-wrap card hidden sm:block">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Month</th>
+                        <th className="align-right">Amount</th>
+                        <th>Status</th>
+                        <th>Paid on</th>
+                        <th>Payment ID</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {payments.map((payment) => (
+                        <tr key={payment.id}>
+                          <td className="font-medium text-charcoal">
+                            {payment.month}
+                          </td>
+                          <td className="num align-right">
+                            <span className="text-base font-semibold tabular-nums text-forest">
+                              {formatRupees(payment.amount)}
+                            </span>
+                          </td>
+                          <td>
+                            <StatusBadge status={payment.status} />
+                          </td>
+                          <td>
+                            <span className="text-sm text-charcoal">
+                              {payment.paidOn ?? '—'}
+                            </span>
+                            {!payment.paidOn && payment.createdAt && (
+                              <span className="block text-xs text-charcoal/55">
+                                Created {payment.createdAt}
+                              </span>
+                            )}
+                          </td>
+                          <td className="text-xs text-charcoal/55">
+                            {payment.razorpayPaymentId || '—'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+          </div>
+        </section>
       </div>
     </section>
   )

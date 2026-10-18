@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import TenantNav from '../../components/layout/TenantNav'
+import { BedDouble, LogOut, Pencil } from 'lucide-react'
+import Alert from '../../components/ui/Alert'
+import Button from '../../components/ui/Button'
+import EmptyState from '../../components/ui/EmptyState'
+import PageHeader from '../../components/ui/PageHeader'
+import StatusBadge from '../../components/ui/StatusBadge'
 import FormField from '../../components/common/FormField'
 import Spinner from '../../components/common/Spinner'
-import { selectCurrentUser } from '../../features/auth/authSlice'
+import { logout, selectCurrentUser } from '../../features/auth/authSlice'
 import { getTenantsByUser, updateTenant } from '../../features/tenants/tenantService'
+import formatRupees from '../../utils/formatRupees'
 
 // Tenant screen to view and edit their profile details.
 export default function TenantProfilePage() {
@@ -19,6 +25,7 @@ export default function TenantProfilePage() {
   const [phone, setPhone] = useState('')
   const [saving, setSaving] = useState(false)
   const [saveMsg, setSaveMsg] = useState(null)
+  const [editing, setEditing] = useState(false)
 
   useEffect(() => {
     if (!user?.uid) return
@@ -55,80 +62,180 @@ export default function TenantProfilePage() {
     }
   }
 
-  if (tenancyLoading) return <Spinner label="Loading profile..." />
+  if (tenancyLoading) {
+    return (
+      <section>
+        <PageHeader
+          eyebrow="Tenant portal"
+          title="Profile"
+          description="Your account and current tenancy."
+        />
+        <div className="mt-6">
+          <Spinner compact label="Loading profile…" />
+        </div>
+      </section>
+    )
+  }
 
   return (
-    <section className="mx-auto max-w-4xl px-4 py-12">
-      <h1 className="text-3xl font-bold text-slate-900">My profile</h1>
-      <p className="mt-2 text-slate-600">
-        {user?.email}
-      </p>
+    <section>
+      <PageHeader
+        eyebrow="Tenant portal"
+        title="Profile"
+        description={user?.email}
+      />
 
-      <div className="mt-6">
-        <TenantNav />
-      </div>
-
-      {/* Tenancy info card */}
-      {tenancy && (
-        <div className="mt-8 rounded-lg border border-indigo-100 bg-indigo-50 p-4">
-          <p className="text-sm font-semibold uppercase tracking-wide text-indigo-600">
-            Active tenancy
-          </p>
-          <p className="mt-1 font-medium text-slate-900">{tenancy.hostelName}</p>
-          <div className="mt-2 grid grid-cols-2 gap-2 text-sm text-slate-600 sm:grid-cols-4">
-            <span>Room: <strong>{tenancy.roomNumber ?? '—'}</strong></span>
-            <span>Bed: <strong>{tenancy.bedNumber ?? '—'}</strong></span>
-            <span>Joined: <strong>{tenancy.joinedOn ?? '—'}</strong></span>
-            <span>
-              Rent:{' '}
-              <strong className={tenancy.rentStatus === 'paid' ? 'text-green-700' : 'text-amber-700'}>
-                {tenancy.rentStatus ?? 'unpaid'}
-              </strong>
-            </span>
-          </div>
-        </div>
-      )}
-
-      {!tenancy && (
-        <div className="mt-8 rounded-lg border border-slate-200 bg-slate-50 p-4 text-slate-600">
-          You are not an active tenant yet. Your profile will show tenancy details once you move in.
-        </div>
-      )}
-
-      {/* Edit form — only for active tenants who have a record to update */}
-      {tenancy && (
-        <form onSubmit={handleSubmit} className="mt-8 space-y-4 rounded-lg border border-slate-200 bg-white p-4">
-          <h2 className="text-lg font-semibold text-slate-900">Edit details</h2>
-
-          <FormField
-            label="Full name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            autoComplete="name"
-          />
-          <FormField
-            label="Phone number"
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            autoComplete="tel"
-          />
-
-          {saveMsg && (
-            <p className={`text-sm ${saveMsg.type === 'ok' ? 'text-green-700' : 'text-red-600'}`}>
-              {saveMsg.text}
+      <div className="mt-6 space-y-6">
+        {/* Identity + edit form */}
+        <section className="card p-5" aria-labelledby="account-heading">
+          <div className="flex items-center justify-between gap-3">
+            <p id="account-heading" className="eyebrow">
+              Account
             </p>
-          )}
 
-          <button
-            type="submit"
-            disabled={saving}
-            className="rounded-md bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
+            {tenancy && !editing && (
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => setEditing(true)}
+              >
+                <Pencil size={14} strokeWidth={1.75} aria-hidden="true" />
+                Edit
+              </Button>
+            )}
+          </div>
+
+          <dl className="mt-3">
+            <div className="flex justify-between border-b border-line py-2 text-sm last:border-0">
+              <dt className="text-charcoal/55">Name</dt>
+              <dd className="font-medium text-charcoal">
+                {tenancy?.name ?? user?.displayName ?? '—'}
+              </dd>
+            </div>
+            <div className="flex justify-between border-b border-line py-2 text-sm last:border-0">
+              <dt className="text-charcoal/55">Email</dt>
+              <dd className="font-medium text-charcoal">
+                {user?.email ?? '—'}
+              </dd>
+            </div>
+            <div className="flex justify-between border-b border-line py-2 text-sm last:border-0">
+              <dt className="text-charcoal/55">Phone</dt>
+              <dd className="font-medium text-charcoal">
+                {tenancy?.phone || '—'}
+              </dd>
+            </div>
+          </dl>
+
+          {tenancy && editing && (
+            <form
+              onSubmit={handleSubmit}
+              className="mt-5 space-y-4 border-t border-line pt-5"
+            >
+              <FormField
+                label="Full name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                autoComplete="name"
+              />
+              <FormField
+                label="Phone number"
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                autoComplete="tel"
+              />
+
+              {saveMsg &&
+                (saveMsg.type === 'ok' ? (
+                  <Alert tone="success">{saveMsg.text}</Alert>
+                ) : (
+                  <Alert tone="error">{saveMsg.text}</Alert>
+                ))}
+
+              <div className="flex flex-wrap gap-2">
+                <Button type="submit" disabled={saving}>
+                  {saving ? 'Saving…' : 'Save changes'}
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => setEditing(false)}
+                  disabled={saving}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          )}
+        </section>
+
+        {/* Current tenancy */}
+        {tenancy ? (
+          <section
+            className="rounded-card bg-forest p-5 text-ivory"
+            aria-labelledby="tenancy-heading"
           >
-            {saving ? 'Saving…' : 'Save changes'}
-          </button>
-        </form>
-      )}
+            <p className="eyebrow eyebrow-light" id="tenancy-heading">
+              Current tenancy
+            </p>
+            <p className="mt-2 text-base font-semibold text-ivory">
+              {tenancy.hostelName}
+            </p>
+
+            <dl className="mt-3">
+              <div className="flex justify-between border-b border-ivory/20 py-2 text-sm last:border-0">
+                <dt className="text-ivory/75">Room</dt>
+                <dd className="font-medium text-ivory">
+                  {tenancy.roomNumber ?? '—'}
+                </dd>
+              </div>
+              <div className="flex justify-between border-b border-ivory/20 py-2 text-sm last:border-0">
+                <dt className="text-ivory/75">Bed</dt>
+                <dd className="font-medium text-ivory">
+                  {tenancy.bedNumber ?? '—'}
+                </dd>
+              </div>
+              <div className="flex justify-between border-b border-ivory/20 py-2 text-sm last:border-0">
+                <dt className="text-ivory/75">Joined on</dt>
+                <dd className="font-medium text-ivory">
+                  {tenancy.joinedOn ?? '—'}
+                </dd>
+              </div>
+              <div className="flex justify-between border-b border-ivory/20 py-2 text-sm last:border-0">
+                <dt className="text-ivory/75">Rent</dt>
+                <dd className="flex items-center gap-2">
+                  <span className="font-semibold tabular-nums text-ivory">
+                    {formatRupees(tenancy.rentPerMonth)}
+                  </span>
+                  <StatusBadge status={tenancy.rentStatus ?? 'unpaid'} />
+                </dd>
+              </div>
+            </dl>
+          </section>
+        ) : (
+          <EmptyState
+            icon={BedDouble}
+            title="Not an active tenant yet"
+            hint="Your profile will show room, bed, and rent details once you move in."
+            action={
+              <Button to="/hostels" variant="secondary">
+                Browse branches
+              </Button>
+            }
+          />
+        )}
+
+        {/* Sign out */}
+        <div className="border-t border-line pt-5">
+          <Button
+            variant="secondary"
+            block
+            onClick={() => dispatch(logout())}
+          >
+            <LogOut size={16} strokeWidth={1.75} aria-hidden="true" />
+            Sign out
+          </Button>
+        </div>
+      </div>
     </section>
   )
 }

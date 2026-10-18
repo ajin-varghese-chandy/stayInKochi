@@ -1,11 +1,19 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { MessageCircle, Users } from 'lucide-react'
+import Alert from '../../components/ui/Alert'
+import Button from '../../components/ui/Button'
+import PageHeader from '../../components/ui/PageHeader'
 import Spinner from '../../components/common/Spinner'
-import TenantNav from '../../components/layout/TenantNav'
 import { selectCurrentUser } from '../../features/auth/authSlice'
 import ChatWindow from '../../features/chat/components/ChatWindow'
 import ConversationListItem from '../../features/chat/components/ConversationListItem'
 import { getTenantsByUser } from '../../features/tenants/tenantService'
+
+const ROOM_COPY = {
+  hostel: 'Talk with the other tenants at your branch.',
+  direct: 'Message the owner directly about your stay or rent.',
+}
 
 // Tenant screen: their hostel's group chat plus a private line to the owner.
 export default function TenantChatPage() {
@@ -68,43 +76,84 @@ export default function TenantChatPage() {
   }, [tenancy, user])
 
   if (tenancyLoading) {
-    return <Spinner label="Loading your chats..." />
+    return (
+      <section>
+        <PageHeader
+          eyebrow="Tenant portal"
+          title="Messages"
+          description="Your branch's group chat and a private line to the owner."
+        />
+        <div className="mt-6">
+          <Spinner compact label="Loading your chats…" />
+        </div>
+      </section>
+    )
   }
 
   const activeConversation =
     conversations.find((item) => item.key === conversation?.key) ?? null
 
   return (
-    <section className="mx-auto max-w-5xl px-4 py-12">
-      <h1 className="text-3xl font-bold text-slate-900">Chat</h1>
-      <p className="mt-1 text-slate-600">
-        Your branch's group chat and a private line to the owner.
-      </p>
+    <section>
+      <PageHeader
+        eyebrow="Tenant portal"
+        title="Messages"
+        description="Your branch's group chat and a private line to the owner."
+      />
 
-      <div className="mt-6">
-        <TenantNav />
-      </div>
+      <div className="mt-6 space-y-5">
+        {!tenancy && (
+          <Alert tone="info">
+            Join a branch to use the group chat. You can still message the
+            owner.
+          </Alert>
+        )}
 
-      {!tenancy && (
-        <p className="mt-6 rounded-md border border-slate-200 bg-slate-50 p-4 text-slate-600">
-          Join a branch to use the group chat. You can still message the owner.
-        </p>
-      )}
+        <div className="grid gap-5 lg:grid-cols-2">
+          {conversations.map((item) => {
+            const isActive = activeConversation?.key === item.key
+            const Icon = item.type === 'hostel' ? Users : MessageCircle
 
-      <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <div className="space-y-1">
-          {conversations.map((item) => (
-            <ConversationListItem
-              key={item.key}
-              conversation={item}
-              isActive={activeConversation?.key === item.key}
-              onSelect={setConversation}
-            />
-          ))}
-        </div>
+            return (
+              <section key={item.key} className="card flex flex-col">
+                <header className="flex items-center gap-3 border-b border-line p-4">
+                  <span
+                    className="flex size-9 shrink-0 items-center justify-center rounded-card bg-sage text-forest"
+                    aria-hidden="true"
+                  >
+                    <Icon size={18} strokeWidth={1.75} />
+                  </span>
 
-        <div className="md:col-span-2">
-          <ChatWindow conversation={activeConversation} sender={user} />
+                  <div className="min-w-0 flex-1">
+                    <ConversationListItem
+                      conversation={item}
+                      isActive={isActive}
+                      onSelect={setConversation}
+                    />
+                  </div>
+                </header>
+
+                <div className="flex-1">
+                  {isActive ? (
+                    <ChatWindow conversation={item} sender={user} />
+                  ) : (
+                    <div className="flex flex-col items-start gap-3 p-4">
+                      <p className="text-sm leading-relaxed text-charcoal/70">
+                        {ROOM_COPY[item.type]}
+                      </p>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => setConversation(item)}
+                      >
+                        Open chat
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </section>
+            )
+          })}
         </div>
       </div>
     </section>
