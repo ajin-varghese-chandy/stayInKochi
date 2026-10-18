@@ -165,7 +165,7 @@ export default function HostelDetailsPage() {
   return (
     <section className="mx-auto max-w-4xl px-4 py-12">
       <Link to="/hostels" className="text-indigo-600">
-        &larr; Back to hostels
+        &larr; Back to branches
       </Link>
 
       <img
@@ -176,7 +176,7 @@ export default function HostelDetailsPage() {
 
       <div className="mt-6 flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">{hostel.name}</h1>
+      <h1 className="text-3xl font-bold text-slate-900">{hostel.name}</h1>
           <p className="mt-1 text-slate-500">{hostel.location}</p>
         </div>
         <p className="font-semibold text-indigo-600">

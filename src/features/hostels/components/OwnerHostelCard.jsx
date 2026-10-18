@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import formatRupees from '../../../utils/formatRupees'
 
-// One hostel row on the owner's hostel management screen.
+// One branch row on the owner's branch management screen.
 export default function OwnerHostelCard({ hostel, isSaving, onEdit, onDelete }) {
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-4">
@@ -9,14 +9,17 @@ export default function OwnerHostelCard({ hostel, isSaving, onEdit, onDelete }) 
         <div>
           <h3 className="font-semibold text-slate-900">{hostel.name}</h3>
           <p className="text-sm text-slate-500">{hostel.location}</p>
+          {hostel.description && (
+            <p className="mt-1 line-clamp-1 text-sm text-slate-500">{hostel.description}</p>
+          )}
           <p className="mt-1 font-semibold text-indigo-600">
             {formatRupees(hostel.rentPerMonth)}
             <span className="font-normal text-slate-500"> /month</span>
           </p>
         </div>
-        <span className="text-sm text-slate-500">
-          {hostel.amenities?.length ?? 0} amenities
-        </span>
+        <div className="shrink-0 text-right text-sm text-slate-500">
+          <p>{hostel.amenities?.length ?? 0} amenities</p>
+        </div>
       </div>
 
       <div className="mt-4 flex flex-wrap gap-3 text-sm">

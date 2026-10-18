@@ -86,7 +86,7 @@ export default function OwnerRoomsPage() {
   return (
     <section className="mx-auto max-w-4xl px-4 py-12">
       <Link to="/owner/hostels" className="text-indigo-600">
-        &larr; Back to hostels
+        &larr; Back to branches
       </Link>
 
       <h1 className="mt-3 text-3xl font-bold text-slate-900">

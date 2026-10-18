@@ -34,7 +34,7 @@ export default function OwnerSwitchesPage() {
     <section className="mx-auto max-w-4xl px-4 py-12">
       <h1 className="text-3xl font-bold text-slate-900">Switch requests</h1>
       <p className="mt-1 text-slate-600">
-        Approving frees the old bed and moves the tenant to the new hostel.
+        Approving frees the old bed and moves the tenant to the new branch.
       </p>
 
       <div className="mt-6">

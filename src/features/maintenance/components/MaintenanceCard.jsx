@@ -17,7 +17,7 @@ export default function MaintenanceCard({
         <div>
           <h3 className="font-semibold text-slate-900">{request.title}</h3>
           <p className="text-sm text-slate-500">
-            {request.hostelName ?? 'Hostel'} · {request.tenantName ?? 'Tenant'}{' '}
+            {request.hostelName ?? 'Branch'} · {request.tenantName ?? 'Tenant'}{' '}
             · {request.createdAt?.slice(0, 10)}
           </p>
         </div>

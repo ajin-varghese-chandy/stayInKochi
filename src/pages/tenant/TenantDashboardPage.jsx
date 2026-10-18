@@ -85,7 +85,7 @@ export default function TenantDashboardPage() {
           <p className="mt-4 text-slate-600">
             You have not requested a stay yet.{' '}
             <Link to="/hostels" className="font-medium text-indigo-600 underline">
-              Browse hostels
+              Browse branches
             </Link>{' '}
             to get started.
           </p>
@@ -149,7 +149,7 @@ function TenancyBanner({ tenancy, isLoading }) {
     <div className="mt-6 rounded-md border border-slate-200 bg-slate-100 p-4 text-slate-600">
       You are not an active tenant yet.{' '}
       <Link to="/hostels" className="font-medium text-indigo-600 underline">
-        Browse hostels
+        Browse branches
       </Link>{' '}
       and submit a stay request — the owner approves it before you can move in.
     </div>

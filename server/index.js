@@ -31,7 +31,10 @@ const dbFile = join(rootDir, 'db.json')
 const db = {
   data: {},
   read() {
-    this.data = JSON.parse(readFileSync(dbFile, 'utf8'))
+    // Strip a UTF-8 BOM if present: JSON.parse rejects it, and editors on
+    // Windows sometimes add one when saving db.json.
+    const text = readFileSync(dbFile, 'utf8').replace(/^\uFEFF/, '')
+    this.data = JSON.parse(text)
   },
   write() {
     writeFileSync(dbFile, JSON.stringify(this.data, null, 2))
@@ -198,6 +201,17 @@ async function handleSecretsRoute(req, res, pathname) {
 
 const server = createServer((req, res) => {
   const { pathname } = new URL(req.url, 'http://localhost')
+
+  // Allow the Vite dev server (any origin in dev) to call all routes.
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS')
+
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204)
+    res.end()
+    return
+  }
 
   if (pathname.startsWith('/razorpay') || pathname.startsWith('/cloudinary')) {
     void handleSecretsRoute(req, res, pathname)

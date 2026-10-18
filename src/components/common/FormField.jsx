@@ -6,6 +6,7 @@ export default function FormField({
   onChange,
   required = true,
   autoComplete,
+  placeholder,
 }) {
   return (
     <label className="block">
@@ -16,7 +17,8 @@ export default function FormField({
         onChange={onChange}
         required={required}
         autoComplete={autoComplete}
-        className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-800 focus:border-indigo-500 focus:outline-none"
+        placeholder={placeholder}
+        className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-800 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
       />
     </label>
   )

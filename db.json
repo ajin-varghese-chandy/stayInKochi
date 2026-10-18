@@ -1,4 +1,4 @@
-﻿{
+{
   "hostels": [
     {
       "id": "h1",
@@ -60,16 +60,16 @@
       "roomId": "r1",
       "hostelId": "h1",
       "bedNumber": "A",
-      "status": "occupied",
-      "tenantId": "t1"
+      "status": "available",
+      "tenantId": null
     },
     {
       "id": "b2",
       "roomId": "r1",
       "hostelId": "h1",
       "bedNumber": "B",
-      "status": "available",
-      "tenantId": null
+      "status": "occupied",
+      "tenantId": "mrkB7wSUnNw"
     },
     {
       "id": "b3",
@@ -84,8 +84,8 @@
       "roomId": "r3",
       "hostelId": "h2",
       "bedNumber": "A",
-      "status": "available",
-      "tenantId": null
+      "status": "occupied",
+      "tenantId": "t1"
     }
   ],
   "tenants": [
@@ -95,31 +95,44 @@
       "name": "Arun Das",
       "email": "arun@example.com",
       "phone": "9876543210",
-      "hostelId": "h1",
-      "hostelName": "StayInKochi Kakkanad",
-      "roomId": "r1",
-      "roomNumber": "101",
-      "bedId": "b1",
+      "hostelId": "h2",
+      "hostelName": "StayInKochi Vytilla",
+      "roomId": "r3",
+      "roomNumber": "201",
+      "bedId": "b4",
       "bedNumber": "A",
-      "rentPerMonth": 8500,
-      "rentStatus": "paid",
+      "rentPerMonth": 7000,
+      "rentStatus": "unpaid",
       "joinedOn": "2026-01-05"
     },
     {
-      "rentPerMonth": null,
-      "bedNumber": null,
-      "bedId": null,
+      "rentPerMonth": 8500,
+      "bedNumber": "B",
+      "bedId": "b2",
       "hostelId": "h1",
       "uid": "JzT5tcsl4yMdyJl78zWYpJN2sfS2",
-      "roomNumber": null,
+      "roomNumber": "101",
       "name": "ajin ",
       "hostelName": "StayInKochi Kakkanad",
       "joinedOn": "2026-10-16",
       "phone": "1234567890",
-      "roomId": null,
+      "roomId": "r1",
       "rentStatus": "unpaid",
       "email": "ajin1@gmail.com",
       "id": "mrkB7wSUnNw"
+    },
+    {
+      "uid": "firebase-uid-2",
+      "name": "Priya Nair",
+      "email": "priya@example.com",
+      "phone": "9876501234",
+      "hostelId": "h1",
+      "hostelName": "StayInKochi Kakkanad",
+      "roomId": null,
+      "bedId": null,
+      "rentStatus": "unpaid",
+      "joinedOn": "2026-10-18",
+      "id": "bvhXMZofMS0"
     }
   ],
   "foodPlans": [
@@ -181,8 +194,9 @@
       "tenantEmail": "priya@example.com",
       "phone": "9876501234",
       "message": "Looking for a quiet place near work.",
-      "status": "pending",
-      "requestedOn": "2026-02-01"
+      "status": "approved",
+      "requestedOn": "2026-02-01",
+      "decidedOn": "2026-10-18"
     },
     {
       "id": "s2",
@@ -280,7 +294,7 @@
       "id": "n2",
       "uid": "owner",
       "message": "Priya Nair requested a stay at Green Nest Hostel.",
-      "read": false,
+      "read": true,
       "createdAt": "2026-02-01T09:00:00.000Z"
     },
     {
@@ -289,6 +303,20 @@
       "read": false,
       "createdAt": "2026-10-16T18:21:34.351Z",
       "id": "zQ8Y-CiZ3KE"
+    },
+    {
+      "uid": "firebase-uid-2",
+      "message": "Your stay request for StayInKochi Kakkanad was approved.",
+      "read": false,
+      "createdAt": "2026-10-18T04:16:23.074Z",
+      "id": "ZaMeYt1uIWg"
+    },
+    {
+      "uid": "firebase-uid-1",
+      "message": "Your switch to StayInKochi Vytilla was approved. Ask the owner to assign you a bed.",
+      "read": false,
+      "createdAt": "2026-10-18T04:17:46.463Z",
+      "id": "nriigXz6SHs"
     }
   ],
   "planSubscriptions": [
@@ -329,11 +357,11 @@
       "toHostelId": "h2",
       "toHostelName": "StayInKochi Vytilla",
       "amount": 500,
-      "status": "pending",
+      "status": "approved",
       "razorpayPaymentId": "pay_seed_001",
       "paidOn": "2026-02-10",
       "createdAt": "2026-02-10",
-      "decidedOn": ""
+      "decidedOn": "2026-10-18"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

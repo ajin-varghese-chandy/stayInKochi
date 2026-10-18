@@ -6,7 +6,7 @@ export default function MealCard({ meal, isSaving, onEdit, onDelete }) {
         <div>
           <h3 className="font-semibold text-slate-900">{meal.name}</h3>
           <p className="text-sm text-slate-500">
-            {meal.hostelName ?? 'Hostel assigned'}
+            {meal.hostelName ?? 'Branch assigned'}
           </p>
           <p className="mt-1 font-semibold text-indigo-600">
             ₹{meal.price}

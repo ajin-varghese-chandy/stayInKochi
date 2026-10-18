@@ -35,7 +35,7 @@ export async function registerUser({ email, password, displayName }) {
 // Sign in and return the profile for that user.
 export async function loginUser({ email, password }) {
   const credential = await signInWithEmailAndPassword(auth, email, password)
-  const savedProfile = await loadUserProfile(credential.user.uid)
+  const savedProfile = await loadSavedProfileSafe(credential.user.uid)
   return buildProfile(credential.user, savedProfile)
 }
 
@@ -49,6 +49,18 @@ export async function loadUserProfile(uid) {
   return snapshot.exists() ? snapshot.val() : null
 }
 
+// Same as loadUserProfile, but never throws: sign-in and the auth listener must
+// still succeed even when the database read fails (e.g. while rules are being
+// set up), so the user falls back to a profile built from their Firebase account.
+async function loadSavedProfileSafe(uid) {
+  try {
+    return await loadUserProfile(uid)
+  } catch (error) {
+    console.error('Could not load saved user profile:', error)
+    return null
+  }
+}
+
 // Run `callback` with the signed-in profile (or null when signed out) whenever
 // the Firebase auth state changes. Returns an unsubscribe function.
 export function subscribeToAuthChange(callback) {
@@ -58,7 +70,10 @@ export function subscribeToAuthChange(callback) {
       return
     }
 
-    const savedProfile = await loadUserProfile(firebaseUser.uid)
+    // Use the non-throwing read here: if this callback throws, `callback` is
+    // never invoked, the app stays in its initial "loading" state, and the
+    // login/register buttons are stuck on "Signing in..." forever.
+    const savedProfile = await loadSavedProfileSafe(firebaseUser.uid)
     callback(buildProfile(firebaseUser, savedProfile))
   })
 }

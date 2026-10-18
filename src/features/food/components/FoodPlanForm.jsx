@@ -65,14 +65,14 @@ export default function FoodPlanForm({ foodPlan, onDone }) {
       </h2>
 
       <label className="block">
-        <span className="block text-sm font-medium text-slate-700">Hostel</span>
+        <span className="block text-sm font-medium text-slate-700">Branch</span>
         <select
           value={hostelId}
           onChange={(event) => setHostelId(event.target.value)}
           required
           className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-800 focus:border-indigo-500 focus:outline-none"
         >
-          <option value="">Select a hostel...</option>
+          <option value="">Select a branch...</option>
           {hostels.map((hostel) => (
             <option key={hostel.id} value={hostel.id}>
               {hostel.name}

@@ -78,7 +78,7 @@ export default function TenantChatPage() {
     <section className="mx-auto max-w-5xl px-4 py-12">
       <h1 className="text-3xl font-bold text-slate-900">Chat</h1>
       <p className="mt-1 text-slate-600">
-        Your hostel's group chat and a private line to the owner.
+        Your branch's group chat and a private line to the owner.
       </p>
 
       <div className="mt-6">
@@ -87,7 +87,7 @@ export default function TenantChatPage() {
 
       {!tenancy && (
         <p className="mt-6 rounded-md border border-slate-200 bg-slate-50 p-4 text-slate-600">
-          Join a hostel to use the group chat. You can still message the owner.
+          Join a branch to use the group chat. You can still message the owner.
         </p>
       )}
 

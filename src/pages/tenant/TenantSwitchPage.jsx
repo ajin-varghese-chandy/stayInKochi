@@ -69,7 +69,7 @@ export default function TenantSwitchPage() {
   if (!tenancy) {
     return (
       <section className="mx-auto max-w-4xl px-4 py-12">
-        <h1 className="text-3xl font-bold text-slate-900">Switch hostel</h1>
+        <h1 className="text-3xl font-bold text-slate-900">Switch branch</h1>
         <div className="mt-6">
           <TenantNav />
         </div>
@@ -89,7 +89,7 @@ export default function TenantSwitchPage() {
 
   return (
     <section className="mx-auto max-w-4xl px-4 py-12">
-      <h1 className="text-3xl font-bold text-slate-900">Switch hostel</h1>
+      <h1 className="text-3xl font-bold text-slate-900">Switch branch</h1>
       <p className="mt-1 text-slate-600">
         Currently at {tenancy.hostelName} · fee ₹
         {SWITCH_FEE_RUPEES.toLocaleString('en-IN')}
@@ -106,10 +106,10 @@ export default function TenantSwitchPage() {
       )}
 
       <div className="mt-8">
-        <h2 className="text-xl font-semibold text-slate-900">Other hostels</h2>
+        <h2 className="text-xl font-semibold text-slate-900">Other branches</h2>
 
         {otherHostels.length === 0 && (
-          <p className="mt-4 text-slate-600">There are no other hostels yet.</p>
+          <p className="mt-4 text-slate-600">There are no other branches yet.</p>
         )}
 
         <div className="mt-4 space-y-3">

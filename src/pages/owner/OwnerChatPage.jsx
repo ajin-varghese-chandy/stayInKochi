@@ -56,7 +56,7 @@ export default function OwnerChatPage() {
     <section className="mx-auto max-w-5xl px-4 py-12">
       <h1 className="text-3xl font-bold text-slate-900">Chat</h1>
       <p className="mt-1 text-slate-600">
-        Group chats with each hostel, and private chats with tenants.
+        Group chats with each branch, and private chats with tenants.
       </p>
 
       <div className="mt-6">
@@ -66,7 +66,7 @@ export default function OwnerChatPage() {
       <div className="mt-6 grid gap-4 md:grid-cols-3">
         <div className="space-y-6">
           <ChatSection
-            title="Hostel groups"
+            title="Branch groups"
             conversations={groupChats}
             activeKey={activeConversation?.key}
             onSelect={setConversation}

@@ -6,7 +6,7 @@ import {
   clearAuthError,
   login,
   selectAuthError,
-  selectAuthLoading,
+  selectAuthSubmitting,
 } from '../features/auth/authSlice'
 
 // Sign-in form for existing users.
@@ -15,7 +15,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
 
   const dispatch = useDispatch()
-  const isLoading = useSelector(selectAuthLoading)
+  const isSubmitting = useSelector(selectAuthSubmitting)
   const error = useSelector(selectAuthError)
   const navigate = useNavigate()
   const location = useLocation()
@@ -65,10 +65,10 @@ export default function LoginPage() {
 
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isSubmitting}
           className="w-full rounded-md bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
         >
-          {isLoading ? 'Signing in...' : 'Login'}
+          {isSubmitting ? 'Signing in...' : 'Login'}
         </button>
       </form>
 

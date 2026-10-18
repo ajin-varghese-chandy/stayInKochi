@@ -8,7 +8,7 @@ export default function FoodPlanCard({ foodPlan, isSaving, onEdit, onDelete }) {
         <div>
           <h3 className="font-semibold text-slate-900">{foodPlan.name}</h3>
           <p className="text-sm text-slate-500">
-            {foodPlan.hostelName ?? 'Hostel assigned'}
+            {foodPlan.hostelName ?? 'Branch assigned'}
           </p>
           <p className="mt-1 font-semibold text-indigo-600">
             {formatRupees(foodPlan.pricePerMonth)}

@@ -6,7 +6,7 @@ const TABS = [
   { to: '/tenant/chat', label: 'Chat' },
   { to: '/tenant/maintenance', label: 'Maintenance' },
   { to: '/tenant/payments', label: 'Rent' },
-  { to: '/tenant/switch', label: 'Switch' },
+  { to: '/tenant/switch', label: 'Switch Branch' },
   { to: '/tenant/profile', label: 'Profile' },
 ]
 
