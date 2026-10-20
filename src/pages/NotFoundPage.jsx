@@ -5,7 +5,7 @@ export default function NotFoundPage() {
   return (
     <section className="mx-auto flex max-w-lg flex-col items-center px-4 py-20 text-center sm:py-28">
       <p className="eyebrow text-terracotta">Error 404</p>
-      <h1 className="mt-3 font-serif text-4xl text-charcoal sm:text-5xl">
+      <h1 className="mt-3 display text-4xl text-charcoal sm:text-5xl">
         This room doesn’t exist.
       </h1>
       <p className="mt-4 text-sm leading-relaxed text-charcoal/65">

@@ -144,7 +144,7 @@ export default function TenantSwitchPage() {
           </p>
           <p className="mt-2 text-base font-semibold tabular-nums text-forest">
             {formatRupees(SWITCH_FEE_RUPEES)}
-            <span className="ml-1.5 text-xs font-normal text-charcoal/55">
+            <span className="ml-1.5 text-xs font-normal text-charcoal/70">
               one-time
             </span>
           </p>
@@ -223,7 +223,7 @@ export default function TenantSwitchPage() {
                         <p className="text-sm font-semibold text-charcoal">
                           {request.fromHostelName} → {request.toHostelName}
                         </p>
-                        <p className="mt-0.5 text-xs text-charcoal/55">
+                        <p className="mt-0.5 text-xs text-charcoal/70">
                           Requested {request.createdAt} ·{' '}
                           <span className="font-semibold tabular-nums text-forest">
                             {formatRupees(request.amount)}

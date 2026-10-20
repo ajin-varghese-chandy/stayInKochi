@@ -56,7 +56,7 @@ export default function LoginPage() {
 
       <div className="card p-6 sm:p-8">
         <p className="eyebrow text-terracotta">Welcome back</p>
-        <h1 className="mt-2 font-serif text-[1.75rem] leading-tight text-charcoal">
+        <h1 className="mt-2 display text-[1.75rem] leading-tight text-charcoal">
           Sign in to your stay
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-charcoal/65">

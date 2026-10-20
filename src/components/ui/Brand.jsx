@@ -30,7 +30,7 @@ export default function Brand({ to = '/', tone = 'dark', markSize = 'h-7 w-7' })
     <Link to={to} className="group inline-flex items-center gap-2.5">
       <BrandMark className={`${markSize} shrink-0`} />
       <span
-        className={`font-serif text-[1.15rem] leading-none tracking-tight ${textClass} transition-colors`}
+        className={`display text-[1.15rem] leading-none ${textClass} transition-colors`}
       >
         StayInKochi
       </span>

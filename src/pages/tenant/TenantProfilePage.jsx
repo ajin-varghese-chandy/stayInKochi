@@ -107,19 +107,19 @@ export default function TenantProfilePage() {
 
           <dl className="mt-3">
             <div className="flex justify-between border-b border-line py-2 text-sm last:border-0">
-              <dt className="text-charcoal/55">Name</dt>
+              <dt className="text-charcoal/70">Name</dt>
               <dd className="font-medium text-charcoal">
                 {tenancy?.name ?? user?.displayName ?? '—'}
               </dd>
             </div>
             <div className="flex justify-between border-b border-line py-2 text-sm last:border-0">
-              <dt className="text-charcoal/55">Email</dt>
+              <dt className="text-charcoal/70">Email</dt>
               <dd className="font-medium text-charcoal">
                 {user?.email ?? '—'}
               </dd>
             </div>
             <div className="flex justify-between border-b border-line py-2 text-sm last:border-0">
-              <dt className="text-charcoal/55">Phone</dt>
+              <dt className="text-charcoal/70">Phone</dt>
               <dd className="font-medium text-charcoal">
                 {tenancy?.phone || '—'}
               </dd>

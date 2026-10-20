@@ -57,14 +57,6 @@ export default function Footer() {
                     Tenant portal
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    to="/owner"
-                    className="text-white/65 transition-colors hover:text-white"
-                  >
-                    Owner console
-                  </Link>
-                </li>
               </ul>
             </div>
           </div>

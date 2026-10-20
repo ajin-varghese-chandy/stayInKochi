@@ -6,7 +6,7 @@ export default function MessageBubble({ message, isOwnMessage }) {
       className={`flex flex-col ${isOwnMessage ? 'items-end' : 'items-start'}`}
     >
       <div
-        className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-sm ${
+        className={`max-w-[85%] rounded-card px-3.5 py-2 text-sm ${
           isOwnMessage
             ? 'bg-forest text-ivory'
             : 'border border-line bg-white text-charcoal'

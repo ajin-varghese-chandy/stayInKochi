@@ -182,7 +182,7 @@ export default function TenantFoodPage() {
                   </p>
                   <p className="mt-1 text-base font-semibold tabular-nums text-forest">
                     {formatRupees(subscription.pricePerMonth)}
-                    <span className="ml-1 text-xs font-normal text-charcoal/55">
+                    <span className="ml-1 text-xs font-normal text-charcoal/70">
                       /month
                     </span>
                   </p>
@@ -310,7 +310,7 @@ export default function TenantFoodPage() {
                           <p className="text-sm font-semibold text-charcoal">
                             {booking.mealName}
                           </p>
-                          <p className="mt-0.5 text-xs text-charcoal/55">
+                          <p className="mt-0.5 text-xs text-charcoal/70">
                             {booking.date}
                           </p>
                         </div>

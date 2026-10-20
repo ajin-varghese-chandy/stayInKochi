@@ -187,7 +187,7 @@ export default function HostelDetailsPage() {
       {/* Title */}
       <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-serif text-3xl leading-tight text-charcoal sm:text-4xl">
+          <h1 className="display text-3xl leading-tight text-charcoal sm:text-4xl">
             {hostel.name}
           </h1>
           <p className="mt-2 flex items-center gap-1.5 text-sm text-charcoal/65">

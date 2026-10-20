@@ -3,7 +3,7 @@
 // Branches currently store a single placeholder image in db.json. When that
 // image is a picsum placeholder we derive two extra placeholder frames from
 // its seed so the gallery is real, clickable markup that can be swapped for
-// Cloudinary URLs later. Any other (real) image URL is returned as-is, so a
+// real image URLs later. Any other (real) image URL is returned as-is, so a
 // branch with one real photo never shows invented extra photos.
 export default function hostelPhotos(hostel) {
   const main = hostel?.image

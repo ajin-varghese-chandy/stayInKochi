@@ -49,7 +49,7 @@ export default function RegisterPage() {
 
       <div className="card p-6 sm:p-8">
         <p className="eyebrow text-terracotta">Join StayInKochi</p>
-        <h1 className="mt-2 font-serif text-[1.75rem] leading-tight text-charcoal">
+        <h1 className="mt-2 display text-[1.75rem] leading-tight text-charcoal">
           Create your account
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-charcoal/65">

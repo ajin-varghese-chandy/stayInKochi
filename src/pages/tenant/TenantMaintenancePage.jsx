@@ -178,7 +178,7 @@ export default function TenantMaintenancePage() {
               !error &&
               requests.length > 0 &&
               visibleRequests.length === 0 && (
-                <p className="text-sm text-charcoal/55">
+                <p className="text-sm text-charcoal/70">
                   No requests with this status.
                 </p>
               )}
