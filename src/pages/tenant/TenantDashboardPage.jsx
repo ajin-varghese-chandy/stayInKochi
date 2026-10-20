@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { BedDouble, FileText } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import {
+  ArrowLeftRight,
+  BedDouble,
+  FileText,
+  IndianRupee,
+  UtensilsCrossed,
+  Wrench,
+} from 'lucide-react'
 import Alert from '../../components/ui/Alert'
 import Button from '../../components/ui/Button'
 import EmptyState from '../../components/ui/EmptyState'
@@ -19,7 +27,36 @@ import {
 import { getTenantsByUser } from '../../features/tenants/tenantService'
 import formatRupees from '../../utils/formatRupees'
 
-// Tenant home base: active tenancy status plus this user's stay requests.
+// The four things a tenant actually does, as one-tap tiles.
+const QUICK_ACTIONS = [
+  {
+    to: '/tenant/payments',
+    icon: IndianRupee,
+    title: 'Pay rent',
+    desc: 'Rent due, payment history & receipts',
+  },
+  {
+    to: '/tenant/food',
+    icon: UtensilsCrossed,
+    title: 'Food plans',
+    desc: 'Monthly meal plans or single meals',
+  },
+  {
+    to: '/tenant/maintenance',
+    icon: Wrench,
+    title: 'Raise an issue',
+    desc: 'Report something that needs fixing',
+  },
+  {
+    to: '/tenant/switch',
+    icon: ArrowLeftRight,
+    title: 'Switch branch',
+    desc: 'Move to another StayInKochi branch',
+  },
+]
+
+// Tenant home base, ordered the way a tenant needs it: tenancy status first,
+// then the quick actions, notifications, and stay request history.
 export default function TenantDashboardPage() {
   const dispatch = useDispatch()
   const user = useSelector(selectCurrentUser)
@@ -56,19 +93,51 @@ export default function TenantDashboardPage() {
     }
   }, [dispatch, user?.uid])
 
+  const firstName = (user?.displayName ?? '').trim().split(' ')[0]
+
   return (
     <section>
       <PageHeader
         eyebrow="Tenant portal"
-        title="Overview"
-        description={`Welcome back, ${user?.displayName ?? 'tenant'}.`}
+        title={firstName ? `Welcome back, ${firstName}` : 'Overview'}
+        description={
+          tenancy
+            ? `${tenancy.hostelName} · Room ${tenancy.roomNumber ?? '—'} · Bed ${tenancy.bedNumber ?? '—'}`
+            : 'Your stay, rent, food, and requests — all in one place.'
+        }
       />
 
       <div className="mt-6 space-y-6">
-        <TenancyBanner tenancy={tenancy} isLoading={tenancyLoading} />
+        {/* Tenancy status */}
+        <TenancyStatus tenancy={tenancy} isLoading={tenancyLoading} />
 
+        {/* Quick actions — only meaningful once there is an active tenancy */}
+        {tenancy && (
+          <nav aria-label="Quick actions" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {QUICK_ACTIONS.map(({ to, icon: Icon, title, desc }) => (
+              <Link
+                key={to}
+                to={to}
+                className="card p-4 transition-colors hover:border-forest/40"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-card bg-sage/70 text-forest">
+                  <Icon size={17} strokeWidth={1.75} aria-hidden="true" />
+                </span>
+                <p className="mt-3 text-sm font-semibold text-charcoal">
+                  {title}
+                </p>
+                <p className="mt-1 text-xs leading-relaxed text-charcoal/70">
+                  {desc}
+                </p>
+              </Link>
+            ))}
+          </nav>
+        )}
+
+        {/* Notifications */}
         <NotificationInbox recipientId={user?.uid} />
 
+        {/* Stay requests */}
         <section aria-labelledby="stay-requests-heading">
           <h2
             id="stay-requests-heading"
@@ -109,8 +178,9 @@ export default function TenantDashboardPage() {
   )
 }
 
-// Shows whether the user is an active tenant yet, plus the next useful step.
-function TenancyBanner({ tenancy, isLoading }) {
+// Shows whether the user is an active tenant yet: a scannable status card
+// (branch name, rent badge, four stat tiles) or a clear next step.
+function TenancyStatus({ tenancy, isLoading }) {
   if (isLoading) {
     return <Spinner compact label="Checking your tenancy…" />
   }
@@ -120,66 +190,47 @@ function TenancyBanner({ tenancy, isLoading }) {
       <EmptyState
         icon={BedDouble}
         title="You are not an active tenant yet"
-        hint="Browse branches and submit a stay request — the owner approves it before you can move in."
+        hint="Browse branches and send a stay request — the owner approves it before you move in."
         action={<Button to="/hostels">Browse branches</Button>}
       />
     )
   }
 
+  const stats = [
+    { label: 'Room', value: tenancy.roomNumber ?? '—' },
+    { label: 'Bed', value: tenancy.bedNumber ?? '—' },
+    { label: 'Rent / month', value: formatRupees(tenancy.rentPerMonth) },
+    { label: 'Joined on', value: tenancy.joinedOn ?? '—' },
+  ]
+
   return (
     <section className="card p-5" aria-labelledby="tenancy-heading">
-      <p id="tenancy-heading" className="eyebrow">
-        Active tenancy
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p id="tenancy-heading" className="eyebrow">
+            Active tenancy
+          </p>
+          <p className="display mt-1.5 text-xl text-charcoal">
+            {tenancy.hostelName}
+          </p>
+        </div>
 
-      <dl className="mt-3">
-        <div className="flex justify-between border-b border-line py-2 text-sm last:border-0">
-          <dt className="text-charcoal/55">Branch</dt>
-          <dd className="font-medium text-charcoal">{tenancy.hostelName}</dd>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-charcoal/70">Rent</span>
+          <StatusBadge status={tenancy.rentStatus ?? 'unpaid'} />
         </div>
-        <div className="flex justify-between border-b border-line py-2 text-sm last:border-0">
-          <dt className="text-charcoal/55">Room</dt>
-          <dd className="font-medium text-charcoal">
-            {tenancy.roomNumber ?? '—'}
-          </dd>
-        </div>
-        <div className="flex justify-between border-b border-line py-2 text-sm last:border-0">
-          <dt className="text-charcoal/55">Bed</dt>
-          <dd className="font-medium text-charcoal">
-            {tenancy.bedNumber ?? '—'}
-          </dd>
-        </div>
-        <div className="flex justify-between border-b border-line py-2 text-sm last:border-0">
-          <dt className="text-charcoal/55">Joined on</dt>
-          <dd className="font-medium text-charcoal">
-            {tenancy.joinedOn ?? '—'}
-          </dd>
-        </div>
-        <div className="flex justify-between border-b border-line py-2 text-sm last:border-0">
-          <dt className="text-charcoal/55">Rent</dt>
-          <dd className="flex items-center gap-2">
-            <span className="font-semibold tabular-nums text-forest">
-              {formatRupees(tenancy.rentPerMonth)}
-            </span>
-            <StatusBadge status={tenancy.rentStatus ?? 'unpaid'} />
-          </dd>
-        </div>
-      </dl>
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        <Button to="/tenant/payments" size="sm" variant="secondary">
-          Pay rent
-        </Button>
-        <Button to="/tenant/food" size="sm" variant="secondary">
-          Food plans
-        </Button>
-        <Button to="/tenant/maintenance" size="sm" variant="secondary">
-          Raise an issue
-        </Button>
-        <Button to="/tenant/switch" size="sm" variant="secondary">
-          Switch branch
-        </Button>
       </div>
+
+      <dl className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {stats.map(({ label, value }) => (
+          <div key={label} className="rounded-card bg-ivory px-3.5 py-3">
+            <dt className="text-xs font-medium text-charcoal/70">{label}</dt>
+            <dd className="mt-1 text-sm font-semibold tabular-nums text-charcoal">
+              {value}
+            </dd>
+          </div>
+        ))}
+      </dl>
     </section>
   )
 }
