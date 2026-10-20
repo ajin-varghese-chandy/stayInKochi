@@ -1,4 +1,4 @@
-import { apiRequest } from '../../services/api'
+import api from '../../services/api'
 
 // There is exactly one owner and they never register through the app, so all
 // owner-facing notifications are stored under this fixed recipient id.
@@ -6,7 +6,7 @@ export const OWNER_INBOX = 'owner'
 
 // Notifications addressed to one recipient (a tenant uid or OWNER_INBOX).
 export function getNotificationsByUser(recipientId) {
-  return apiRequest(`/notifications?uid=${recipientId}`).then((items) =>
+  return api.get(`/notifications?uid=${recipientId}`).then((items) =>
     // Newest first; json-server has no portable sort across versions.
     [...items].sort((a, b) =>
       String(b.createdAt ?? '').localeCompare(String(a.createdAt ?? '')),
@@ -15,18 +15,12 @@ export function getNotificationsByUser(recipientId) {
 }
 
 export function createNotification(notification) {
-  return apiRequest('/notifications', {
-    method: 'POST',
-    body: JSON.stringify(notification),
-  })
+  return api.post('/notifications', notification)
 }
 
 // Used by the "mark as read" button.
 export function updateNotification(notificationId, updates) {
-  return apiRequest(`/notifications/${notificationId}`, {
-    method: 'PATCH',
-    body: JSON.stringify(updates),
-  })
+  return api.patch(`/notifications/${notificationId}`, updates)
 }
 
 // Best-effort notification: approvals, payments and requests must not fail
