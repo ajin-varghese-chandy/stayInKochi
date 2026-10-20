@@ -5,7 +5,7 @@
       "name": "StayInKochi Kakkanad",
       "location": "Kakkanad, Kochi",
       "description": "Quiet, modern branch near the IT corridor with Wi-Fi and 24/7 security.",
-      "image": "https://picsum.photos/seed/greennest/800/500",
+      "image": "https://img.findmyhostel.in/c16e1df281_2e848ff796.png?p=cover&w=640",
       "rentPerMonth": 8500,
       "amenities": [
         "Wi-Fi",
@@ -19,11 +19,70 @@
       "name": "StayInKochi Vytilla",
       "location": "Vytilla, Kochi",
       "description": "Cozy branch overlooking the backwaters, close to public transport.",
-      "image": "https://picsum.photos/seed/backwater/800/500",
+      "image": "https://img.findmyhostel.in/0c32955d35_045c24507b.jpg?p=cover&w=640",
       "rentPerMonth": 7000,
       "amenities": [
         "Wi-Fi",
         "Parking",
+        "Housekeeping"
+      ]
+    },
+    {
+      "id": "h3",
+      "name": "StayInKochi Edappally",
+      "location": "Edappally, Kochi",
+      "description": "Bright, new branch minutes from Lulu Mall and the metro, with a rooftop common area.",
+      "image": "https://img.findmyhostel.in/8b434b8c5c_19af00d1cc.JPG?p=cover&w=640",
+      "rentPerMonth": 9000,
+      "amenities": [
+        "Wi-Fi",
+        "Power backup",
+        "Laundry",
+        "Rooftop lounge",
+        "24/7 security"
+      ]
+    },
+    {
+      "id": "h4",
+      "name": "StayInKochi Kaloor",
+      "location": "Kaloor, Kochi",
+      "description": "Budget-friendly rooms near the stadium and the airport road.",
+      "image": "https://img.findmyhostel.in/dff0d2afca_bc8111b51f.jpeg?p=cover&w=640",
+      "rentPerMonth": 7500,
+      "amenities": [
+        "Wi-Fi",
+        "Housekeeping",
+        "Parking",
+        "CCTV"
+      ]
+    },
+    {
+      "id": "h5",
+      "name": "StayInKochi Panampilly",
+      "location": "Panampilly Nagar, Kochi",
+      "description": "Premium PG in a leafy residential neighbourhood, a walk from cafés and gyms.",
+      "image": "https://img.findmyhostel.in/de8ddf6070_bd2a602223.jpeg?p=cover&w=640",
+      "rentPerMonth": 11000,
+      "amenities": [
+        "Wi-Fi",
+        "Attached bathroom",
+        "Laundry",
+        "Housekeeping",
+        "Power backup",
+        "Gym access"
+      ]
+    },
+    {
+      "id": "h6",
+      "name": "StayInKochi Aluva",
+      "location": "Aluva, Kochi",
+      "description": "Quiet branch by the Periyar river, well connected to the industrial belt and the airport.",
+      "image": "https://img.findmyhostel.in/e288b43205_d60ecf96b2.jpeg?p=cover&w=640",
+      "rentPerMonth": 6000,
+      "amenities": [
+        "Wi-Fi",
+        "Parking",
+        "Common kitchen",
         "Housekeeping"
       ]
     }
@@ -52,6 +111,102 @@
       "floor": 2,
       "rentPerMonth": 7000,
       "bedCount": 3
+    },
+    {
+      "id": "r4",
+      "hostelId": "h3",
+      "roomNumber": "301",
+      "floor": 3,
+      "rentPerMonth": 9000,
+      "bedCount": 3
+    },
+    {
+      "id": "r5",
+      "hostelId": "h3",
+      "roomNumber": "302",
+      "floor": 3,
+      "rentPerMonth": 9500,
+      "bedCount": 2
+    },
+    {
+      "id": "r6",
+      "hostelId": "h3",
+      "roomNumber": "401",
+      "floor": 4,
+      "rentPerMonth": 10000,
+      "bedCount": 2
+    },
+    {
+      "id": "r7",
+      "hostelId": "h4",
+      "roomNumber": "101",
+      "floor": 1,
+      "rentPerMonth": 7500,
+      "bedCount": 3
+    },
+    {
+      "id": "r8",
+      "hostelId": "h4",
+      "roomNumber": "102",
+      "floor": 1,
+      "rentPerMonth": 7500,
+      "bedCount": 3
+    },
+    {
+      "id": "r9",
+      "hostelId": "h4",
+      "roomNumber": "201",
+      "floor": 2,
+      "rentPerMonth": 8000,
+      "bedCount": 2
+    },
+    {
+      "id": "r10",
+      "hostelId": "h5",
+      "roomNumber": "1",
+      "floor": 1,
+      "rentPerMonth": 11000,
+      "bedCount": 2
+    },
+    {
+      "id": "r11",
+      "hostelId": "h5",
+      "roomNumber": "2",
+      "floor": 1,
+      "rentPerMonth": 11500,
+      "bedCount": 2
+    },
+    {
+      "id": "r12",
+      "hostelId": "h5",
+      "roomNumber": "3",
+      "floor": 2,
+      "rentPerMonth": 12000,
+      "bedCount": 1
+    },
+    {
+      "id": "r13",
+      "hostelId": "h6",
+      "roomNumber": "A1",
+      "floor": 1,
+      "rentPerMonth": 6000,
+      "bedCount": 3
+    },
+    {
+      "id": "r14",
+      "hostelId": "h6",
+      "roomNumber": "A2",
+      "floor": 1,
+      "rentPerMonth": 6000,
+      "bedCount": 2
+    },
+    {
+      "id": "r15",
+      "hostelId": "h6",
+      "roomNumber": "B1",
+      "floor": 2,
+      "rentPerMonth": 6500,
+      "bedCount": 2
     }
   ],
   "beds": [
@@ -86,6 +241,238 @@
       "bedNumber": "A",
       "status": "occupied",
       "tenantId": "t1"
+    },
+    {
+      "id": "b5",
+      "roomId": "r3",
+      "hostelId": "h2",
+      "bedNumber": "B",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b6",
+      "roomId": "r3",
+      "hostelId": "h2",
+      "bedNumber": "C",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b10",
+      "roomId": "r4",
+      "hostelId": "h3",
+      "bedNumber": "A",
+      "status": "occupied",
+      "tenantId": "t10"
+    },
+    {
+      "id": "b11",
+      "roomId": "r4",
+      "hostelId": "h3",
+      "bedNumber": "B",
+      "status": "occupied",
+      "tenantId": "t11"
+    },
+    {
+      "id": "b12",
+      "roomId": "r4",
+      "hostelId": "h3",
+      "bedNumber": "C",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b13",
+      "roomId": "r5",
+      "hostelId": "h3",
+      "bedNumber": "A",
+      "status": "occupied",
+      "tenantId": "t12"
+    },
+    {
+      "id": "b14",
+      "roomId": "r5",
+      "hostelId": "h3",
+      "bedNumber": "B",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b15",
+      "roomId": "r6",
+      "hostelId": "h3",
+      "bedNumber": "A",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b16",
+      "roomId": "r6",
+      "hostelId": "h3",
+      "bedNumber": "B",
+      "status": "occupied",
+      "tenantId": "t13"
+    },
+    {
+      "id": "b17",
+      "roomId": "r7",
+      "hostelId": "h4",
+      "bedNumber": "A",
+      "status": "occupied",
+      "tenantId": "t14"
+    },
+    {
+      "id": "b18",
+      "roomId": "r7",
+      "hostelId": "h4",
+      "bedNumber": "B",
+      "status": "occupied",
+      "tenantId": "t15"
+    },
+    {
+      "id": "b19",
+      "roomId": "r7",
+      "hostelId": "h4",
+      "bedNumber": "C",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b20",
+      "roomId": "r8",
+      "hostelId": "h4",
+      "bedNumber": "A",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b21",
+      "roomId": "r8",
+      "hostelId": "h4",
+      "bedNumber": "B",
+      "status": "occupied",
+      "tenantId": "t16"
+    },
+    {
+      "id": "b22",
+      "roomId": "r8",
+      "hostelId": "h4",
+      "bedNumber": "C",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b23",
+      "roomId": "r9",
+      "hostelId": "h4",
+      "bedNumber": "A",
+      "status": "occupied",
+      "tenantId": "t17"
+    },
+    {
+      "id": "b24",
+      "roomId": "r9",
+      "hostelId": "h4",
+      "bedNumber": "B",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b25",
+      "roomId": "r10",
+      "hostelId": "h5",
+      "bedNumber": "A",
+      "status": "occupied",
+      "tenantId": "t18"
+    },
+    {
+      "id": "b26",
+      "roomId": "r10",
+      "hostelId": "h5",
+      "bedNumber": "B",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b27",
+      "roomId": "r11",
+      "hostelId": "h5",
+      "bedNumber": "A",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b28",
+      "roomId": "r11",
+      "hostelId": "h5",
+      "bedNumber": "B",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b29",
+      "roomId": "r12",
+      "hostelId": "h5",
+      "bedNumber": "A",
+      "status": "occupied",
+      "tenantId": "t19"
+    },
+    {
+      "id": "b30",
+      "roomId": "r13",
+      "hostelId": "h6",
+      "bedNumber": "A",
+      "status": "occupied",
+      "tenantId": "t20"
+    },
+    {
+      "id": "b31",
+      "roomId": "r13",
+      "hostelId": "h6",
+      "bedNumber": "B",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b32",
+      "roomId": "r13",
+      "hostelId": "h6",
+      "bedNumber": "C",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b33",
+      "roomId": "r14",
+      "hostelId": "h6",
+      "bedNumber": "A",
+      "status": "occupied",
+      "tenantId": "t21"
+    },
+    {
+      "id": "b34",
+      "roomId": "r14",
+      "hostelId": "h6",
+      "bedNumber": "B",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b35",
+      "roomId": "r15",
+      "hostelId": "h6",
+      "bedNumber": "A",
+      "status": "available",
+      "tenantId": null
+    },
+    {
+      "id": "b36",
+      "roomId": "r15",
+      "hostelId": "h6",
+      "bedNumber": "B",
+      "status": "available",
+      "tenantId": null
     }
   ],
   "tenants": [
@@ -146,6 +533,198 @@
       "rentStatus": "unpaid",
       "joinedOn": "2026-10-18",
       "id": "td9vPOG25po"
+    },
+    {
+      "id": "t10",
+      "uid": "demo-uid-10",
+      "name": "Neha Menon",
+      "email": "neha.menon@example.com",
+      "phone": "9847011223",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "roomId": "r4",
+      "roomNumber": "301",
+      "bedId": "b10",
+      "bedNumber": "A",
+      "rentPerMonth": 9000,
+      "rentStatus": "paid",
+      "joinedOn": "2026-07-01"
+    },
+    {
+      "id": "t11",
+      "uid": "demo-uid-11",
+      "name": "Vishnu Prasad",
+      "email": "vishnu.prasad@example.com",
+      "phone": "9847022334",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "roomId": "r4",
+      "roomNumber": "301",
+      "bedId": "b11",
+      "bedNumber": "B",
+      "rentPerMonth": 9000,
+      "rentStatus": "unpaid",
+      "joinedOn": "2026-08-12"
+    },
+    {
+      "id": "t12",
+      "uid": "demo-uid-12",
+      "name": "Fathima Rasheed",
+      "email": "fathima.rasheed@example.com",
+      "phone": "9847033445",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "roomId": "r5",
+      "roomNumber": "302",
+      "bedId": "b13",
+      "bedNumber": "A",
+      "rentPerMonth": 9500,
+      "rentStatus": "paid",
+      "joinedOn": "2026-07-20"
+    },
+    {
+      "id": "t13",
+      "uid": "demo-uid-13",
+      "name": "Sreerag Pillai",
+      "email": "sreerag.pillai@example.com",
+      "phone": "9847044556",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "roomId": "r6",
+      "roomNumber": "401",
+      "bedId": "b16",
+      "bedNumber": "B",
+      "rentPerMonth": 10000,
+      "rentStatus": "unpaid",
+      "joinedOn": "2026-09-05"
+    },
+    {
+      "id": "t14",
+      "uid": "demo-uid-14",
+      "name": "Anjali Rajan",
+      "email": "anjali.rajan@example.com",
+      "phone": "9847055667",
+      "hostelId": "h4",
+      "hostelName": "StayInKochi Kaloor",
+      "roomId": "r7",
+      "roomNumber": "101",
+      "bedId": "b17",
+      "bedNumber": "A",
+      "rentPerMonth": 7500,
+      "rentStatus": "paid",
+      "joinedOn": "2026-06-15"
+    },
+    {
+      "id": "t15",
+      "uid": "demo-uid-15",
+      "name": "Muhammed Irfan",
+      "email": "muhammed.irfan@example.com",
+      "phone": "9847066778",
+      "hostelId": "h4",
+      "hostelName": "StayInKochi Kaloor",
+      "roomId": "r7",
+      "roomNumber": "101",
+      "bedId": "b18",
+      "bedNumber": "B",
+      "rentPerMonth": 7500,
+      "rentStatus": "unpaid",
+      "joinedOn": "2026-08-01"
+    },
+    {
+      "id": "t16",
+      "uid": "demo-uid-16",
+      "name": "Diya Krishna",
+      "email": "diya.krishna@example.com",
+      "phone": "9847077889",
+      "hostelId": "h4",
+      "hostelName": "StayInKochi Kaloor",
+      "roomId": "r8",
+      "roomNumber": "102",
+      "bedId": "b21",
+      "bedNumber": "B",
+      "rentPerMonth": 7500,
+      "rentStatus": "paid",
+      "joinedOn": "2026-09-10"
+    },
+    {
+      "id": "t17",
+      "uid": "demo-uid-17",
+      "name": "Aravind Shankar",
+      "email": "aravind.shankar@example.com",
+      "phone": "9847088990",
+      "hostelId": "h4",
+      "hostelName": "StayInKochi Kaloor",
+      "roomId": "r9",
+      "roomNumber": "201",
+      "bedId": "b23",
+      "bedNumber": "A",
+      "rentPerMonth": 8000,
+      "rentStatus": "unpaid",
+      "joinedOn": "2026-07-25"
+    },
+    {
+      "id": "t18",
+      "uid": "demo-uid-18",
+      "name": "Aparna Thomas",
+      "email": "aparna.thomas@example.com",
+      "phone": "9847099001",
+      "hostelId": "h5",
+      "hostelName": "StayInKochi Panampilly",
+      "roomId": "r10",
+      "roomNumber": "1",
+      "bedId": "b25",
+      "bedNumber": "A",
+      "rentPerMonth": 11000,
+      "rentStatus": "paid",
+      "joinedOn": "2026-08-05"
+    },
+    {
+      "id": "t19",
+      "uid": "demo-uid-19",
+      "name": "Rohit Menon",
+      "email": "rohit.menon@example.com",
+      "phone": "9847100112",
+      "hostelId": "h5",
+      "hostelName": "StayInKochi Panampilly",
+      "roomId": "r12",
+      "roomNumber": "3",
+      "bedId": "b29",
+      "bedNumber": "A",
+      "rentPerMonth": 12000,
+      "rentStatus": "unpaid",
+      "joinedOn": "2026-09-18"
+    },
+    {
+      "id": "t20",
+      "uid": "demo-uid-20",
+      "name": "Sanjay Varma",
+      "email": "sanjay.varma@example.com",
+      "phone": "9847111223",
+      "hostelId": "h6",
+      "hostelName": "StayInKochi Aluva",
+      "roomId": "r13",
+      "roomNumber": "A1",
+      "bedId": "b30",
+      "bedNumber": "A",
+      "rentPerMonth": 6000,
+      "rentStatus": "paid",
+      "joinedOn": "2026-06-20"
+    },
+    {
+      "id": "t21",
+      "uid": "demo-uid-21",
+      "name": "Meera Nambiar",
+      "email": "meera.nambiar@example.com",
+      "phone": "9847122334",
+      "hostelId": "h6",
+      "hostelName": "StayInKochi Aluva",
+      "roomId": "r14",
+      "roomNumber": "A2",
+      "bedId": "b33",
+      "bedNumber": "A",
+      "rentPerMonth": 6000,
+      "rentStatus": "unpaid",
+      "joinedOn": "2026-09-28"
     }
   ],
   "foodPlans": [
@@ -168,6 +747,59 @@
       "includes": [
         "Breakfast",
         "Dinner"
+      ]
+    },
+    {
+      "id": "f3",
+      "hostelId": "h3",
+      "name": "Full Meal Plan",
+      "pricePerMonth": 3200,
+      "includes": [
+        "Breakfast",
+        "Lunch",
+        "Dinner"
+      ]
+    },
+    {
+      "id": "f4",
+      "hostelId": "h3",
+      "name": "Veg Meal Plan",
+      "pricePerMonth": 2600,
+      "includes": [
+        "Breakfast",
+        "Dinner"
+      ]
+    },
+    {
+      "id": "f5",
+      "hostelId": "h4",
+      "name": "Budget Meal Plan",
+      "pricePerMonth": 2400,
+      "includes": [
+        "Lunch",
+        "Dinner"
+      ]
+    },
+    {
+      "id": "f6",
+      "hostelId": "h5",
+      "name": "Premium Meal Plan",
+      "pricePerMonth": 3800,
+      "includes": [
+        "Breakfast",
+        "Lunch",
+        "Dinner",
+        "Snacks"
+      ]
+    },
+    {
+      "id": "f7",
+      "hostelId": "h6",
+      "name": "Simple Meal Plan",
+      "pricePerMonth": 2200,
+      "includes": [
+        "Breakfast",
+        "Lunch"
       ]
     }
   ],
@@ -195,6 +827,72 @@
       "hostelId": "h2",
       "name": "Lunch",
       "price": 100
+    },
+    {
+      "id": "m5",
+      "hostelId": "h3",
+      "name": "Breakfast",
+      "price": 80
+    },
+    {
+      "id": "m6",
+      "hostelId": "h3",
+      "name": "Lunch",
+      "price": 120
+    },
+    {
+      "id": "m7",
+      "hostelId": "h3",
+      "name": "Dinner",
+      "price": 130
+    },
+    {
+      "id": "m8",
+      "hostelId": "h4",
+      "name": "Breakfast",
+      "price": 70
+    },
+    {
+      "id": "m9",
+      "hostelId": "h4",
+      "name": "Lunch",
+      "price": 100
+    },
+    {
+      "id": "m10",
+      "hostelId": "h4",
+      "name": "Dinner",
+      "price": 110
+    },
+    {
+      "id": "m11",
+      "hostelId": "h5",
+      "name": "Breakfast",
+      "price": 100
+    },
+    {
+      "id": "m12",
+      "hostelId": "h5",
+      "name": "Lunch",
+      "price": 150
+    },
+    {
+      "id": "m13",
+      "hostelId": "h5",
+      "name": "Dinner",
+      "price": 160
+    },
+    {
+      "id": "m14",
+      "hostelId": "h6",
+      "name": "Breakfast",
+      "price": 60
+    },
+    {
+      "id": "m15",
+      "hostelId": "h6",
+      "name": "Lunch",
+      "price": 90
     }
   ],
   "stayRequests": [
@@ -249,6 +947,68 @@
       "requestedOn": "2026-10-18",
       "id": "v4CpEkb8iGg",
       "decidedOn": "2026-10-18"
+    },
+    {
+      "id": "s3",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "tenantUid": "demo-uid-30",
+      "tenantName": "Kavya Suresh",
+      "tenantEmail": "kavya.suresh@example.com",
+      "phone": "9847133445",
+      "message": "Moving to Kochi for work at InfoPark — looking for a twin-share room.",
+      "status": "pending",
+      "requestedOn": "2026-10-17"
+    },
+    {
+      "id": "s4",
+      "hostelId": "h5",
+      "hostelName": "StayInKochi Panampilly",
+      "tenantUid": "demo-uid-31",
+      "tenantName": "Jithin Joes",
+      "tenantEmail": "jithin.joes@example.com",
+      "phone": "9847144556",
+      "message": "Prefer a single occupancy room if one is free.",
+      "status": "pending",
+      "requestedOn": "2026-10-18"
+    },
+    {
+      "id": "s5",
+      "hostelId": "h6",
+      "hostelName": "StayInKochi Aluva",
+      "tenantUid": "demo-uid-32",
+      "tenantName": "Reshma K B",
+      "tenantEmail": "reshma.kb@example.com",
+      "phone": "9847155667",
+      "message": "",
+      "status": "pending",
+      "requestedOn": "2026-10-19"
+    },
+    {
+      "id": "s6",
+      "hostelId": "h4",
+      "hostelName": "StayInKochi Kaloor",
+      "tenantUid": "demo-uid-33",
+      "tenantName": "Gokul Nandakumar",
+      "tenantEmail": "gokul.n@example.com",
+      "phone": "9847166778",
+      "message": "Need a bed from next month.",
+      "status": "rejected",
+      "requestedOn": "2026-10-10",
+      "decidedOn": "2026-10-12"
+    },
+    {
+      "id": "s7",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "tenantUid": "demo-uid-13",
+      "tenantName": "Sreerag Pillai",
+      "tenantEmail": "sreerag.pillai@example.com",
+      "phone": "9847044556",
+      "message": "Single room on the top floor, if available.",
+      "status": "approved",
+      "requestedOn": "2026-09-03",
+      "decidedOn": "2026-09-05"
     }
   ],
   "maintenanceRequests": [
@@ -276,6 +1036,92 @@
       "status": "resolved",
       "createdAt": "2026-02-05T11:30:00.000Z",
       "updatedAt": "2026-02-06T08:00:00.000Z"
+    },
+    {
+      "id": "mr3",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "tenantUid": "demo-uid-10",
+      "tenantName": "Neha Menon",
+      "title": "Wi-Fi drops every evening",
+      "description": "Connection stalls between 8pm and 10pm in room 301.",
+      "imageUrl": "",
+      "status": "open",
+      "createdAt": "2026-10-14T18:20:00.000Z"
+    },
+    {
+      "id": "mr4",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "tenantUid": "demo-uid-12",
+      "tenantName": "Fathima Rasheed",
+      "title": "Washroom tap leaking",
+      "description": "Tap in the attached bathroom needs a new washer.",
+      "imageUrl": "",
+      "status": "in_progress",
+      "createdAt": "2026-10-12T09:05:00.000Z"
+    },
+    {
+      "id": "mr5",
+      "hostelId": "h4",
+      "hostelName": "StayInKochi Kaloor",
+      "tenantUid": "demo-uid-15",
+      "tenantName": "Muhammed Irfan",
+      "title": "Tube light flickering",
+      "description": "Main light in room 101 flickers when switched on.",
+      "imageUrl": "",
+      "status": "resolved",
+      "createdAt": "2026-10-05T20:10:00.000Z",
+      "updatedAt": "2026-10-06T11:45:00.000Z"
+    },
+    {
+      "id": "mr6",
+      "hostelId": "h4",
+      "hostelName": "StayInKochi Kaloor",
+      "tenantUid": "demo-uid-17",
+      "tenantName": "Aravind Shankar",
+      "title": "Door lock jammed",
+      "description": "The main door lock of room 201 needs lubrication.",
+      "imageUrl": "",
+      "status": "open",
+      "createdAt": "2026-10-17T07:40:00.000Z"
+    },
+    {
+      "id": "mr7",
+      "hostelId": "h5",
+      "hostelName": "StayInKochi Panampilly",
+      "tenantUid": "demo-uid-18",
+      "tenantName": "Aparna Thomas",
+      "title": "AC not cooling properly",
+      "description": "Unit runs but the room stays warm.",
+      "imageUrl": "",
+      "status": "in_progress",
+      "createdAt": "2026-10-16T13:15:00.000Z"
+    },
+    {
+      "id": "mr8",
+      "hostelId": "h6",
+      "hostelName": "StayInKochi Aluva",
+      "tenantUid": "demo-uid-20",
+      "tenantName": "Sanjay Varma",
+      "title": "Water heater needs servicing",
+      "description": "Geyser in room A1 takes too long to heat.",
+      "imageUrl": "",
+      "status": "resolved",
+      "createdAt": "2026-09-30T10:00:00.000Z",
+      "updatedAt": "2026-10-02T16:30:00.000Z"
+    },
+    {
+      "id": "mr9",
+      "hostelId": "h5",
+      "hostelName": "StayInKochi Panampilly",
+      "tenantUid": "demo-uid-19",
+      "tenantName": "Rohit Menon",
+      "title": "Room cleaning schedule",
+      "description": "Would like the room cleaned twice a week.",
+      "imageUrl": "",
+      "status": "open",
+      "createdAt": "2026-10-18T08:00:00.000Z"
     }
   ],
   "payments": [
@@ -289,7 +1135,7 @@
       "amount": 8500,
       "month": "2026-01",
       "status": "paid",
-      "razorpayPaymentId": "",
+      "paymentId": "",
       "paidOn": "2026-01-05",
       "createdAt": "2026-01-05"
     },
@@ -303,7 +1149,7 @@
       "amount": 8500,
       "month": "2026-02",
       "status": "pending",
-      "razorpayPaymentId": "",
+      "paymentId": "",
       "paidOn": "",
       "createdAt": "2026-02-01"
     },
@@ -318,6 +1164,312 @@
       "status": "pending",
       "createdAt": "2026-10-18",
       "id": "sw-B6lmwXv0"
+    },
+    {
+      "hostelId": "h1",
+      "hostelName": "StayInKochi Kakkanad",
+      "tenantId": "td9vPOG25po",
+      "tenantUid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
+      "tenantName": "ajin",
+      "amount": 0,
+      "month": "2026-10",
+      "status": "pending",
+      "createdAt": "2026-10-19",
+      "id": "rPm0JzL66Ac"
+    },
+    {
+      "id": "p10",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "tenantId": "t10",
+      "tenantUid": "demo-uid-10",
+      "tenantName": "Neha Menon",
+      "amount": 9000,
+      "month": "2026-08",
+      "status": "paid",
+      "paymentId": "pay_seed_010",
+      "paidOn": "2026-08-03",
+      "createdAt": "2026-08-01"
+    },
+    {
+      "id": "p11",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "tenantId": "t10",
+      "tenantUid": "demo-uid-10",
+      "tenantName": "Neha Menon",
+      "amount": 9000,
+      "month": "2026-09",
+      "status": "paid",
+      "paymentId": "pay_seed_011",
+      "paidOn": "2026-09-04",
+      "createdAt": "2026-09-01"
+    },
+    {
+      "id": "p12",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "tenantId": "t10",
+      "tenantUid": "demo-uid-10",
+      "tenantName": "Neha Menon",
+      "amount": 9000,
+      "month": "2026-10",
+      "status": "paid",
+      "paymentId": "pay_seed_012",
+      "paidOn": "2026-10-05",
+      "createdAt": "2026-10-01"
+    },
+    {
+      "id": "p13",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "tenantId": "t11",
+      "tenantUid": "demo-uid-11",
+      "tenantName": "Vishnu Prasad",
+      "amount": 9000,
+      "month": "2026-09",
+      "status": "pending",
+      "paymentId": "",
+      "paidOn": "",
+      "createdAt": "2026-09-01"
+    },
+    {
+      "id": "p14",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "tenantId": "t11",
+      "tenantUid": "demo-uid-11",
+      "tenantName": "Vishnu Prasad",
+      "amount": 9000,
+      "month": "2026-10",
+      "status": "pending",
+      "paymentId": "",
+      "paidOn": "",
+      "createdAt": "2026-10-01"
+    },
+    {
+      "id": "p15",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "tenantId": "t12",
+      "tenantUid": "demo-uid-12",
+      "tenantName": "Fathima Rasheed",
+      "amount": 9500,
+      "month": "2026-09",
+      "status": "paid",
+      "paymentId": "pay_seed_015",
+      "paidOn": "2026-09-06",
+      "createdAt": "2026-09-01"
+    },
+    {
+      "id": "p16",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "tenantId": "t12",
+      "tenantUid": "demo-uid-12",
+      "tenantName": "Fathima Rasheed",
+      "amount": 9500,
+      "month": "2026-10",
+      "status": "paid",
+      "paymentId": "pay_seed_016",
+      "paidOn": "2026-10-05",
+      "createdAt": "2026-10-01"
+    },
+    {
+      "id": "p17",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "tenantId": "t13",
+      "tenantUid": "demo-uid-13",
+      "tenantName": "Sreerag Pillai",
+      "amount": 10000,
+      "month": "2026-10",
+      "status": "pending",
+      "paymentId": "",
+      "paidOn": "",
+      "createdAt": "2026-10-05"
+    },
+    {
+      "id": "p18",
+      "hostelId": "h4",
+      "hostelName": "StayInKochi Kaloor",
+      "tenantId": "t14",
+      "tenantUid": "demo-uid-14",
+      "tenantName": "Anjali Rajan",
+      "amount": 7500,
+      "month": "2026-08",
+      "status": "paid",
+      "paymentId": "pay_seed_018",
+      "paidOn": "2026-08-02",
+      "createdAt": "2026-08-01"
+    },
+    {
+      "id": "p19",
+      "hostelId": "h4",
+      "hostelName": "StayInKochi Kaloor",
+      "tenantId": "t14",
+      "tenantUid": "demo-uid-14",
+      "tenantName": "Anjali Rajan",
+      "amount": 7500,
+      "month": "2026-09",
+      "status": "paid",
+      "paymentId": "pay_seed_019",
+      "paidOn": "2026-09-02",
+      "createdAt": "2026-09-01"
+    },
+    {
+      "id": "p20",
+      "hostelId": "h4",
+      "hostelName": "StayInKochi Kaloor",
+      "tenantId": "t14",
+      "tenantUid": "demo-uid-14",
+      "tenantName": "Anjali Rajan",
+      "amount": 7500,
+      "month": "2026-10",
+      "status": "paid",
+      "paymentId": "pay_seed_020",
+      "paidOn": "2026-10-03",
+      "createdAt": "2026-10-01"
+    },
+    {
+      "id": "p21",
+      "hostelId": "h4",
+      "hostelName": "StayInKochi Kaloor",
+      "tenantId": "t15",
+      "tenantUid": "demo-uid-15",
+      "tenantName": "Muhammed Irfan",
+      "amount": 7500,
+      "month": "2026-09",
+      "status": "failed",
+      "paymentId": "",
+      "paidOn": "",
+      "createdAt": "2026-09-03"
+    },
+    {
+      "id": "p22",
+      "hostelId": "h4",
+      "hostelName": "StayInKochi Kaloor",
+      "tenantId": "t15",
+      "tenantUid": "demo-uid-15",
+      "tenantName": "Muhammed Irfan",
+      "amount": 7500,
+      "month": "2026-10",
+      "status": "pending",
+      "paymentId": "",
+      "paidOn": "",
+      "createdAt": "2026-10-03"
+    },
+    {
+      "id": "p23",
+      "hostelId": "h4",
+      "hostelName": "StayInKochi Kaloor",
+      "tenantId": "t16",
+      "tenantUid": "demo-uid-16",
+      "tenantName": "Diya Krishna",
+      "amount": 7500,
+      "month": "2026-10",
+      "status": "paid",
+      "paymentId": "pay_seed_023",
+      "paidOn": "2026-10-08",
+      "createdAt": "2026-10-01"
+    },
+    {
+      "id": "p24",
+      "hostelId": "h4",
+      "hostelName": "StayInKochi Kaloor",
+      "tenantId": "t17",
+      "tenantUid": "demo-uid-17",
+      "tenantName": "Aravind Shankar",
+      "amount": 8000,
+      "month": "2026-10",
+      "status": "pending",
+      "paymentId": "",
+      "paidOn": "",
+      "createdAt": "2026-10-06"
+    },
+    {
+      "id": "p25",
+      "hostelId": "h5",
+      "hostelName": "StayInKochi Panampilly",
+      "tenantId": "t18",
+      "tenantUid": "demo-uid-18",
+      "tenantName": "Aparna Thomas",
+      "amount": 11000,
+      "month": "2026-09",
+      "status": "paid",
+      "paymentId": "pay_seed_025",
+      "paidOn": "2026-09-04",
+      "createdAt": "2026-09-01"
+    },
+    {
+      "id": "p26",
+      "hostelId": "h5",
+      "hostelName": "StayInKochi Panampilly",
+      "tenantId": "t18",
+      "tenantUid": "demo-uid-18",
+      "tenantName": "Aparna Thomas",
+      "amount": 11000,
+      "month": "2026-10",
+      "status": "paid",
+      "paymentId": "pay_seed_026",
+      "paidOn": "2026-10-04",
+      "createdAt": "2026-10-01"
+    },
+    {
+      "id": "p27",
+      "hostelId": "h5",
+      "hostelName": "StayInKochi Panampilly",
+      "tenantId": "t19",
+      "tenantUid": "demo-uid-19",
+      "tenantName": "Rohit Menon",
+      "amount": 12000,
+      "month": "2026-10",
+      "status": "pending",
+      "paymentId": "",
+      "paidOn": "",
+      "createdAt": "2026-10-07"
+    },
+    {
+      "id": "p28",
+      "hostelId": "h6",
+      "hostelName": "StayInKochi Aluva",
+      "tenantId": "t20",
+      "tenantUid": "demo-uid-20",
+      "tenantName": "Sanjay Varma",
+      "amount": 6000,
+      "month": "2026-09",
+      "status": "paid",
+      "paymentId": "pay_seed_028",
+      "paidOn": "2026-09-01",
+      "createdAt": "2026-09-01"
+    },
+    {
+      "id": "p29",
+      "hostelId": "h6",
+      "hostelName": "StayInKochi Aluva",
+      "tenantId": "t20",
+      "tenantUid": "demo-uid-20",
+      "tenantName": "Sanjay Varma",
+      "amount": 6000,
+      "month": "2026-10",
+      "status": "paid",
+      "paymentId": "pay_seed_029",
+      "paidOn": "2026-10-02",
+      "createdAt": "2026-10-01"
+    },
+    {
+      "id": "p30",
+      "hostelId": "h6",
+      "hostelName": "StayInKochi Aluva",
+      "tenantId": "t21",
+      "tenantUid": "demo-uid-21",
+      "tenantName": "Meera Nambiar",
+      "amount": 6000,
+      "month": "2026-10",
+      "status": "pending",
+      "paymentId": "",
+      "paidOn": "",
+      "createdAt": "2026-10-02"
     }
   ],
   "notifications": [
@@ -369,6 +1521,83 @@
       "read": false,
       "createdAt": "2026-10-18T06:56:56.082Z",
       "id": "aD4Dse5YbAA"
+    },
+    {
+      "id": "n10",
+      "uid": "owner",
+      "message": "Neha Menon paid ₹9,000 rent for October.",
+      "read": false,
+      "createdAt": "2026-10-05T09:12:00.000Z"
+    },
+    {
+      "id": "n11",
+      "uid": "owner",
+      "message": "Kavya Suresh requested a stay at StayInKochi Edappally.",
+      "read": false,
+      "createdAt": "2026-10-17T11:04:00.000Z"
+    },
+    {
+      "id": "n12",
+      "uid": "owner",
+      "message": "Jithin Joes requested a stay at StayInKochi Panampilly.",
+      "read": false,
+      "createdAt": "2026-10-18T16:30:00.000Z"
+    },
+    {
+      "id": "n13",
+      "uid": "owner",
+      "message": "Reshma K B requested a stay at StayInKochi Aluva.",
+      "read": false,
+      "createdAt": "2026-10-19T08:45:00.000Z"
+    },
+    {
+      "id": "n14",
+      "uid": "owner",
+      "message": "Anjali Rajan asked to switch from StayInKochi Kaloor to StayInKochi Panampilly.",
+      "read": false,
+      "createdAt": "2026-10-16T10:15:00.000Z"
+    },
+    {
+      "id": "n15",
+      "uid": "demo-uid-10",
+      "message": "Your rent for October is due.",
+      "read": false,
+      "createdAt": "2026-10-01T07:00:00.000Z"
+    },
+    {
+      "id": "n16",
+      "uid": "demo-uid-10",
+      "message": "Rent for October received. Thank you!",
+      "read": true,
+      "createdAt": "2026-10-05T09:15:00.000Z"
+    },
+    {
+      "id": "n17",
+      "uid": "demo-uid-15",
+      "message": "Your September rent payment could not be verified. Please try again.",
+      "read": false,
+      "createdAt": "2026-09-03T18:20:00.000Z"
+    },
+    {
+      "id": "n18",
+      "uid": "demo-uid-12",
+      "message": "Your upkeep request was marked in progress.",
+      "read": false,
+      "createdAt": "2026-10-13T09:30:00.000Z"
+    },
+    {
+      "id": "n19",
+      "uid": "demo-uid-20",
+      "message": "Water heater servicing has been scheduled for this week.",
+      "read": true,
+      "createdAt": "2026-10-02T16:35:00.000Z"
+    },
+    {
+      "id": "n20",
+      "uid": "demo-uid-13",
+      "message": "Your stay request for StayInKochi Edappally was approved.",
+      "read": false,
+      "createdAt": "2026-09-05T12:00:00.000Z"
     }
   ],
   "planSubscriptions": [
@@ -393,6 +1622,72 @@
       "status": "active",
       "startedOn": "2026-10-18",
       "id": "IKHEnPpFPR8"
+    },
+    {
+      "id": "ps3",
+      "hostelId": "h3",
+      "foodPlanId": "f3",
+      "planName": "Full Meal Plan",
+      "pricePerMonth": 3200,
+      "tenantUid": "demo-uid-10",
+      "tenantName": "Neha Menon",
+      "status": "active",
+      "startedOn": "2026-07-01"
+    },
+    {
+      "id": "ps4",
+      "hostelId": "h3",
+      "foodPlanId": "f4",
+      "planName": "Veg Meal Plan",
+      "pricePerMonth": 2600,
+      "tenantUid": "demo-uid-12",
+      "tenantName": "Fathima Rasheed",
+      "status": "active",
+      "startedOn": "2026-08-20"
+    },
+    {
+      "id": "ps5",
+      "hostelId": "h4",
+      "foodPlanId": "f5",
+      "planName": "Budget Meal Plan",
+      "pricePerMonth": 2400,
+      "tenantUid": "demo-uid-14",
+      "tenantName": "Anjali Rajan",
+      "status": "active",
+      "startedOn": "2026-06-15"
+    },
+    {
+      "id": "ps6",
+      "hostelId": "h4",
+      "foodPlanId": "f5",
+      "planName": "Budget Meal Plan",
+      "pricePerMonth": 2400,
+      "tenantUid": "demo-uid-16",
+      "tenantName": "Diya Krishna",
+      "status": "active",
+      "startedOn": "2026-09-10"
+    },
+    {
+      "id": "ps7",
+      "hostelId": "h5",
+      "foodPlanId": "f6",
+      "planName": "Premium Meal Plan",
+      "pricePerMonth": 3800,
+      "tenantUid": "demo-uid-18",
+      "tenantName": "Aparna Thomas",
+      "status": "active",
+      "startedOn": "2026-08-05"
+    },
+    {
+      "id": "ps8",
+      "hostelId": "h6",
+      "foodPlanId": "f7",
+      "planName": "Simple Meal Plan",
+      "pricePerMonth": 2200,
+      "tenantUid": "demo-uid-21",
+      "tenantName": "Meera Nambiar",
+      "status": "active",
+      "startedOn": "2026-09-28"
     }
   ],
   "mealBookings": [
@@ -407,6 +1702,90 @@
       "tenantName": "Arun Das",
       "status": "booked",
       "createdAt": "2026-02-14"
+    },
+    {
+      "hostelId": "h1",
+      "mealId": "m1",
+      "mealName": "Breakfast",
+      "price": 80,
+      "date": "2026-10-19",
+      "tenantUid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
+      "tenantName": "ajin",
+      "status": "booked",
+      "createdAt": "2026-10-19",
+      "id": "xBBOuY4wqhU"
+    },
+    {
+      "id": "mb3",
+      "hostelId": "h3",
+      "mealId": "m6",
+      "mealName": "Lunch",
+      "price": 120,
+      "date": "2026-10-19",
+      "tenantUid": "demo-uid-10",
+      "tenantName": "Neha Menon",
+      "status": "booked",
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "mb4",
+      "hostelId": "h3",
+      "mealId": "m7",
+      "mealName": "Dinner",
+      "price": 130,
+      "date": "2026-10-18",
+      "tenantUid": "demo-uid-12",
+      "tenantName": "Fathima Rasheed",
+      "status": "booked",
+      "createdAt": "2026-10-17"
+    },
+    {
+      "id": "mb5",
+      "hostelId": "h4",
+      "mealId": "m9",
+      "mealName": "Lunch",
+      "price": 100,
+      "date": "2026-10-19",
+      "tenantUid": "demo-uid-14",
+      "tenantName": "Anjali Rajan",
+      "status": "booked",
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "mb6",
+      "hostelId": "h5",
+      "mealId": "m12",
+      "mealName": "Lunch",
+      "price": 150,
+      "date": "2026-10-17",
+      "tenantUid": "demo-uid-18",
+      "tenantName": "Aparna Thomas",
+      "status": "cancelled",
+      "createdAt": "2026-10-16"
+    },
+    {
+      "id": "mb7",
+      "hostelId": "h6",
+      "mealId": "m15",
+      "mealName": "Lunch",
+      "price": 90,
+      "date": "2026-10-19",
+      "tenantUid": "demo-uid-20",
+      "tenantName": "Sanjay Varma",
+      "status": "booked",
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "mb8",
+      "hostelId": "h4",
+      "mealId": "m8",
+      "mealName": "Breakfast",
+      "price": 70,
+      "date": "2026-10-18",
+      "tenantUid": "demo-uid-16",
+      "tenantName": "Diya Krishna",
+      "status": "booked",
+      "createdAt": "2026-10-17"
     }
   ],
   "switchRequests": [
@@ -421,7 +1800,7 @@
       "toHostelName": "StayInKochi Vytilla",
       "amount": 500,
       "status": "approved",
-      "razorpayPaymentId": "pay_seed_001",
+      "paymentId": "pay_seed_001",
       "paidOn": "2026-02-10",
       "createdAt": "2026-02-10",
       "decidedOn": "2026-10-18"
@@ -436,9 +1815,54 @@
       "toHostelName": "StayInKochi Vytilla",
       "amount": 500,
       "status": "unpaid",
-      "razorpayPaymentId": "",
+      "paymentId": "",
       "createdAt": "2026-10-18",
       "id": "WjcwocKsRJY"
+    },
+    {
+      "id": "sw3",
+      "tenantId": "t14",
+      "tenantUid": "demo-uid-14",
+      "tenantName": "Anjali Rajan",
+      "fromHostelId": "h4",
+      "fromHostelName": "StayInKochi Kaloor",
+      "toHostelId": "h5",
+      "toHostelName": "StayInKochi Panampilly",
+      "amount": 500,
+      "status": "pending",
+      "paymentId": "pay_seed_sw3",
+      "paidOn": "2026-10-16",
+      "createdAt": "2026-10-16"
+    },
+    {
+      "id": "sw4",
+      "tenantId": "t20",
+      "tenantUid": "demo-uid-20",
+      "tenantName": "Sanjay Varma",
+      "fromHostelId": "h6",
+      "fromHostelName": "StayInKochi Aluva",
+      "toHostelId": "h4",
+      "toHostelName": "StayInKochi Kaloor",
+      "amount": 500,
+      "status": "rejected",
+      "paymentId": "pay_seed_sw4",
+      "paidOn": "2026-10-08",
+      "createdAt": "2026-10-08",
+      "decidedOn": "2026-10-09"
+    },
+    {
+      "id": "sw5",
+      "tenantId": "t19",
+      "tenantUid": "demo-uid-19",
+      "tenantName": "Rohit Menon",
+      "fromHostelId": "h5",
+      "fromHostelName": "StayInKochi Panampilly",
+      "toHostelId": "h3",
+      "toHostelName": "StayInKochi Edappally",
+      "amount": 500,
+      "status": "unpaid",
+      "paymentId": "",
+      "createdAt": "2026-10-18"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
