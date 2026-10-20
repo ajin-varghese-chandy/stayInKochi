@@ -1,6 +1,9 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import OwnerNav from '../../components/layout/OwnerNav'
+import { ArrowLeftRight } from 'lucide-react'
+import Alert from '../../components/ui/Alert'
+import EmptyState from '../../components/ui/EmptyState'
+import PageHeader from '../../components/ui/PageHeader'
 import Spinner from '../../components/common/Spinner'
 import SwitchRequestCard from '../../features/switches/components/SwitchRequestCard'
 import {
@@ -31,27 +34,28 @@ export default function OwnerSwitchesPage() {
   )
 
   return (
-    <section className="mx-auto max-w-4xl px-4 py-12">
-      <h1 className="text-3xl font-bold text-slate-900">Switch requests</h1>
-      <p className="mt-1 text-slate-600">
-        Approving frees the old bed and moves the tenant to the new branch.
-      </p>
-
-      <div className="mt-6">
-        <OwnerNav />
-      </div>
-
-      {isLoading && <Spinner label="Loading switch requests..." />}
-
-      {error && (
-        <p className="mt-6 text-red-600">Could not load requests: {error}</p>
-      )}
-
-      {!isLoading && !error && sorted.length === 0 && (
-        <p className="mt-6 text-slate-600">No switch requests yet.</p>
-      )}
+    <section>
+      <PageHeader
+        eyebrow="Owner console"
+        title="Switch requests"
+        description="Approving frees the old bed and moves the tenant to the new branch."
+      />
 
       <div className="mt-6 space-y-4">
+        {isLoading && <Spinner compact label="Loading switch requests…" />}
+
+        {error && (
+          <Alert tone="error">Could not load requests: {error}</Alert>
+        )}
+
+        {!isLoading && !error && sorted.length === 0 && (
+          <EmptyState
+            icon={ArrowLeftRight}
+            title="No switch requests yet"
+            hint="Tenants ask to move between branches and those requests arrive here."
+          />
+        )}
+
         {sorted.map((request) => (
           <SwitchRequestCard
             key={request.id}

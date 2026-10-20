@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import OwnerNav from '../../components/layout/OwnerNav'
+import { MessagesSquare } from 'lucide-react'
+import EmptyState from '../../components/ui/EmptyState'
+import PageHeader from '../../components/ui/PageHeader'
 import { selectCurrentUser } from '../../features/auth/authSlice'
 import ChatWindow from '../../features/chat/components/ChatWindow'
 import ConversationListItem from '../../features/chat/components/ConversationListItem'
@@ -53,15 +55,12 @@ export default function OwnerChatPage() {
     ) ?? null
 
   return (
-    <section className="mx-auto max-w-5xl px-4 py-12">
-      <h1 className="text-3xl font-bold text-slate-900">Chat</h1>
-      <p className="mt-1 text-slate-600">
-        Group chats with each branch, and private chats with tenants.
-      </p>
-
-      <div className="mt-6">
-        <OwnerNav />
-      </div>
+    <section>
+      <PageHeader
+        eyebrow="Owner console"
+        title="Messages"
+        description="Group chats with each branch, and private chats with tenants."
+      />
 
       <div className="mt-6 grid gap-4 md:grid-cols-3">
         <div className="space-y-6">
@@ -79,7 +78,11 @@ export default function OwnerChatPage() {
           />
 
           {groupChats.length === 0 && privateChats.length === 0 && (
-            <p className="text-sm text-slate-500">Nothing to chat about yet.</p>
+            <EmptyState
+              icon={MessagesSquare}
+              title="Nothing to chat about yet"
+              hint="Branch groups and tenant chats appear here once people move in."
+            />
           )}
         </div>
 
@@ -97,10 +100,8 @@ function ChatSection({ title, conversations, activeKey, onSelect }) {
 
   return (
     <div>
-      <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
-        {title}
-      </h2>
-      <div className="space-y-1">
+      <h2 className="eyebrow">{title}</h2>
+      <div className="mt-2 space-y-1">
         {conversations.map((item) => (
           <ConversationListItem
             key={item.key}

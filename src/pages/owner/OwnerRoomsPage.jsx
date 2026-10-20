@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
-import OwnerNav from '../../components/layout/OwnerNav'
+import { BedDouble } from 'lucide-react'
+import Alert from '../../components/ui/Alert'
+import Button from '../../components/ui/Button'
+import EmptyState from '../../components/ui/EmptyState'
+import PageHeader from '../../components/ui/PageHeader'
 import Spinner from '../../components/common/Spinner'
 import RoomForm from '../../features/rooms/components/RoomForm'
 import RoomCard from '../../features/rooms/components/RoomCard'
@@ -84,60 +88,51 @@ export default function OwnerRoomsPage() {
   const showForm = isAdding || editingRoom !== null
 
   return (
-    <section className="mx-auto max-w-4xl px-4 py-12">
-      <Link to="/owner/hostels" className="text-indigo-600">
-        &larr; Back to branches
+    <section>
+      <Link to="/owner/hostels" className="link text-sm">
+        ← Back to branches
       </Link>
 
-      <h1 className="mt-3 text-3xl font-bold text-slate-900">
-        {hostel ? `${hostel.name} — rooms` : 'Manage rooms'}
-      </h1>
-
-      <div className="mt-6">
-        <OwnerNav />
+      <div className="mt-3">
+        <PageHeader
+          eyebrow="Owner console"
+          title={hostel ? `${hostel.name} — rooms` : 'Manage rooms'}
+          description="Rooms, beds, and who is assigned to each bed."
+          actions={
+            showForm ? null : (
+              <Button onClick={() => setIsAdding(true)}>Add room</Button>
+            )
+          }
+        />
       </div>
 
-      <div className="mt-6 flex items-center justify-between">
-        <p className="text-slate-600">{rooms.length} rooms</p>
-        {!showForm && (
-          <button
-            type="button"
-            onClick={() => setIsAdding(true)}
-            className="rounded-md bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700"
-          >
-            Add room
-          </button>
-        )}
-      </div>
-
-      {showForm && (
-        <div className="mt-4">
-          <RoomForm
-            hostelId={hostelId}
-            room={editingRoom}
-            onDone={() => {
-              setIsAdding(false)
-              setEditingRoom(null)
-            }}
+      <div className="mt-6 space-y-4">
+        {!isLoading && !error && !showForm && rooms.length === 0 && (
+          <EmptyState
+            icon={BedDouble}
+            title="No rooms yet"
+            hint="Add a room to start assigning beds."
           />
-        </div>
-      )}
+        )}
 
-      {isLoading && <Spinner label="Loading rooms and beds..." />}
+        {showForm && (
+          <div className="card p-5">
+            <RoomForm
+              hostelId={hostelId}
+              room={editingRoom}
+              onDone={() => {
+                setIsAdding(false)
+                setEditingRoom(null)
+              }}
+            />
+          </div>
+        )}
 
-      {error && (
-        <p className="mt-6 text-red-600">Could not load rooms: {error}</p>
-      )}
+        {isLoading && <Spinner compact label="Loading rooms and beds…" />}
 
-      {saveError && <p className="mt-6 text-red-600">{saveError}</p>}
+        {error && <Alert tone="error">Could not load rooms: {error}</Alert>}
+        {saveError && <Alert tone="error">{saveError}</Alert>}
 
-      {!isLoading && !error && rooms.length === 0 && (
-        <p className="mt-6 text-slate-600">
-          No rooms yet. Add a room to start assigning beds.
-        </p>
-      )}
-
-      <div className="mt-4 space-y-4">
         {rooms.map((room) => (
           <RoomCard
             key={room.id}

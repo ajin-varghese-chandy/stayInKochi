@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import OwnerNav from '../../components/layout/OwnerNav'
+import { Building2 } from 'lucide-react'
+import Alert from '../../components/ui/Alert'
+import Button from '../../components/ui/Button'
+import EmptyState from '../../components/ui/EmptyState'
+import PageHeader from '../../components/ui/PageHeader'
 import Spinner from '../../components/common/Spinner'
 import HostelForm from '../../features/hostels/components/HostelForm'
 import OwnerHostelCard from '../../features/hostels/components/OwnerHostelCard'
@@ -39,49 +43,43 @@ export default function OwnerHostelsPage() {
   const showForm = isAdding || editingHostel !== null
 
   return (
-    <section className="mx-auto max-w-4xl px-4 py-12">
-      <h1 className="text-3xl font-bold text-slate-900">Manage branches</h1>
+    <section>
+      <PageHeader
+        eyebrow="Owner console"
+        title="Branches"
+        description="Add, edit, and remove the hostels you run."
+        actions={
+          showForm ? null : (
+            <Button onClick={() => setIsAdding(true)}>Add branch</Button>
+          )
+        }
+      />
 
-      <div className="mt-6">
-        <OwnerNav />
-      </div>
-
-      <div className="mt-6 flex items-center justify-between">
-        <p className="text-slate-600">{hostels.length} branches</p>
-        {!showForm && (
-          <button
-            type="button"
-            onClick={() => setIsAdding(true)}
-            className="rounded-md bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700"
-          >
-            Add branch
-          </button>
+      <div className="mt-6 space-y-4">
+        {showForm && (
+          <div className="card p-5">
+            <HostelForm
+              hostel={editingHostel}
+              onDone={() => {
+                setIsAdding(false)
+                setEditingHostel(null)
+              }}
+            />
+          </div>
         )}
-      </div>
 
-      {showForm && (
-        <div className="mt-4">
-          <HostelForm
-            hostel={editingHostel}
-            onDone={() => {
-              setIsAdding(false)
-              setEditingHostel(null)
-            }}
+        {isLoading && <Spinner compact label="Loading branches…" />}
+
+        {error && <Alert tone="error">Could not load branches: {error}</Alert>}
+
+        {!isLoading && !error && hostels.length === 0 && (
+          <EmptyState
+            icon={Building2}
+            title="No branches yet"
+            hint="Add your first branch to get started."
           />
-        </div>
-      )}
+        )}
 
-      {isLoading && <Spinner label="Loading hostels..." />}
-
-      {error && <p className="mt-6 text-red-600">Could not load branches: {error}</p>}
-
-      {!isLoading && !error && hostels.length === 0 && (
-        <p className="mt-6 text-slate-600">
-          No branches yet. Add your first branch to get started.
-        </p>
-      )}
-
-      <div className="mt-4 space-y-4">
         {hostels.map((hostel) => (
           <OwnerHostelCard
             key={hostel.id}

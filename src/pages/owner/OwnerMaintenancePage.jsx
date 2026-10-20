@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import OwnerNav from '../../components/layout/OwnerNav'
+import { Wrench } from 'lucide-react'
+import Alert from '../../components/ui/Alert'
+import EmptyState from '../../components/ui/EmptyState'
+import PageHeader from '../../components/ui/PageHeader'
+import SearchInput from '../../components/ui/SearchInput'
 import Spinner from '../../components/common/Spinner'
 import MaintenanceCard from '../../features/maintenance/components/MaintenanceCard'
 import {
@@ -45,29 +49,30 @@ export default function OwnerMaintenancePage() {
   })
 
   const openCount = requests.filter((r) => r.status !== 'resolved').length
+  const isFiltering = Boolean(search) || statusFilter !== 'all'
 
   return (
-    <section className="mx-auto max-w-4xl px-4 py-12">
-      <h1 className="text-3xl font-bold text-slate-900">Maintenance</h1>
-
-      <div className="mt-6">
-        <OwnerNav />
-      </div>
+    <section>
+      <PageHeader
+        eyebrow="Owner console"
+        title="Upkeep"
+        description="Review tenant issues and mark them resolved."
+      />
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-        <span className="text-sm text-slate-500">{openCount} unresolved</span>
-        <div className="flex flex-wrap gap-3">
-          <input
-            type="search"
+        <span className="text-sm text-charcoal/55">{openCount} unresolved</span>
+        <div className="flex w-full flex-wrap gap-3 sm:w-auto">
+          <SearchInput
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={setSearch}
             placeholder="Search tenant, branch or issue…"
-            className="w-full max-w-xs rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none"
+            className="w-full sm:max-w-xs"
           />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:outline-none"
+            aria-label="Filter by status"
+            className="field w-auto"
           >
             <option value="all">All statuses</option>
             <option value="open">Open</option>
@@ -77,17 +82,28 @@ export default function OwnerMaintenancePage() {
         </div>
       </div>
 
-      {isLoading && <Spinner label="Loading maintenance requests..." />}
-      {error && <p className="mt-6 text-red-600">Could not load requests: {error}</p>}
-      {saveError && <p className="mt-6 text-red-600">{saveError}</p>}
-
-      {!isLoading && !error && filtered.length === 0 && (
-        <p className="mt-6 text-slate-600">
-          {search || statusFilter !== 'all' ? 'No requests match your filters.' : 'No maintenance requests yet.'}
-        </p>
-      )}
-
       <div className="mt-4 space-y-4">
+        {isLoading && <Spinner compact label="Loading upkeep requests…" />}
+
+        {error && (
+          <Alert tone="error">Could not load requests: {error}</Alert>
+        )}
+        {saveError && <Alert tone="error">{saveError}</Alert>}
+
+        {!isLoading && !error && filtered.length === 0 && (
+          <EmptyState
+            icon={Wrench}
+            title={
+              isFiltering ? 'No requests match your filters' : 'No upkeep requests yet'
+            }
+            hint={
+              isFiltering
+                ? 'Try another status or search term.'
+                : 'Tenant requests will appear here as they are raised.'
+            }
+          />
+        )}
+
         {filtered.map((request) => (
           <MaintenanceCard
             key={request.id}

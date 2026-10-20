@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import OwnerNav from '../../components/layout/OwnerNav'
+import { FileText } from 'lucide-react'
+import Alert from '../../components/ui/Alert'
+import Button from '../../components/ui/Button'
+import EmptyState from '../../components/ui/EmptyState'
+import PageHeader from '../../components/ui/PageHeader'
 import Spinner from '../../components/common/Spinner'
 import { selectCurrentUser } from '../../features/auth/authSlice'
 import FinancialSummary from '../../features/finance/components/FinancialSummary'
@@ -87,94 +91,122 @@ export default function OwnerDashboardPage() {
   })
 
   return (
-    <section className="mx-auto max-w-4xl px-4 py-12">
-      <h1 className="text-3xl font-bold text-slate-900">Owner dashboard</h1>
-      <p className="mt-2 text-slate-600">
-        Welcome back, {user?.displayName ?? 'owner'}.
-      </p>
+    <section>
+      <PageHeader
+        eyebrow="Owner console"
+        title="Dashboard"
+        description={`Welcome back, ${user?.displayName ?? 'owner'}.`}
+      />
 
-      <div className="mt-6">
-        <OwnerNav />
-      </div>
+      <div className="mt-6 space-y-6">
+        {/* Financials */}
+        <section aria-labelledby="financials-heading">
+          <h2 id="financials-heading" className="text-base font-semibold text-charcoal">
+            Financial summary
+          </h2>
+          <div className="mt-3">
+            <FinancialSummary />
+          </div>
+        </section>
 
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold text-slate-900">Financial summary</h2>
-        <div className="mt-3">
-          <FinancialSummary />
-        </div>
-      </div>
-
-      <div className="mt-8">
         <NotificationInbox recipientId={OWNER_INBOX} />
-      </div>
 
-      {/* Broadcast announcement */}
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold text-slate-900">Send announcement</h2>
-        <p className="mt-1 text-sm text-slate-500">
-          Push a notification to all tenants or a specific branch.
-        </p>
-        <form onSubmit={handleBroadcast} className="mt-3 space-y-3 rounded-lg border border-slate-200 bg-white p-4">
-          <div className="flex flex-wrap gap-3">
+        {/* Broadcast announcement */}
+        <section aria-labelledby="announcement-heading">
+          <h2 id="announcement-heading" className="text-base font-semibold text-charcoal">
+            Send announcement
+          </h2>
+          <p className="mt-1 text-sm text-charcoal/60">
+            Push a notification to all tenants or a specific branch.
+          </p>
+
+          <form onSubmit={handleBroadcast} className="card mt-3 space-y-3 p-4">
             <select
               value={broadcastTarget}
               onChange={(e) => setBroadcastTarget(e.target.value)}
-              className="rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:outline-none"
+              aria-label="Choose who receives the announcement"
+              className="field w-full sm:max-w-xs"
             >
               <option value="all">All tenants</option>
               {hostels.map((h) => (
                 <option key={h.id} value={h.id}>{h.name}</option>
               ))}
             </select>
-          </div>
-          <textarea
-            value={announcement}
-            onChange={(e) => setAnnouncement(e.target.value)}
-            rows={2}
-            placeholder="Type your announcement here…"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-800 focus:border-indigo-500 focus:outline-none"
-            required
-          />
-          {broadcastResult && (
-            <p className={`text-sm ${broadcastResult.type === 'ok' ? 'text-green-700' : broadcastResult.type === 'warn' ? 'text-amber-700' : 'text-red-600'}`}>
-              {broadcastResult.msg}
-            </p>
-          )}
-          <button
-            type="submit"
-            disabled={broadcasting || !announcement.trim()}
-            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
-          >
-            {broadcasting ? 'Sending…' : 'Send announcement'}
-          </button>
-        </form>
-      </div>
 
-      <div className="mt-8">
-        <div className="flex items-baseline justify-between">
-          <h2 className="text-xl font-semibold text-slate-900">Stay requests</h2>
-          <span className="text-sm text-slate-500">{pendingCount} pending</span>
-        </div>
-
-        {isLoading && <Spinner label="Loading stay requests..." />}
-        {error && <p className="mt-4 text-red-600">Could not load requests: {error}</p>}
-        {saveError && <p className="mt-4 text-red-600">{saveError}</p>}
-
-        {!isLoading && !error && sortedRequests.length === 0 && (
-          <p className="mt-4 text-slate-600">No stay requests yet.</p>
-        )}
-
-        <div className="mt-4 space-y-4">
-          {sortedRequests.map((request) => (
-            <StayRequestCard
-              key={request.id}
-              request={request}
-              isDeciding={decidingRequestId === request.id}
-              onApprove={() => dispatch(approveStayRequest(request))}
-              onReject={() => dispatch(rejectStayRequest(request))}
+            <textarea
+              value={announcement}
+              onChange={(e) => setAnnouncement(e.target.value)}
+              rows={2}
+              placeholder="Type your announcement here…"
+              className="field"
+              required
             />
-          ))}
-        </div>
+
+            {broadcastResult && (
+              <Alert
+                tone={
+                  broadcastResult.type === 'ok'
+                    ? 'success'
+                    : broadcastResult.type === 'warn'
+                      ? 'warning'
+                      : 'error'
+                }
+              >
+                {broadcastResult.msg}
+              </Alert>
+            )}
+
+            <div className="flex justify-end">
+              <Button
+                type="submit"
+                size="sm"
+                disabled={broadcasting || !announcement.trim()}
+              >
+                {broadcasting ? 'Sending…' : 'Send announcement'}
+              </Button>
+            </div>
+          </form>
+        </section>
+
+        {/* Stay requests */}
+        <section aria-labelledby="stay-requests-heading">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2
+              id="stay-requests-heading"
+              className="text-base font-semibold text-charcoal"
+            >
+              Stay requests
+            </h2>
+            <span className="text-sm text-charcoal/55">{pendingCount} pending</span>
+          </div>
+
+          <div className="mt-3 space-y-4">
+            {isLoading && <Spinner compact label="Loading stay requests…" />}
+
+            {error && (
+              <Alert tone="error">Could not load requests: {error}</Alert>
+            )}
+            {saveError && <Alert tone="error">{saveError}</Alert>}
+
+            {!isLoading && !error && sortedRequests.length === 0 && (
+              <EmptyState
+                icon={FileText}
+                title="No stay requests yet"
+                hint="Requests from prospective tenants will appear here for approval."
+              />
+            )}
+
+            {sortedRequests.map((request) => (
+              <StayRequestCard
+                key={request.id}
+                request={request}
+                isDeciding={decidingRequestId === request.id}
+                onApprove={() => dispatch(approveStayRequest(request))}
+                onReject={() => dispatch(rejectStayRequest(request))}
+              />
+            ))}
+          </div>
+        </section>
       </div>
     </section>
   )
