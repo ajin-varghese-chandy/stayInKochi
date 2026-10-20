@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { uploadImage } from '../../services/cloudinary'
 import { notify, OWNER_INBOX } from '../notifications/notificationService'
 import {
   createMaintenanceRequest,
@@ -40,16 +39,15 @@ export const fetchMyMaintenance = createAsyncThunk(
   },
 )
 
-// Tenant: raise a request. The photo (if any) is uploaded to Cloudinary first.
+// Tenant: raise a request. The photo (if any) is a plain image URL pasted by
+// the tenant — no file upload happens.
 export const submitMaintenanceRequest = createAsyncThunk(
   'maintenance/submitMaintenanceRequest',
-  async ({ request, imageFile }, { rejectWithValue }) => {
+  async ({ request, imageUrl }, { rejectWithValue }) => {
     try {
-      const imageUrl = imageFile ? await uploadImage(imageFile) : ''
-
       const created = await createMaintenanceRequest({
         ...request,
-        imageUrl,
+        imageUrl: (imageUrl ?? '').trim(),
         status: 'open',
         createdAt: new Date().toISOString(),
       })
