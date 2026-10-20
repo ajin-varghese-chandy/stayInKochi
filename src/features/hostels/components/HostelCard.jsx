@@ -1,25 +1,18 @@
 import { Link } from 'react-router-dom'
-import { MapPin } from 'lucide-react'
+import { ArrowRight, MapPin } from 'lucide-react'
 import formatRupees from '../../../utils/formatRupees'
 
 // One branch in the public list.
-//   variant="card"     vertical, image-led (default)
-//   variant="feature"  horizontal, used for the first/result lead item
+//   variant="card"     uniform catalogue card (default) — `meta` renders as a
+//                      badge over the photograph
+//   variant="feature"  horizontal lead card (landing page) — `meta` renders in
+//                      the body
 export default function HostelCard({ hostel, variant = 'card', meta }) {
-  const image = (
-    <img
-      src={hostel.image}
-      alt={hostel.name}
-      loading="lazy"
-      className="h-52 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02] sm:h-56"
-    />
-  )
-
-  const body = (
-    <div className="flex flex-1 flex-col p-5">
-      <div className="flex items-start justify-between gap-4">
+  const body = (showMeta) => (
+    <div className="flex flex-1 flex-col p-4 sm:p-5">
+      <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="font-serif text-xl leading-snug text-charcoal transition-colors group-hover:text-forest">
+          <h2 className="display text-lg leading-snug text-charcoal transition-colors group-hover:text-forest">
             {hostel.name}
           </h2>
           <p className="mt-1 flex items-center gap-1.5 text-sm text-charcoal/60">
@@ -31,7 +24,7 @@ export default function HostelCard({ hostel, variant = 'card', meta }) {
           <span className="text-base font-semibold text-forest tabular-nums">
             {formatRupees(hostel.rentPerMonth)}
           </span>
-          <span className="block text-xs text-charcoal/55">per month</span>
+          <span className="block text-xs text-charcoal/55">/month</span>
         </p>
       </div>
 
@@ -39,11 +32,11 @@ export default function HostelCard({ hostel, variant = 'card', meta }) {
         {hostel.description}
       </p>
 
-      {meta && <div className="mt-4">{meta}</div>}
+      {showMeta && meta && <div className="mt-3">{meta}</div>}
 
       {hostel.amenities?.length > 0 && (
-        <ul className="mt-4 flex flex-wrap gap-1.5">
-          {hostel.amenities.slice(0, 4).map((amenity) => (
+        <ul className="mt-3 flex flex-wrap gap-1.5">
+          {hostel.amenities.slice(0, 3).map((amenity) => (
             <li
               key={amenity}
               className="rounded-card border border-line bg-ivory px-2 py-0.5 text-xs text-charcoal/70"
@@ -51,14 +44,23 @@ export default function HostelCard({ hostel, variant = 'card', meta }) {
               {amenity}
             </li>
           ))}
+          {hostel.amenities.length > 3 && (
+            <li className="rounded-card border border-line px-2 py-0.5 text-xs text-charcoal/55">
+              +{hostel.amenities.length - 3}
+            </li>
+          )}
         </ul>
       )}
 
-      <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-forest">
+      {/* Pushed to the bottom so every card in a row ends level */}
+      <span className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-medium text-forest">
         View branch
-        <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
-          →
-        </span>
+        <ArrowRight
+          size={15}
+          strokeWidth={1.9}
+          aria-hidden="true"
+          className="transition-transform group-hover:translate-x-0.5"
+        />
       </span>
     </div>
   )
@@ -76,7 +78,7 @@ export default function HostelCard({ hostel, variant = 'card', meta }) {
             className="h-56 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02] sm:h-full sm:min-h-64"
           />
         </div>
-        {body}
+        {body(true)}
       </Link>
     )
   }
@@ -86,8 +88,16 @@ export default function HostelCard({ hostel, variant = 'card', meta }) {
       to={`/hostels/${hostel.id}`}
       className="group card flex flex-col overflow-hidden"
     >
-      <div className="overflow-hidden">{image}</div>
-      {body}
+      <div className="relative overflow-hidden">
+        <img
+          src={hostel.image}
+          alt={hostel.name}
+          loading="lazy"
+          className="h-44 w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] sm:h-48"
+        />
+        {meta && <div className="absolute top-3 left-3">{meta}</div>}
+      </div>
+      {body(false)}
     </Link>
   )
 }
