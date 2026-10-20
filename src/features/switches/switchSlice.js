@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { openRazorpayCheckout, verifyRazorpayPayment } from '../../services/razorpay'
+import { openCheckout } from '../../services/paymentGateway'
 import { notify, OWNER_INBOX } from '../notifications/notificationService'
 import { updateBed } from '../rooms/bedService'
 import { getTenantsByUser, updateTenant } from '../tenants/tenantService'
@@ -49,7 +49,7 @@ export const fetchAllSwitches = createAsyncThunk(
 
 // Tenant: pay the switching fee, then lodge the request for owner approval.
 //   1. record the request as unpaid
-//   2. open Razorpay
+//   2. open the payment sheet
 //   3. mark it pending (paid) on success, cancelled otherwise
 export const requestHostelSwitch = createAsyncThunk(
   'switches/requestHostelSwitch',
@@ -65,16 +65,16 @@ export const requestHostelSwitch = createAsyncThunk(
         toHostelName: toHostel.name,
         amount,
         status: 'unpaid',
-        razorpayPaymentId: '',
+        paymentId: '',
         createdAt: today(),
       })
 
       let response
       try {
-        response = await openRazorpayCheckout({
+        response = await openCheckout({
           amountInRupees: amount,
           description: `Switch to ${toHostel.name}`,
-          prefill: { name: tenant.name, email: tenant.email },
+          payer: { name: tenant.name, email: tenant.email },
         })
       } catch (error) {
         await updateSwitchRequest(request.id, { status: 'cancelled' })
@@ -86,22 +86,9 @@ export const requestHostelSwitch = createAsyncThunk(
         return rejectWithValue('Payment was cancelled.')
       }
 
-      // The server re-checks the signature with RAZORPAY_KEY_SECRET before the
-      // fee is recorded as paid.
-      const verified = await verifyRazorpayPayment({
-        razorpayPaymentId: response.razorpay_payment_id,
-        razorpayOrderId: response.razorpay_order_id,
-        razorpaySignature: response.razorpay_signature,
-      })
-
-      if (!verified) {
-        await updateSwitchRequest(request.id, { status: 'cancelled' })
-        return rejectWithValue('Payment could not be verified. Please contact support.')
-      }
-
       const pending = await updateSwitchRequest(request.id, {
         status: 'pending',
-        razorpayPaymentId: response.razorpay_payment_id ?? '',
+        paymentId: response.paymentId ?? '',
         paidOn: today(),
       })
 

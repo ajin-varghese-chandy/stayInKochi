@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { openRazorpayCheckout, verifyRazorpayPayment } from '../../services/razorpay'
+import { openCheckout } from '../../services/paymentGateway'
 import { notify, OWNER_INBOX } from '../notifications/notificationService'
 import { updateTenant } from '../tenants/tenantService'
 import {
@@ -13,7 +13,7 @@ const initialState = {
   items: [], // payments for the current view (tenant: mine, owner: all)
   isLoading: false,
   error: null,
-  isSaving: false, // a Razorpay payment is in progress
+  isSaving: false, // a payment is in progress
   saveError: null,
 }
 
@@ -41,9 +41,9 @@ export const fetchAllPayments = createAsyncThunk(
   },
 )
 
-// Tenant: pay one month's rent through Razorpay.
+// Tenant: pay one month's rent.
 //   1. record a pending payment
-//   2. open the Razorpay checkout
+//   2. open the payment sheet
 //   3. mark it paid (and the tenant's rent paid) on success
 //   4. mark it failed/cancelled otherwise
 export const payRent = createAsyncThunk(
@@ -66,10 +66,10 @@ export const payRent = createAsyncThunk(
 
       let response
       try {
-        response = await openRazorpayCheckout({
+        response = await openCheckout({
           amountInRupees: amount,
           description: `Rent for ${month}`,
-          prefill: { name: tenant.name, email: tenant.email },
+          payer: { name: tenant.name, email: tenant.email },
         })
       } catch (error) {
         await updatePayment(payment.id, { status: 'failed' })
@@ -81,22 +81,9 @@ export const payRent = createAsyncThunk(
         return rejectWithValue('Payment was cancelled.')
       }
 
-      // Never trust the checkout callback alone: the server re-checks the
-      // signature with RAZORPAY_KEY_SECRET before we record anything as paid.
-      const verified = await verifyRazorpayPayment({
-        razorpayPaymentId: response.razorpay_payment_id,
-        razorpayOrderId: response.razorpay_order_id,
-        razorpaySignature: response.razorpay_signature,
-      })
-
-      if (!verified) {
-        await updatePayment(payment.id, { status: 'failed' })
-        return rejectWithValue('Payment could not be verified. Please contact support.')
-      }
-
       const paid = await updatePayment(payment.id, {
         status: 'paid',
-        razorpayPaymentId: response.razorpay_payment_id ?? '',
+        paymentId: response.paymentId ?? '',
         paidOn: new Date().toISOString().slice(0, 10),
       })
 

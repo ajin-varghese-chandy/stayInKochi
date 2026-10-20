@@ -8,7 +8,7 @@ function currentMonth() {
   return new Date().toISOString().slice(0, 7)
 }
 
-// Rent due + the Razorpay pay button for one tenant.
+// Rent due + the pay button for one tenant.
 export default function PaymentSummary({
   tenant,
   paidThisMonth,

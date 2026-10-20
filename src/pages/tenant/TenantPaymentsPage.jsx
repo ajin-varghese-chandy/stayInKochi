@@ -29,7 +29,7 @@ function monthLabel(month) {
     : date.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
 }
 
-// Tenant screen for paying rent through Razorpay and viewing payment history.
+// Tenant screen for paying rent and viewing payment history.
 export default function TenantPaymentsPage() {
   const dispatch = useDispatch()
   const user = useSelector(selectCurrentUser)
@@ -132,7 +132,7 @@ export default function TenantPaymentsPage() {
               <p className="mt-2 text-2xl font-semibold tabular-nums text-charcoal">
                 {formatRupees(rentAmount)}
               </p>
-              <p className="mt-1 text-sm text-charcoal/55">
+              <p className="mt-1 text-sm text-charcoal/70">
                 For {monthLabel(currentMonth)}
               </p>
             </div>
@@ -205,13 +205,11 @@ export default function TenantPaymentsPage() {
                         {formatRupees(payment.amount)}
                       </p>
 
-                      <p className="mt-1 text-xs text-charcoal/55">
+                      <p className="mt-1 text-xs text-charcoal/70">
                         {payment.status === 'paid' && payment.paidOn
                           ? `Paid on ${payment.paidOn}`
                           : `Created on ${payment.createdAt}`}
-                        {payment.razorpayPaymentId
-                          ? ` · ${payment.razorpayPaymentId}`
-                          : ''}
+                        {payment.paymentId ? ` · ${payment.paymentId}` : ''}
                       </p>
                     </div>
                   ))}
@@ -248,13 +246,13 @@ export default function TenantPaymentsPage() {
                               {payment.paidOn ?? '—'}
                             </span>
                             {!payment.paidOn && payment.createdAt && (
-                              <span className="block text-xs text-charcoal/55">
+                              <span className="block text-xs text-charcoal/70">
                                 Created {payment.createdAt}
                               </span>
                             )}
                           </td>
-                          <td className="text-xs text-charcoal/55">
-                            {payment.razorpayPaymentId || '—'}
+                          <td className="text-xs text-charcoal/70">
+                            {payment.paymentId || '—'}
                           </td>
                         </tr>
                       ))}
