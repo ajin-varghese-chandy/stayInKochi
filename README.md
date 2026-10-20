@@ -1,33 +1,37 @@
 # StayInKochi
 
-A full-stack hostel management platform for a single owner running multiple **StayInKochi** branches across Kochi. Tenants browse branches, request stays, pay rent, book food, raise maintenance issues, and chat — all from one app.
+A hostel management app for **StayInKochi**, which runs hostel and PG branches across Kochi.
+One owner manages everything; tenants use the app to find a branch, move in, pay rent, and talk to the owner.
 
-## Tech stack
+## What it does
 
-| Layer | Technology |
-|---|---|
-| Frontend | React 19, Vite, Redux Toolkit, React Router 7, Tailwind CSS 4 |
-| Auth & Chat | Firebase (Authentication + Realtime Database) |
-| REST data | json-server (wrapped in a custom Node.js server) |
-| Payments | Razorpay |
-| Image uploads | Cloudinary |
+- **Anyone** — browse the branches, search by area or price, and send a stay request.
+- **Tenants** — see their room and rent status, pay rent, book food plans, raise maintenance requests (with a photo), chat with the owner, and request a switch to another branch.
+- **Owner** — one console for all branches: dashboard, branches, rooms and beds, tenants, stay/switch approvals, payments, food plans, maintenance, and chat.
 
-## Getting started
+## Tech
 
-### 1. Clone and install
+- React 19 + Vite + Tailwind CSS 4
+- Redux Toolkit (state)
+- Firebase (login and chat)
+- json-server (data in `db.json`)
+- axios (API calls)
+
+## Run it
+
+**1. Install**
 
 ```bash
 npm install
 ```
 
-### 2. Configure environment
+**2. Configure**
 
-Copy `.env.example` to `.env` and fill in your values:
+Copy `.env.example` to `.env` and fill in your Firebase values:
 
 ```
 VITE_API_BASE_URL=http://localhost:5000
-VITE_OWNER_EMAIL=owner@yourdomain.com
-
+VITE_OWNER_EMAIL=admin@stayinkochi.com
 VITE_FIREBASE_API_KEY=...
 VITE_FIREBASE_AUTH_DOMAIN=...
 VITE_FIREBASE_DATABASE_URL=...
@@ -35,69 +39,44 @@ VITE_FIREBASE_PROJECT_ID=...
 VITE_FIREBASE_STORAGE_BUCKET=...
 VITE_FIREBASE_MESSAGING_SENDER_ID=...
 VITE_FIREBASE_APP_ID=...
-
-RAZORPAY_KEY_ID=...
-RAZORPAY_KEY_SECRET=...
-
-CLOUDINARY_URL=cloudinary://api_key:api_secret@cloud_name
 ```
 
-### 3. Create the owner account
-
-The owner never registers through the app. Create a Firebase Auth user manually in the Firebase console using the email set in `VITE_OWNER_EMAIL`. Everyone else who registers becomes a tenant.
-
-### 4. Run
-
-Start the API server and the Vite dev server in separate terminals:
+**3. Start both servers** (two terminals)
 
 ```bash
-# Terminal 1 – API (json-server + secrets proxy)
-npm run server
-
-# Terminal 2 – Frontend
-npm run dev
+npm run server   # data API on http://localhost:5000
+npm run dev      # app on http://localhost:5173
 ```
 
-## Features
+**4. Create the owner account**
 
-### Owner
-- **Dashboard** — financial summary (rent collected, pending, food income, switch fees), notification inbox, broadcast announcements to all tenants or a specific branch
-- **Branches** — add / edit / delete StayInKochi branches; branch names are auto-prefixed with "StayInKochi"
-- **Rooms & Beds** — per-branch room management; assign tenants to beds
-- **Tenants** — list all active tenants with search; reset rent status; check out tenants
-- **Stay requests** — approve or reject incoming requests; approved requests activate a tenant record
-- **Payments** — payment history with search, status filter, and CSV export
-- **Maintenance** — review and update issue status with search and status filter
-- **Food** — manage monthly food plans and individual bookable meals; activity tab shows all active subscriptions and meal bookings
-- **Switch requests** — approve paid branch-switch requests
-- **Chat** — group chat per branch + private 1:1 chat with each tenant
+The owner does not register in the app. Add a user in the Firebase console with the email you set in `VITE_OWNER_EMAIL`.
+Anyone who registers in the app becomes a tenant.
 
-### Tenant
-- **Dashboard** — tenancy status, stay request history, notification inbox
-- **Profile** — view active tenancy details; edit name and phone
-- **Rent** — pay monthly rent via Razorpay; payment history
-- **Food** — subscribe to monthly plans or book individual meals
-- **Maintenance** — raise requests with optional photo upload (Cloudinary)
-- **Switch branch** — pay the switching fee via Razorpay; owner approves the move
-- **Chat** — branch group chat + private chat with the owner
+## Data
 
-### Public
-- Browse all StayInKochi branches with search
-- Branch detail page with amenities and stay request form
+`db.json` holds all the demo data: 6 branches, rooms, beds, tenants, payments, food plans, meals, requests, and notifications — enough to try every screen.
 
-## Project structure
+- Records you create in the app are written back to this file.
+- Reset it any time with `git checkout db.json`.
+- Demo tenants (`demo-uid-10`, `demo-uid-11`, …) exist in the data only, so they appear in the owner console but cannot log in.
+- Start the API with `npm run server`, not `npx json-server db.json` — the script includes a flag that stops json-server deleting related records when you delete something.
+
+## Notes
+
+- **Payments** — rent and the branch-switch fee are paid through the card checkout sheet in the app.
+- **Images** — no upload service; wherever a photo is needed, paste a hosted image URL.
+
+## Where things live
 
 ```
 src/
-  app/            Redux store
-  components/     Shared UI (Navbar, layouts, FormField, Spinner)
-  features/       Feature slices: auth, chat, finance, food, hostels,
-                  maintenance, notifications, payments, rooms, stayRequests,
-                  switches, tenants
-  hooks/          useAuthListener
-  pages/          Route-level page components
-  routes/         AppRoutes, ProtectedRoute
-  services/       api, firebase, razorpay, cloudinary
-  utils/          formatRupees
-server/           Node.js API server (json-server + secrets proxy)
+  components/   shared UI (navbar, layouts, buttons, dialogs)
+  features/     one folder per feature (auth, chat, food, hostels,
+                maintenance, notifications, payments, rooms,
+                stayRequests, switches, tenants) — slice + service + UI
+  pages/        the screens for each route
+  routes/       routing and access control
+  services/     api (axios), firebase, paymentGateway
+db.json         the data json-server serves
 ```
