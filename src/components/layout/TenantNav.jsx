@@ -1,41 +1,57 @@
 import { NavLink } from 'react-router-dom'
-import {
-  ArrowLeftRight,
-  IndianRupee,
-  LayoutDashboard,
-  MessageSquare,
-  User,
-  UtensilsCrossed,
-  Wrench,
-} from 'lucide-react'
+import { TENANT_NAV_ITEMS } from './tenantNavItems'
 
-// Tenant portal navigation: a horizontally scrollable tab strip that never
-// wraps and keeps 44px touch targets on mobile.
-export const TENANT_NAV_ITEMS = [
-  { to: '/tenant', label: 'Overview', icon: LayoutDashboard, end: true },
-  { to: '/tenant/payments', label: 'Rent', icon: IndianRupee },
-  { to: '/tenant/food', label: 'Food', icon: UtensilsCrossed },
-  { to: '/tenant/maintenance', label: 'Upkeep', icon: Wrench },
-  { to: '/tenant/chat', label: 'Messages', icon: MessageSquare },
-  { to: '/tenant/switch', label: 'Switch', icon: ArrowLeftRight },
-  { to: '/tenant/profile', label: 'Profile', icon: User },
-]
+// Tenant portal navigation in two forms:
+//   variant="tabs"   underline tab strip for sm+ screens (sits in the header)
+//   variant="bottom" fixed bottom tab bar for phones (mounted by the layout)
+// Both use the same items and the same active language: forest text on a
+// sage highlight — high contrast against white in either form.
+export default function TenantNav({ variant = 'tabs' }) {
+  if (variant === 'bottom') {
+    return (
+      <nav
+        aria-label="Tenant sections"
+        className="grid grid-cols-7 gap-0.5 px-1.5 py-1.5"
+      >
+        {TENANT_NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={end}
+            title={label}
+            className={({ isActive }) =>
+              `flex min-h-12 flex-col items-center justify-center gap-1 rounded-card px-0.5 py-1.5 text-[10px] font-medium leading-none transition-colors ${
+                isActive
+                  ? 'bg-sage/70 text-forest'
+                  : 'text-charcoal/70 hover:bg-charcoal/5 hover:text-charcoal'
+              }`
+            }
+          >
+            <Icon size={19} strokeWidth={1.75} aria-hidden="true" />
+            <span className="hidden min-[400px]:block">{label}</span>
+          </NavLink>
+        ))}
+      </nav>
+    )
+  }
 
-export default function TenantNav() {
   return (
-    <nav className="nav-scroll" aria-label="Tenant sections">
+    <nav
+      aria-label="Tenant sections"
+      className="nav-scroll items-center gap-5 sm:gap-6"
+    >
       {TENANT_NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
         <NavLink
           key={to}
           to={to}
           end={end}
           className={({ isActive }) =>
-            `tab inline-flex min-h-11 items-center gap-2 ${
+            `tab flex shrink-0 items-center gap-2 text-charcoal/80 ${
               isActive ? 'is-active' : ''
             }`
           }
         >
-          <Icon size={16} strokeWidth={1.75} aria-hidden="true" />
+          <Icon size={15} strokeWidth={1.75} aria-hidden="true" />
           {label}
         </NavLink>
       ))}
