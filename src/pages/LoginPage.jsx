@@ -5,12 +5,12 @@ import FormField from '../components/common/FormField'
 import Brand from '../components/ui/Brand'
 import Alert from '../components/ui/Alert'
 import Button from '../components/ui/Button'
-import Spinner from '../components/common/Spinner'
 import {
   clearAuthError,
   login,
   selectAuthError,
-  selectAuthLoading,
+  selectAuthSubmitting,
+  selectCurrentUser,
 } from '../features/auth/authSlice'
 
 // Sign-in screen. Centre column on ivory; serif title is one of the few
@@ -20,7 +20,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
 
   const dispatch = useDispatch()
-  const isLoading = useSelector(selectAuthLoading)
+  const user = useSelector(selectCurrentUser)
+  const isSubmitting = useSelector(selectAuthSubmitting)
   const error = useSelector(selectAuthError)
   const navigate = useNavigate()
   const location = useLocation()
@@ -32,21 +33,18 @@ export default function LoginPage() {
     dispatch(clearAuthError())
   }, [dispatch])
 
+  // Already signed in (arrived from an old link, or just finished signing in):
+  // leave the form straight away instead of asking for credentials again.
+  useEffect(() => {
+    if (!user) return
+    const fallback = user.role === 'owner' ? '/owner' : '/tenant'
+    navigate(redirectTo ?? fallback, { replace: true })
+  }, [navigate, redirectTo, user])
+
   function handleSubmit(event) {
     event.preventDefault()
-
-    dispatch(login({ email, password })).then((result) => {
-      if (result.meta.requestStatus !== 'fulfilled') return
-
-      const user = result.payload
-      const fallback = user.role === 'owner' ? '/owner' : '/tenant'
-      navigate(redirectTo ?? fallback, { replace: true })
-    })
+    dispatch(login({ email, password }))
   }
-
-  // The auth slice starts as "loading" until Firebase reports the session;
-  // only show a spinner then, so the form is not blocked while it settles.
-  const waitingForSession = isLoading && !email && !password
 
   return (
     <section className="mx-auto flex max-w-md flex-col justify-center px-4 py-12 sm:py-16">
@@ -69,34 +67,28 @@ export default function LoginPage() {
           </Alert>
         )}
 
-        {waitingForSession ? (
-          <div className="mt-6">
-            <Spinner compact label="Checking your session…" />
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-            <FormField
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              autoComplete="email"
-              placeholder="you@example.com"
-            />
-            <FormField
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              autoComplete="current-password"
-              placeholder="••••••••"
-            />
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <FormField
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            autoComplete="email"
+            placeholder="you@example.com"
+          />
+          <FormField
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            autoComplete="current-password"
+            placeholder="••••••••"
+          />
 
-            <Button type="submit" block disabled={isLoading}>
-              {isLoading ? 'Signing in…' : 'Sign in'}
-            </Button>
-          </form>
-        )}
+          <Button type="submit" block disabled={isSubmitting}>
+            {isSubmitting ? 'Signing in…' : 'Sign in'}
+          </Button>
+        </form>
       </div>
 
       <p className="mt-5 text-center text-sm text-charcoal/65">

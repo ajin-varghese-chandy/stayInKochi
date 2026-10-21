@@ -5,12 +5,12 @@ import FormField from '../components/common/FormField'
 import Brand from '../components/ui/Brand'
 import Alert from '../components/ui/Alert'
 import Button from '../components/ui/Button'
-import Spinner from '../components/common/Spinner'
 import {
   clearAuthError,
   register,
   selectAuthError,
-  selectAuthLoading,
+  selectAuthSubmitting,
+  selectCurrentUser,
 } from '../features/auth/authSlice'
 
 // Registration for new tenants. There is only one owner, and that account is
@@ -21,7 +21,8 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('')
 
   const dispatch = useDispatch()
-  const isLoading = useSelector(selectAuthLoading)
+  const user = useSelector(selectCurrentUser)
+  const isSubmitting = useSelector(selectAuthSubmitting)
   const error = useSelector(selectAuthError)
   const navigate = useNavigate()
 
@@ -29,17 +30,17 @@ export default function RegisterPage() {
     dispatch(clearAuthError())
   }, [dispatch])
 
+  // Signing up signs the tenant in, so ride that straight into the portal
+  // instead of keeping them on a form they no longer need.
+  useEffect(() => {
+    if (!user) return
+    navigate(user.role === 'owner' ? '/owner' : '/tenant', { replace: true })
+  }, [navigate, user])
+
   function handleSubmit(event) {
     event.preventDefault()
-
-    dispatch(register({ displayName, email, password })).then((result) => {
-      if (result.meta.requestStatus !== 'fulfilled') return
-
-      navigate('/tenant', { replace: true })
-    })
+    dispatch(register({ displayName, email, password }))
   }
-
-  const waitingForSession = isLoading && !email && !password
 
   return (
     <section className="mx-auto flex max-w-md flex-col justify-center px-4 py-12 sm:py-16">
@@ -63,42 +64,36 @@ export default function RegisterPage() {
           </Alert>
         )}
 
-        {waitingForSession ? (
-          <div className="mt-6">
-            <Spinner compact label="Checking your session…" />
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-            <FormField
-              label="Full name"
-              value={displayName}
-              onChange={(event) => setDisplayName(event.target.value)}
-              autoComplete="name"
-              placeholder="Your name"
-            />
-            <FormField
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              autoComplete="email"
-              placeholder="you@example.com"
-            />
-            <FormField
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              autoComplete="new-password"
-              placeholder="At least 6 characters"
-              hint="Used to sign in to your tenant portal."
-            />
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <FormField
+            label="Full name"
+            value={displayName}
+            onChange={(event) => setDisplayName(event.target.value)}
+            autoComplete="name"
+            placeholder="Your name"
+          />
+          <FormField
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            autoComplete="email"
+            placeholder="you@example.com"
+          />
+          <FormField
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            autoComplete="new-password"
+            placeholder="At least 6 characters"
+            hint="Used to sign in to your tenant portal."
+          />
 
-            <Button type="submit" block disabled={isLoading}>
-              {isLoading ? 'Creating account…' : 'Create account'}
-            </Button>
-          </form>
-        )}
+          <Button type="submit" block disabled={isSubmitting}>
+            {isSubmitting ? 'Creating account…' : 'Create account'}
+          </Button>
+        </form>
       </div>
 
       <p className="mt-5 text-center text-sm text-charcoal/65">

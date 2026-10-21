@@ -13,6 +13,35 @@ import { auth, database } from '../../services/firebase'
 // .env marks them as the owner. Everyone who registers becomes a tenant.
 const OWNER_EMAIL = import.meta.env.VITE_OWNER_EMAIL
 
+// The signed-in profile is mirrored in sessionStorage so a reload can render
+// the app immediately instead of replacing the whole screen with a "Checking
+// your session…" spinner while Firebase restores the session. Only the
+// profile (uid, email, name, role) is stored — never tokens or passwords.
+const CACHE_KEY = 'stayinkochi.auth.user'
+
+export function readCachedUser() {
+  try {
+    const raw = window.sessionStorage.getItem(CACHE_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    // Storage can be unavailable (private mode / blocked cookies). The app
+    // still works, it just falls back to the Firebase check.
+    return null
+  }
+}
+
+export function cacheUser(user) {
+  try {
+    if (user) {
+      window.sessionStorage.setItem(CACHE_KEY, JSON.stringify(user))
+    } else {
+      window.sessionStorage.removeItem(CACHE_KEY)
+    }
+  } catch {
+    // Ignore — see readCachedUser.
+  }
+}
+
 // Register a new tenant and save their profile in the realtime database.
 export async function registerUser({ email, password, displayName }) {
   const credential = await createUserWithEmailAndPassword(auth, email, password)
@@ -28,6 +57,7 @@ export async function registerUser({ email, password, displayName }) {
     createdAt: new Date().toISOString(),
   }
   await set(ref(database, `users/${firebaseUser.uid}`), profile)
+  cacheUser(profile)
 
   return profile
 }
@@ -36,11 +66,14 @@ export async function registerUser({ email, password, displayName }) {
 export async function loginUser({ email, password }) {
   const credential = await signInWithEmailAndPassword(auth, email, password)
   const savedProfile = await loadSavedProfileSafe(credential.user.uid)
-  return buildProfile(credential.user, savedProfile)
+  const profile = buildProfile(credential.user, savedProfile)
+  cacheUser(profile)
+  return profile
 }
 
 export async function logoutUser() {
   await signOut(auth)
+  cacheUser(null)
 }
 
 // Read the saved profile for a user id, or null if none exists yet.
