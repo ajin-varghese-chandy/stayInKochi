@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import AppLayout from '../components/layout/AppLayout'
 import OwnerLayout from '../components/layout/OwnerLayout'
 import TenantLayout from '../components/layout/TenantLayout'
+import DockPreviewPage from '../pages/DockPreviewPage'
 import HostelDetailsPage from '../pages/HostelDetailsPage'
 import HostelListPage from '../pages/HostelListPage'
 import LandingPage from '../pages/LandingPage'
@@ -27,12 +28,14 @@ import TenantSwitchPage from '../pages/tenant/TenantSwitchPage'
 import ProtectedRoute from './ProtectedRoute'
 
 // All app routes, split by shell:
-//   public  -> AppLayout (navbar + footer)
-//   owner   -> ProtectedRoute -> OwnerLayout (forest sidebar console)
-//   tenant  -> ProtectedRoute -> TenantLayout (compact portal header + tabs)
+//   public  -> AppLayout (floating navbar + footer)
+//   owner   -> ProtectedRoute -> OwnerLayout (floating bar + dock console)
+//   tenant  -> ProtectedRoute -> TenantLayout (floating bar + dock portal)
 export default function AppRoutes() {
   return (
     <Routes>
+      <Route path="dock-preview" element={<DockPreviewPage />} />
+
       <Route element={<AppLayout />}>
         <Route index element={<LandingPage />} />
         <Route path="hostels" element={<HostelListPage />} />

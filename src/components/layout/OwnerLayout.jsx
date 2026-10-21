@@ -3,12 +3,14 @@ import { Outlet } from 'react-router-dom'
 import { LogOut } from 'lucide-react'
 import Brand from '../ui/Brand'
 import NotificationBell from '../common/NotificationBell'
+import FloatingDock from './FloatingDock'
 import OwnerNav from './OwnerNav'
 import { logout, selectCurrentUser } from '../../features/auth/authSlice'
 
-// Owner console shell: forest header on top, ivory content, and a centered
-// bottom tab menu fixed to the viewport (icons only below 400px, labels above).
-// Content carries extra bottom padding so nothing sits under the tab bar.
+// Owner console shell: a floating forest top bar in the same material as the
+// bottom dock, ivory content, and a centered bottom tab menu fixed to the
+// viewport (icons only below 520px, labels above). Content carries extra
+// bottom padding so nothing sits under the tab bar.
 export default function OwnerLayout() {
   const user = useSelector(selectCurrentUser)
   const dispatch = useDispatch()
@@ -17,8 +19,8 @@ export default function OwnerLayout() {
   return (
     <div className="min-h-screen bg-ivory">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-forest">
-        <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
+      <header className="sticky top-0 z-40 bg-ivory px-3 pt-3 pb-1 sm:px-4">
+        <div className="topbar mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-3 px-3 sm:px-4">
           <div className="flex min-w-0 items-center gap-4">
             <Brand tone="light" to="/owner" markSize="h-6 w-6" />
             <span className="eyebrow eyebrow-light hidden border-l border-white/20 pl-4 sm:inline">
@@ -44,14 +46,14 @@ export default function OwnerLayout() {
       </header>
 
       {/* Content */}
-      <main className="mx-auto w-full max-w-6xl px-4 py-6 pb-28 sm:px-6 sm:py-8">
+      <main className="mx-auto w-full max-w-6xl px-4 py-6 pb-28 sm:px-6 sm:pt-8 sm:pb-32">
         <Outlet />
       </main>
 
-      {/* Centered bottom tab menu */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-forest pb-[env(safe-area-inset-bottom)] shadow-[0_-1px_0_rgba(26,58,44,0.9)]">
+      {/* Floating bottom tab menu */}
+      <FloatingDock>
         <OwnerNav />
-      </div>
+      </FloatingDock>
     </div>
   )
 }
