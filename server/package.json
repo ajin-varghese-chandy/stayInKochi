@@ -1,0 +1,17 @@
+{
+  "name": "stayinkochi-api",
+  "private": true,
+  "version": "1.0.0",
+  "description": "json-server REST API for StayInKochi. Deployed separately from the React app.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js --watch"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "json-server": "^0.17.4"
+  }
+}

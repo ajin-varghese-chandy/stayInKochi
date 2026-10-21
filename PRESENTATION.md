@@ -13,6 +13,7 @@ Setup checklist, done 10 minutes early:
 
 ```bash
 npm install
+npm run server:install  # API deps in server/
 npm run server     # terminal 1 — json-server on :5000
 npm run dev        # terminal 2 — Vite on :5173
 ```
@@ -51,7 +52,7 @@ books food → raises an issue → owner resolves it → tenant switches branch.
 - Folder tree: `src/features/*` (auth, hostels, rooms, payments, food, …)
 
 **Demo:** the landing page; open DevTools → React DevTools/Redux to show it's
-live. Mention `npm run server` serving `db.json`.
+live. Mention `npm run server` serving `server/db.json`.
 
 ---
 
@@ -172,7 +173,8 @@ live. Mention `npm run server` serving `db.json`.
 **Time:** 3.5 min · **Goal:** how it works under the hood + wrap-up
 
 **Say:**
-- **API**: json-server on `db.json` (13 collections: hostels, rooms, beds,
+- **API**: json-server in its own `server/` folder, serving `server/db.json`
+  (13 collections: hostels, rooms, beds,
   tenants, stayRequests, maintenanceRequests, payments, foodPlans, meals,
   planSubscriptions, mealBookings, switchRequests, notifications). Started
   with `npm run server` (keeps `--foreign-key-suffix _ref` — explain why).
@@ -188,14 +190,14 @@ live. Mention `npm run server` serving `db.json`.
   Razorpay, pagination, PWA/offline, admin analytics.
 
 **Show in code:**
-- `db.json` (open it — show the seed size), `src/services/api.js`
+- `server/db.json` (open it — show the seed size), `src/services/api.js`
 - One slice end-to-end: e.g. `src/features/maintenance/` slice → service →
   component
 - `src/index.css` design tokens
 - Terminal: `npm run lint` + `npm run build`
 
 **Demo:**
-1. Add a branch in the UI → show the new record appear in `db.json`
+1. Add a branch in the UI → show the new record appear in `server/db.json`
 2. Redux DevTools (if installed) showing thunks fire during the demo
 3. Close: hand over to Q&A
 

@@ -14,7 +14,7 @@ One owner manages everything; tenants use the app to find a branch, move in, pay
 - React 19 + Vite + Tailwind CSS 4
 - Redux Toolkit (state)
 - Firebase (login and chat)
-- json-server (data in `db.json`)
+- json-server (separate `server/` API, data in `server/db.json`)
 - axios (API calls)
 
 ## Run it
@@ -22,7 +22,8 @@ One owner manages everything; tenants use the app to find a branch, move in, pay
 **1. Install**
 
 ```bash
-npm install
+npm install             # React app
+npm run server:install  # API in server/ (or: cd server && npm install)
 ```
 
 **2. Configure**
@@ -44,7 +45,7 @@ VITE_FIREBASE_APP_ID=...
 **3. Start both servers** (two terminals)
 
 ```bash
-npm run server   # data API on http://localhost:5000
+npm run server   # API from server/ on http://localhost:5000
 npm run dev      # app on http://localhost:5173
 ```
 
@@ -55,12 +56,25 @@ Anyone who registers in the app becomes a tenant.
 
 ## Data
 
-`db.json` holds all the demo data: 6 branches, rooms, beds, tenants, payments, food plans, meals, requests, and notifications — enough to try every screen.
+`server/db.json` holds all the demo data: 6 branches, rooms, beds, tenants, payments, food plans, meals, requests, and notifications — enough to try every screen.
 
 - Records you create in the app are written back to this file.
-- Reset it any time with `git checkout db.json`.
+- Reset it any time with `git checkout server/db.json`.
 - Demo tenants (`demo-uid-10`, `demo-uid-11`, …) exist in the data only, so they appear in the owner console but cannot log in.
-- Start the API with `npm run server`, not `npx json-server db.json` — the script includes a flag that stops json-server deleting related records when you delete something.
+- Start the API with `npm run server` (or `cd server && npm run dev`), not `npx json-server db.json` — the server applies a flag that stops json-server deleting related records when you delete something.
+
+## Deploy the API
+
+The API lives in its own folder (`server/`) with its own `package.json`, so it deploys on its own Node host — Render, Railway, Fly.io, or a VPS.
+
+- **Root directory:** `server`
+- **Build command:** `npm install`
+- **Start command:** `npm start`
+- **Port:** read from `PORT`, which the host provides
+
+Then set `VITE_API_BASE_URL=https://your-api-host` in the frontend's environment and rebuild.
+
+Hosts with an ephemeral filesystem lose records written to `db.json` on restart — fine for a demo, but see `server/README.md` for persistence notes.
 
 ## Notes
 
@@ -78,5 +92,7 @@ src/
   pages/        the screens for each route
   routes/       routing and access control
   services/     api (axios), firebase, paymentGateway
-db.json         the data json-server serves
+server/         standalone json-server API (own package.json)
+  db.json       the data the API serves
+  index.js      entry point (PORT from env, _ref foreign keys)
 ```
