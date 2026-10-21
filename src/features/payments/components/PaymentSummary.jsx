@@ -12,6 +12,7 @@ function currentMonth() {
 export default function PaymentSummary({
   tenant,
   paidThisMonth,
+  paidMonths,
   isSaving,
   onPay,
 }) {
@@ -21,6 +22,7 @@ export default function PaymentSummary({
   // just-approved switch), so there is nothing to charge for.
   const hasRent = Number(tenant.rentPerMonth) > 0
   const amount = tenant.rentPerMonth ?? 0
+  const monthPaid = paidMonths?.has(month) ?? false
 
   return (
     <div className="card p-5">
@@ -76,11 +78,13 @@ export default function PaymentSummary({
               block
               size="lg"
               onClick={() => onPay(month)}
-              disabled={isSaving || !month}
+              disabled={isSaving || !month || monthPaid}
             >
-              {isSaving
-                ? 'Processing payment...'
-                : `Pay ${formatRupees(amount)}`}
+              {monthPaid
+                ? `Paid for ${month}`
+                : isSaving
+                  ? 'Processing payment...'
+                  : `Pay ${formatRupees(amount)}`}
             </Button>
           </div>
         </>

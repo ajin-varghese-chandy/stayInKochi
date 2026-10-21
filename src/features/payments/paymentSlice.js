@@ -50,7 +50,18 @@ export const payRent = createAsyncThunk(
   'payments/payRent',
   async ({ tenant, month }, { rejectWithValue }) => {
     try {
-      const amount = tenant.rentPerMonth ?? 0
+      const amount = Number(tenant?.rentPerMonth)
+
+      // A tenant without a bed has no rent set. Never open a ₹0 checkout.
+      if (!Number.isFinite(amount) || amount <= 0) {
+        return rejectWithValue(
+          'No rent has been set for your room yet. Ask the owner to assign you a bed first.',
+        )
+      }
+
+      if (!month) {
+        return rejectWithValue('Choose the month you want to pay for.')
+      }
 
       const payment = await createPayment({
         hostelId: tenant.hostelId,

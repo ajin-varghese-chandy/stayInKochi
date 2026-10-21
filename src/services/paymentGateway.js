@@ -1,9 +1,14 @@
-// Card checkout for StayInKochi.
+// Mock UPI checkout for StayInKochi. No bank or gateway is involved: the sheet
+// simulates a collect request and settles it locally.
 //
 // openCheckout() opens the payment sheet (components/common/PaymentSheet) and
 // resolves once the payer is done with it:
 //   resolves with { paymentId } when the payment goes through
 //   resolves with null when the sheet is dismissed before paying
+//   rejects if there is nothing to charge, or if the sheet is not mounted
+//
+// A checkout must never be left pending: an unresolved payment would leave a
+// switch request stuck at "unpaid" and block the tenant from trying again.
 
 let activeCheckout = null
 let openListener = null
@@ -17,25 +22,41 @@ export function createPaymentId() {
 
 // Show the sheet for one payment and wait for the outcome.
 export function openCheckout({ amountInRupees, description, payer = {} }) {
+  const amount = Number(amountInRupees)
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    return Promise.reject(new Error('There is no amount due to pay.'))
+  }
+
+  if (typeof openListener !== 'function') {
+    return Promise.reject(
+      new Error('Payment checkout is unavailable. Reload the page and try again.'),
+    )
+  }
+
   if (activeCheckout) dismissCheckout()
 
   return new Promise((resolve) => {
     activeCheckout = {
-      amountInRupees,
+      amountInRupees: amount,
       description,
       payer,
       paymentId: createPaymentId(),
       resolve,
     }
-    openListener?.(activeCheckout)
+    openListener(activeCheckout)
   })
 }
 
-// PaymentSheet subscribes on mount so it hears about the next checkout.
+// PaymentSheet subscribes on mount so it hears about the next checkout. If the
+// sheet goes away mid-checkout, settle the promise so the caller is not stuck.
 export function onCheckoutOpen(listener) {
   openListener = listener
   return () => {
-    if (openListener === listener) openListener = null
+    if (openListener === listener) {
+      openListener = null
+      if (activeCheckout) dismissCheckout()
+    }
   }
 }
 

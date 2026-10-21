@@ -113,7 +113,13 @@ export default function TenantPaymentsPage() {
   const paidThisMonth = payments.some(
     (payment) => payment.month === currentMonth && payment.status === 'paid',
   )
-  const rentAmount = tenancy.rentPerMonth ?? 0
+  const paidMonths = new Set(
+    payments
+      .filter((payment) => payment.status === 'paid')
+      .map((payment) => payment.month),
+  )
+  const rentAmount = Number(tenancy.rentPerMonth) || 0
+  const hasRent = rentAmount > 0
 
   return (
     <section>
@@ -130,28 +136,36 @@ export default function TenantPaymentsPage() {
             <div className="min-w-0">
               <p className="eyebrow">Rent due</p>
               <p className="mt-2 text-2xl font-semibold tabular-nums text-charcoal">
-                {formatRupees(rentAmount)}
+                {hasRent ? formatRupees(rentAmount) : 'Rent not set'}
               </p>
               <p className="mt-1 text-sm text-charcoal/70">
-                For {monthLabel(currentMonth)}
+                {hasRent
+                  ? `For ${monthLabel(currentMonth)}`
+                  : 'The owner assigns a bed and its rent before you can pay.'}
               </p>
             </div>
 
-            <StatusBadge status={paidThisMonth ? 'paid' : 'unpaid'} />
+            {hasRent && (
+              <StatusBadge status={paidThisMonth ? 'paid' : 'unpaid'} />
+            )}
           </div>
 
-          <div className="mt-4">
-            <Button
-              size="lg"
-              block
-              onClick={() => handlePay(currentMonth)}
-              disabled={isSaving}
-            >
-              {isSaving
-                ? 'Processing payment…'
-                : `Pay ${formatRupees(rentAmount)}`}
-            </Button>
-          </div>
+          {hasRent && (
+            <div className="mt-4">
+              <Button
+                size="lg"
+                block
+                onClick={() => handlePay(currentMonth)}
+                disabled={isSaving || paidThisMonth}
+              >
+                {paidThisMonth
+                  ? `Paid for ${monthLabel(currentMonth)}`
+                  : isSaving
+                    ? 'Processing payment…'
+                    : `Pay ${formatRupees(rentAmount)}`}
+              </Button>
+            </div>
+          )}
         </section>
 
         {saveError && <Alert tone="error">{saveError}</Alert>}
@@ -159,6 +173,7 @@ export default function TenantPaymentsPage() {
         <PaymentSummary
           tenant={tenancy}
           paidThisMonth={paidThisMonth}
+          paidMonths={paidMonths}
           isSaving={isSaving}
           onPay={handlePay}
         />
