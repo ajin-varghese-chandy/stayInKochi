@@ -216,26 +216,37 @@ export default function TenantSwitchPage() {
               />
             ) : (
               <div className="space-y-3">
-                {switchRequests.map((request) => (
-                  <div key={request.id} className="card p-4">
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-charcoal">
-                          {request.fromHostelName} → {request.toHostelName}
-                        </p>
-                        <p className="mt-0.5 text-xs text-charcoal/70">
-                          Requested {request.createdAt} ·{' '}
-                          <span className="font-semibold tabular-nums text-forest">
-                            {formatRupees(request.amount)}
-                          </span>{' '}
-                          paid
-                        </p>
-                      </div>
+                {switchRequests.map((request) => {
+                  const feePaid = ['pending', 'approved', 'rejected'].includes(
+                    request.status,
+                  )
 
-                      <StatusBadge status={request.status} />
+                  return (
+                    <div key={request.id} className="card p-4">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-charcoal">
+                            {request.fromHostelName} → {request.toHostelName}
+                          </p>
+                          <p className="mt-0.5 text-xs text-charcoal/70">
+                            Requested {request.createdAt} ·{' '}
+                            <span className="font-semibold tabular-nums text-forest">
+                              {formatRupees(request.amount)}
+                            </span>{' '}
+                            {feePaid ? 'paid' : 'not paid'}
+                          </p>
+                          {feePaid && request.paymentId && (
+                            <p className="mt-0.5 text-xs text-charcoal/45">
+                              {request.paymentId}
+                            </p>
+                          )}
+                        </div>
+
+                        <StatusBadge status={request.status} />
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             )}
           </div>

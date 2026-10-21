@@ -55,6 +55,23 @@ export const requestHostelSwitch = createAsyncThunk(
   'switches/requestHostelSwitch',
   async ({ tenant, toHostel, amount }, { rejectWithValue }) => {
     try {
+      const fee = Number(amount)
+
+      if (!tenant?.id || !tenant?.uid) {
+        return rejectWithValue(
+          'Your tenancy could not be found. Reload the page and try again.',
+        )
+      }
+
+      if (!toHostel?.id) {
+        return rejectWithValue('Choose a branch to switch to.')
+      }
+
+      // Never record an unpaid request for a free/undefined fee.
+      if (!Number.isFinite(fee) || fee <= 0) {
+        return rejectWithValue('The switch fee could not be calculated.')
+      }
+
       const request = await createSwitchRequest({
         tenantId: tenant.id,
         tenantUid: tenant.uid,
@@ -63,7 +80,7 @@ export const requestHostelSwitch = createAsyncThunk(
         fromHostelName: tenant.hostelName,
         toHostelId: toHostel.id,
         toHostelName: toHostel.name,
-        amount,
+        amount: fee,
         status: 'unpaid',
         paymentId: '',
         createdAt: today(),
@@ -72,7 +89,7 @@ export const requestHostelSwitch = createAsyncThunk(
       let response
       try {
         response = await openCheckout({
-          amountInRupees: amount,
+          amountInRupees: fee,
           description: `Switch to ${toHostel.name}`,
           payer: { name: tenant.name, email: tenant.email },
         })
@@ -111,9 +128,18 @@ export const approveSwitch = createAsyncThunk(
   async (switchRequest, { rejectWithValue }) => {
     try {
       const tenants = await getTenantsByUser(switchRequest.tenantUid)
-      const tenant = tenants[0]
+      // Prefer the exact tenant record the fee was paid for; fall back to the
+      // user's first record for older requests that did not store tenantId.
+      const tenant =
+        tenants.find(
+          (item) => String(item.id) === String(switchRequest.tenantId),
+        ) ?? tenants[0]
 
-      if (tenant?.bedId) {
+      if (!tenant) {
+        return rejectWithValue('The tenant record for this switch no longer exists.')
+      }
+
+      if (tenant.bedId) {
         await updateBed(tenant.bedId, { status: 'available', tenantId: null })
       }
 
