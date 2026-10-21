@@ -89,14 +89,6 @@
   ],
   "rooms": [
     {
-      "id": "r1",
-      "hostelId": "h1",
-      "roomNumber": "101",
-      "floor": 1,
-      "rentPerMonth": 8500,
-      "bedCount": 2
-    },
-    {
       "id": "r2",
       "hostelId": "h1",
       "roomNumber": "102",
@@ -207,25 +199,17 @@
       "floor": 2,
       "rentPerMonth": 6500,
       "bedCount": 2
+    },
+    {
+      "hostelId": "h1",
+      "roomNumber": "103",
+      "floor": 1,
+      "rentPerMonth": 6000,
+      "bedCount": 2,
+      "id": "rOIWxQO"
     }
   ],
   "beds": [
-    {
-      "id": "b1",
-      "roomId": "r1",
-      "hostelId": "h1",
-      "bedNumber": "A",
-      "status": "available",
-      "tenantId": null
-    },
-    {
-      "id": "b2",
-      "roomId": "r1",
-      "hostelId": "h1",
-      "bedNumber": "B",
-      "status": "occupied",
-      "tenantId": "mrkB7wSUnNw"
-    },
     {
       "id": "b3",
       "roomId": "r2",
@@ -473,6 +457,22 @@
       "bedNumber": "B",
       "status": "available",
       "tenantId": null
+    },
+    {
+      "roomId": "rOIWxQO",
+      "hostelId": "h1",
+      "bedNumber": "A",
+      "status": "occupied",
+      "tenantId": "td9vPOG25po",
+      "id": "MM7DsR7"
+    },
+    {
+      "roomId": "rOIWxQO",
+      "hostelId": "h1",
+      "bedNumber": "B",
+      "status": "available",
+      "tenantId": null,
+      "id": "2Vnz4V5"
     }
   ],
   "tenants": [
@@ -528,11 +528,14 @@
       "phone": "8921613233",
       "hostelId": "h1",
       "hostelName": "StayInKochi Kakkanad",
-      "roomId": null,
-      "bedId": null,
-      "rentStatus": "unpaid",
+      "roomId": "rOIWxQO",
+      "bedId": "MM7DsR7",
+      "rentStatus": "paid",
       "joinedOn": "2026-10-18",
-      "id": "td9vPOG25po"
+      "id": "td9vPOG25po",
+      "roomNumber": "103",
+      "bedNumber": "A",
+      "rentPerMonth": 6000
     },
     {
       "id": "t10",
@@ -1470,6 +1473,32 @@
       "paymentId": "",
       "paidOn": "",
       "createdAt": "2026-10-02"
+    },
+    {
+      "hostelId": "h1",
+      "hostelName": "StayInKochi Kakkanad",
+      "tenantId": "td9vPOG25po",
+      "tenantUid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
+      "tenantName": "ajin",
+      "amount": 6000,
+      "month": "2026-10",
+      "status": "cancelled",
+      "createdAt": "2026-10-21",
+      "id": "J8nY9fz"
+    },
+    {
+      "hostelId": "h1",
+      "hostelName": "StayInKochi Kakkanad",
+      "tenantId": "td9vPOG25po",
+      "tenantUid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
+      "tenantName": "ajin",
+      "amount": 6000,
+      "month": "2026-10",
+      "status": "paid",
+      "createdAt": "2026-10-21",
+      "id": "OuyAi3k",
+      "paymentId": "pay_3dfkim69t95sh65",
+      "paidOn": "2026-10-21"
     }
   ],
   "notifications": [
@@ -1598,6 +1627,153 @@
       "message": "Your stay request for StayInKochi Edappally was approved.",
       "read": false,
       "createdAt": "2026-09-05T12:00:00.000Z"
+    },
+    {
+      "uid": "demo-uid-14",
+      "message": "dasd",
+      "read": false,
+      "createdAt": "2026-10-21T17:38:50.772Z",
+      "id": "jgCecyy"
+    },
+    {
+      "uid": "demo-uid-15",
+      "message": "dasd",
+      "read": false,
+      "createdAt": "2026-10-21T17:38:50.772Z",
+      "id": "S8rl1QN"
+    },
+    {
+      "uid": "demo-uid-16",
+      "message": "dasd",
+      "read": false,
+      "createdAt": "2026-10-21T17:38:50.773Z",
+      "id": "koKGjvR"
+    },
+    {
+      "uid": "demo-uid-17",
+      "message": "dasd",
+      "read": false,
+      "createdAt": "2026-10-21T17:38:50.773Z",
+      "id": "DNezF__"
+    },
+    {
+      "uid": "firebase-uid-1",
+      "message": "heyyy",
+      "read": false,
+      "createdAt": "2026-10-21T17:39:19.748Z",
+      "id": "iNVmzob"
+    },
+    {
+      "uid": "firebase-uid-2",
+      "message": "heyyy",
+      "read": false,
+      "createdAt": "2026-10-21T17:39:19.750Z",
+      "id": "073CEkS"
+    },
+    {
+      "uid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
+      "message": "heyyy",
+      "read": false,
+      "createdAt": "2026-10-21T17:39:19.750Z",
+      "id": "E1qZjuU"
+    },
+    {
+      "uid": "demo-uid-10",
+      "message": "heyyy",
+      "read": false,
+      "createdAt": "2026-10-21T17:39:19.751Z",
+      "id": "Tnk9XmT"
+    },
+    {
+      "uid": "JzT5tcsl4yMdyJl78zWYpJN2sfS2",
+      "message": "heyyy",
+      "read": false,
+      "createdAt": "2026-10-21T17:39:19.749Z",
+      "id": "Nv-cVXH"
+    },
+    {
+      "uid": "demo-uid-11",
+      "message": "heyyy",
+      "read": false,
+      "createdAt": "2026-10-21T17:39:19.751Z",
+      "id": "IWIkPDD"
+    },
+    {
+      "uid": "demo-uid-12",
+      "message": "heyyy",
+      "read": false,
+      "createdAt": "2026-10-21T17:39:19.752Z",
+      "id": "7Gm_VXO"
+    },
+    {
+      "uid": "demo-uid-13",
+      "message": "heyyy",
+      "read": false,
+      "createdAt": "2026-10-21T17:39:19.752Z",
+      "id": "TuTwUMB"
+    },
+    {
+      "uid": "demo-uid-14",
+      "message": "heyyy",
+      "read": false,
+      "createdAt": "2026-10-21T17:39:19.752Z",
+      "id": "qhcZ9aH"
+    },
+    {
+      "uid": "demo-uid-15",
+      "message": "heyyy",
+      "read": false,
+      "createdAt": "2026-10-21T17:39:19.753Z",
+      "id": "YlcynKL"
+    },
+    {
+      "uid": "demo-uid-16",
+      "message": "heyyy",
+      "read": false,
+      "createdAt": "2026-10-21T17:39:19.753Z",
+      "id": "UXZnmzg"
+    },
+    {
+      "uid": "demo-uid-17",
+      "message": "heyyy",
+      "read": false,
+      "createdAt": "2026-10-21T17:39:19.753Z",
+      "id": "JmGHHAK"
+    },
+    {
+      "uid": "demo-uid-18",
+      "message": "heyyy",
+      "read": false,
+      "createdAt": "2026-10-21T17:39:19.754Z",
+      "id": "jCWGwKh"
+    },
+    {
+      "uid": "demo-uid-19",
+      "message": "heyyy",
+      "read": false,
+      "createdAt": "2026-10-21T17:39:19.754Z",
+      "id": "McBxeGl"
+    },
+    {
+      "uid": "demo-uid-20",
+      "message": "heyyy",
+      "read": false,
+      "createdAt": "2026-10-21T17:39:19.754Z",
+      "id": "SqGp9_w"
+    },
+    {
+      "uid": "demo-uid-21",
+      "message": "heyyy",
+      "read": false,
+      "createdAt": "2026-10-21T17:39:19.754Z",
+      "id": "dInRK_h"
+    },
+    {
+      "uid": "owner",
+      "message": "ajin paid ₹6,000 rent for 2026-10.",
+      "read": false,
+      "createdAt": "2026-10-21T18:47:41.236Z",
+      "id": "mrDtWT-"
     }
   ],
   "planSubscriptions": [
@@ -1611,17 +1787,6 @@
       "tenantName": "Arun Das",
       "status": "active",
       "startedOn": "2026-01-05"
-    },
-    {
-      "hostelId": "h1",
-      "foodPlanId": "f1",
-      "planName": "Full Meal Plan",
-      "pricePerMonth": 3000,
-      "tenantUid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
-      "tenantName": "ajin",
-      "status": "active",
-      "startedOn": "2026-10-18",
-      "id": "IKHEnPpFPR8"
     },
     {
       "id": "ps3",
@@ -1711,7 +1876,7 @@
       "date": "2026-10-19",
       "tenantUid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
       "tenantName": "ajin",
-      "status": "booked",
+      "status": "cancelled",
       "createdAt": "2026-10-19",
       "id": "xBBOuY4wqhU"
     },
@@ -1786,6 +1951,18 @@
       "tenantName": "Diya Krishna",
       "status": "booked",
       "createdAt": "2026-10-17"
+    },
+    {
+      "hostelId": "h1",
+      "mealId": "m1",
+      "mealName": "Breakfast",
+      "price": 80,
+      "date": "2026-10-21",
+      "tenantUid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
+      "tenantName": "ajin",
+      "status": "booked",
+      "createdAt": "2026-10-21",
+      "id": "bisJQJ2"
     }
   ],
   "switchRequests": [
@@ -1863,6 +2040,34 @@
       "status": "unpaid",
       "paymentId": "",
       "createdAt": "2026-10-18"
+    },
+    {
+      "tenantId": "td9vPOG25po",
+      "tenantUid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
+      "tenantName": "ajin",
+      "fromHostelId": "h1",
+      "fromHostelName": "StayInKochi Kakkanad",
+      "toHostelId": "h6",
+      "toHostelName": "StayInKochi Aluva",
+      "amount": 500,
+      "status": "unpaid",
+      "paymentId": "",
+      "createdAt": "2026-10-21",
+      "id": "NPVjnvC"
+    },
+    {
+      "tenantId": "td9vPOG25po",
+      "tenantUid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
+      "tenantName": "ajin",
+      "fromHostelId": "h1",
+      "fromHostelName": "StayInKochi Kakkanad",
+      "toHostelId": "h6",
+      "toHostelName": "StayInKochi Aluva",
+      "amount": 500,
+      "status": "unpaid",
+      "paymentId": "",
+      "createdAt": "2026-10-21",
+      "id": "m_pxiWK"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
