@@ -4,8 +4,10 @@
    StayInKochi — Clean Modern
    Design tokens for StayInKochi (Tailwind v4 CSS-first theme).
 
-   One typeface everywhere: Plus Jakarta Sans (400–800). Display headings use
-   the .display class (bold + tight tracking) instead of a second family.
+   One typeface for the product: Plus Jakarta Sans (400–800). Display headings
+   use the .display class (bold + tight tracking). The landing hero and closing
+   band are the exception: they use Lilita One, a self-hosted display face
+   (.hero-title).
 
    Palette (used everywhere, no ad-hoc colours):
      Forest    #244C3A  primary brand + important actions
@@ -15,6 +17,16 @@
      Terracotta #B96548 accent only (sparingly, never decoration)
      Charcoal  #292D29  text
    ========================================================================== */
+
+/* Landing hero display face. Self-hosted (public/fonts) so the headline does
+   not wait on a third-party font CDN. Lilita One, SIL Open Font License 1.1. */
+@font-face {
+  font-family: "Lilita One";
+  src: url("/fonts/lilita-one.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 @theme {
   /* Brand & materials */
@@ -46,6 +58,10 @@
   --font-sans:
     "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif;
+
+  /* Display face for landing headings only */
+  --font-hero:
+    "Lilita One", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 
   /* Restrained radii — architectural, not pill-shaped */
   --radius-card: 4px;
@@ -326,6 +342,14 @@
   .display {
     font-weight: 700;
     letter-spacing: -0.03em;
+  }
+
+  /* Landing display face — hero headline and closing band. Lilita One ships a
+     single 400 weight, so no faux bold and no tight tracking. */
+  .hero-title {
+    font-family: var(--font-hero);
+    font-weight: 400;
+    letter-spacing: 0;
   }
 
   .eyebrow {
