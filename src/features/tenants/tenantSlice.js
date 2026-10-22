@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { updateBed } from '../rooms/bedService'
-import { deleteTenant, getAllTenants } from './tenantService'
+import { deleteTenant, getAllTenants, updateTenant } from './tenantService'
 
 const initialState = {
   items: [],
   isLoading: false,
   error: null,
-  isSaving: false, // checking a tenant out is in progress
+  isSaving: false, // checking out or assigning a bed is in progress
   saveError: null,
 }
 
@@ -33,6 +33,31 @@ export const checkOutTenant = createAsyncThunk(
       }
       await deleteTenant(tenant.id)
       return tenant.id
+    } catch (error) {
+      return rejectWithValue(error.message)
+    }
+  },
+)
+
+// Owner: put a tenant in a room/bed, moving them out of their old bed first.
+export const assignTenantBed = createAsyncThunk(
+  'tenants/assignTenantBed',
+  async ({ tenant, room, bed }, { rejectWithValue }) => {
+    try {
+      // Changing beds must not leave the old bed pointing at this tenant.
+      if (tenant.bedId && String(tenant.bedId) !== String(bed.id)) {
+        await updateBed(tenant.bedId, { status: 'available', tenantId: null })
+      }
+
+      await updateBed(bed.id, { status: 'occupied', tenantId: tenant.id })
+
+      return await updateTenant(tenant.id, {
+        roomId: room.id,
+        bedId: bed.id,
+        roomNumber: room.roomNumber,
+        bedNumber: bed.bedNumber,
+        rentPerMonth: room.rentPerMonth,
+      })
     } catch (error) {
       return rejectWithValue(error.message)
     }
@@ -72,6 +97,24 @@ const tenantSlice = createSlice({
         )
       })
       .addCase(checkOutTenant.rejected, (state, action) => {
+        state.isSaving = false
+        state.saveError = action.payload
+      })
+      // Assigning / moving a tenant to a room and bed
+      .addCase(assignTenantBed.pending, (state) => {
+        state.isSaving = true
+        state.saveError = null
+      })
+      .addCase(assignTenantBed.fulfilled, (state, action) => {
+        state.isSaving = false
+        const index = state.items.findIndex(
+          (tenant) => String(tenant.id) === String(action.payload.id),
+        )
+        if (index !== -1) {
+          state.items[index] = action.payload
+        }
+      })
+      .addCase(assignTenantBed.rejected, (state, action) => {
         state.isSaving = false
         state.saveError = action.payload
       })

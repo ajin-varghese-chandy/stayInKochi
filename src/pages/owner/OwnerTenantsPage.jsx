@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Users } from 'lucide-react'
+import { FileText, Users } from 'lucide-react'
 import Alert from '../../components/ui/Alert'
 import Button from '../../components/ui/Button'
 import EmptyState from '../../components/ui/EmptyState'
@@ -18,6 +18,19 @@ import {
   selectTenantsSaving,
 } from '../../features/tenants/tenantSlice'
 import { updateTenant } from '../../features/tenants/tenantService'
+import { documentUrl } from '../../features/stayRequests/documentService'
+import TenantBedPicker from '../../features/tenants/components/TenantBedPicker'
+import VacateRequestCard from '../../features/vacates/components/VacateRequestCard'
+import {
+  approveVacate,
+  completeVacate,
+  fetchAllVacates,
+  rejectVacate,
+  selectVacateRequests,
+  selectVacatesError,
+  selectVacatesSaveError,
+  selectVacatesSaving,
+} from '../../features/vacates/vacateSlice'
 
 // Owner screen listing every active tenant and where they are assigned.
 export default function OwnerTenantsPage() {
@@ -28,11 +41,19 @@ export default function OwnerTenantsPage() {
   const isSaving = useSelector(selectTenantsSaving)
   const saveError = useSelector(selectTenantsSaveError)
 
+  const vacateRequests = useSelector(selectVacateRequests)
+  const vacatesError = useSelector(selectVacatesError)
+  const vacatesSaving = useSelector(selectVacatesSaving)
+  const vacatesSaveError = useSelector(selectVacatesSaveError)
+
   const [search, setSearch] = useState('')
   const [resetingId, setResetingId] = useState(null)
+  // Tenant whose inline room/bed picker is open (null = closed).
+  const [assigningId, setAssigningId] = useState(null)
 
   useEffect(() => {
     dispatch(fetchTenants())
+    dispatch(fetchAllVacates())
     return () => { dispatch(clearTenantSaveFeedback()) }
   }, [dispatch])
 
@@ -53,6 +74,37 @@ export default function OwnerTenantsPage() {
       setResetingId(null)
     }
   }
+
+  function handleRejectVacate(request) {
+    const confirmed = window.confirm(
+      `Decline ${request.tenantName}'s request to vacate on ${request.vacateOn}?`,
+    )
+    if (confirmed) dispatch(rejectVacate(request))
+  }
+
+  function handleCompleteVacate(request) {
+    const confirmed = window.confirm(
+      `Mark ${request.tenantName} as vacated? This frees their bed and ends their tenancy.`,
+    )
+    if (!confirmed) return
+
+    dispatch(completeVacate(request)).then((result) => {
+      if (result.meta.requestStatus === 'fulfilled') {
+        dispatch(fetchTenants())
+      }
+    })
+  }
+
+  // Only requests that still need the owner's attention sit at the top.
+  const activeVacates = vacateRequests
+    .filter((request) => ['pending', 'approved'].includes(request.status))
+    .sort((a, b) =>
+      a.status === 'pending' ? -1 : b.status === 'pending' ? 1 : 0,
+    )
+
+  const pendingVacates = activeVacates.filter(
+    (request) => request.status === 'pending',
+  ).length
 
   const filtered = tenants.filter((t) => {
     const q = search.toLowerCase()
@@ -83,13 +135,50 @@ export default function OwnerTenantsPage() {
         />
       </div>
 
+      {/* Vacate notices that still need a decision or a hand-over */}
+      {(activeVacates.length > 0 || vacatesError) && (
+        <section className="mt-6" aria-labelledby="vacate-requests-heading">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2
+              id="vacate-requests-heading"
+              className="text-base font-semibold text-charcoal"
+            >
+              Vacate requests
+            </h2>
+            <span className="text-sm text-charcoal/55">
+              {pendingVacates} pending
+            </span>
+          </div>
+
+          <div className="mt-3 space-y-4">
+            {vacatesError && (
+              <Alert tone="error">
+                Could not load vacate requests: {vacatesError}
+              </Alert>
+            )}
+            {vacatesSaveError && <Alert tone="error">{vacatesSaveError}</Alert>}
+
+            {activeVacates.map((request) => (
+              <VacateRequestCard
+                key={request.id}
+                request={request}
+                isSaving={vacatesSaving}
+                onApprove={(item) => dispatch(approveVacate(item))}
+                onReject={handleRejectVacate}
+                onComplete={handleCompleteVacate}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
       <div className="mt-4 space-y-4">
         {isLoading && <Spinner compact label="Loading tenants…" />}
 
         {error && (
           <Alert tone="error">Could not load tenants: {error}</Alert>
         )}
-        {saveError && <Alert tone="error">{saveError}</Alert>}
+        {saveError && !assigningId && <Alert tone="error">{saveError}</Alert>}
 
         {!isLoading && !error && filtered.length === 0 && (
           <EmptyState
@@ -103,7 +192,12 @@ export default function OwnerTenantsPage() {
           />
         )}
 
-        {filtered.map((tenant) => (
+        {filtered.map((tenant) => {
+          const vacate = activeVacates.find(
+            (request) => String(request.tenantId) === String(tenant.id),
+          )
+
+          return (
           <div key={tenant.id} className="card p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0">
@@ -118,6 +212,32 @@ export default function OwnerTenantsPage() {
                   {tenant.hostelName ?? 'Branch assigned'}
                   {tenant.joinedOn ? ` · joined ${tenant.joinedOn}` : ''}
                 </p>
+
+                {tenant.documents?.length > 0 && (
+                  <p className="mt-1.5 flex flex-wrap items-center gap-1.5 text-xs">
+                    <span className="text-charcoal/45">ID docs:</span>
+                    {tenant.documents.map((document) => (
+                      <a
+                        key={document.path ?? document.name}
+                        href={documentUrl(document.path)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex max-w-40 items-center gap-1 border border-line bg-ivory px-1.5 py-0.5 font-medium text-charcoal transition-colors hover:border-line-strong hover:text-forest"
+                      >
+                        <FileText size={12} strokeWidth={1.75} aria-hidden="true" />
+                        <span className="truncate">{document.name}</span>
+                      </a>
+                    ))}
+                  </p>
+                )}
+
+                {vacate && (
+                  <p className="mt-0.5 text-xs font-medium text-forest">
+                    {vacate.status === 'approved'
+                      ? `Vacating ${vacate.vacateOn} (approved)`
+                      : `Vacate requested for ${vacate.vacateOn}`}
+                  </p>
+                )}
               </div>
 
               <div className="text-right text-sm">
@@ -140,11 +260,25 @@ export default function OwnerTenantsPage() {
 
             <div className="mt-4 flex flex-wrap gap-2 border-t border-line pt-3">
               <Button
+                size="sm"
+                variant={tenant.bedId ? 'secondary' : 'primary'}
+                onClick={() => {
+                  dispatch(clearTenantSaveFeedback())
+                  setAssigningId(assigningId === tenant.id ? null : tenant.id)
+                }}
+              >
+                {assigningId === tenant.id
+                  ? 'Close picker'
+                  : tenant.bedId
+                    ? 'Change room & bed'
+                    : 'Assign room & bed'}
+              </Button>
+              <Button
                 to={`/owner/hostels/${tenant.hostelId}`}
-                variant="secondary"
+                variant="ghost"
                 size="sm"
               >
-                {tenant.bedId ? 'Manage rooms' : 'Assign a bed'}
+                Manage rooms
               </Button>
               {tenant.rentStatus === 'paid' && (
                 <Button
@@ -165,8 +299,17 @@ export default function OwnerTenantsPage() {
                 Check out
               </Button>
             </div>
+
+            {assigningId === tenant.id && (
+              <TenantBedPicker
+                tenant={tenant}
+                onDone={() => setAssigningId(null)}
+                onCancel={() => setAssigningId(null)}
+              />
+            )}
           </div>
-        ))}
+          )
+        })}
       </div>
     </section>
   )
