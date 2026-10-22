@@ -231,8 +231,8 @@
       "roomId": "r3",
       "hostelId": "h2",
       "bedNumber": "B",
-      "status": "available",
-      "tenantId": null
+      "status": "occupied",
+      "tenantId": "NRuMIIM"
     },
     {
       "id": "b6",
@@ -279,8 +279,8 @@
       "roomId": "r5",
       "hostelId": "h3",
       "bedNumber": "B",
-      "status": "occupied",
-      "tenantId": "NRuMIIM"
+      "status": "available",
+      "tenantId": null
     },
     {
       "id": "b15",
@@ -734,10 +734,10 @@
       "name": "alex",
       "email": "alex@gmail.com",
       "phone": "8921619560",
-      "hostelId": "h3",
-      "hostelName": "StayInKochi Edappally",
-      "roomId": "r5",
-      "bedId": "b14",
+      "hostelId": "h2",
+      "hostelName": "StayInKochi Vytilla",
+      "roomId": "r3",
+      "bedId": "b5",
       "rentStatus": "paid",
       "joinedOn": "2026-10-22",
       "documents": [
@@ -750,9 +750,32 @@
         }
       ],
       "id": "NRuMIIM",
-      "roomNumber": "302",
+      "roomNumber": "201",
       "bedNumber": "B",
-      "rentPerMonth": 9500
+      "rentPerMonth": 7000,
+      "rentCredit": 807,
+      "rentSettlement": {
+        "month": "2026-10",
+        "moveDate": "2026-10-22",
+        "daysInMonth": 31,
+        "remainingDays": 10,
+        "fromRent": 9500,
+        "toRent": 7000,
+        "fromCredit": 3065,
+        "toDue": 2258,
+        "balance": -807,
+        "charge": 0,
+        "credit": 807,
+        "fromHostelName": "StayInKochi Edappally",
+        "toHostelName": "StayInKochi Vytilla",
+        "grossCharge": 0,
+        "charged": 0,
+        "creditApplied": 0,
+        "credited": 807,
+        "creditLeft": 807,
+        "movedOn": "2026-10-22"
+      },
+      "movedOn": "2026-10-22"
     }
   ],
   "foodPlans": [
@@ -1080,6 +1103,19 @@
       "imageUrl": "",
       "status": "open",
       "createdAt": "2026-10-18T08:00:00.000Z"
+    },
+    {
+      "hostelId": "h2",
+      "hostelName": "StayInKochi Vytilla",
+      "tenantUid": "NahVeZ289XfBrqDsBqg3lmt575k1",
+      "tenantName": "alex",
+      "title": "batrooom pipe leak",
+      "description": "batrooom pipe leak",
+      "imageUrl": "/uploads/maintenance/1792676708305-hero1.png",
+      "status": "resolved",
+      "createdAt": "2026-10-22T13:45:09.818Z",
+      "id": "cCQQnzR",
+      "updatedAt": "2026-10-22T13:45:37.834Z"
     }
   ],
   "payments": [
@@ -1771,6 +1807,83 @@
       "read": false,
       "createdAt": "2026-10-22T13:22:02.311Z",
       "id": "LdTn7qk"
+    },
+    {
+      "uid": "owner",
+      "message": "alex asked to switch from StayInKochi Edappally to StayInKochi Panampilly. Reserve a bed or decline the request.",
+      "read": false,
+      "createdAt": "2026-10-22T13:42:34.662Z",
+      "id": "tIeYCzH"
+    },
+    {
+      "uid": "owner",
+      "message": "alex cancelled the switch to StayInKochi Panampilly.",
+      "read": false,
+      "createdAt": "2026-10-22T13:42:56.661Z",
+      "id": "Ais44n8"
+    },
+    {
+      "uid": "owner",
+      "message": "alex asked to switch from StayInKochi Edappally to StayInKochi Vytilla. Reserve a bed or decline the request.",
+      "read": false,
+      "createdAt": "2026-10-22T13:43:19.210Z",
+      "id": "Rk-dMsD"
+    },
+    {
+      "uid": "NahVeZ289XfBrqDsBqg3lmt575k1",
+      "message": "Your switch to StayInKochi Vytilla was approved. Room 201, bed B is held for you. Clear this month’s rent if it is still due, then pay the ₹500 switch fee plus any prorated rent difference to complete the move.",
+      "read": false,
+      "createdAt": "2026-10-22T13:43:58.823Z",
+      "id": "DJXLgf0"
+    },
+    {
+      "uid": "owner",
+      "message": "alex paid ₹500 and moved to StayInKochi Vytilla — room 201, bed B. Switch fee ₹500.",
+      "read": false,
+      "createdAt": "2026-10-22T13:44:31.212Z",
+      "id": "ajY0qJx"
+    },
+    {
+      "uid": "NahVeZ289XfBrqDsBqg3lmt575k1",
+      "message": "You are now at StayInKochi Vytilla — room 201, bed B. Your old bed has been released. ₹807 rent credit will be applied to your next rent.",
+      "read": false,
+      "createdAt": "2026-10-22T13:44:31.254Z",
+      "id": "0jFyy7_"
+    },
+    {
+      "uid": "owner",
+      "message": "alex reported: batrooom pipe leak.",
+      "read": false,
+      "createdAt": "2026-10-22T13:45:09.857Z",
+      "id": "yApWhWW"
+    },
+    {
+      "uid": "NahVeZ289XfBrqDsBqg3lmt575k1",
+      "message": "Your maintenance request \"batrooom pipe leak\" is now open.",
+      "read": false,
+      "createdAt": "2026-10-22T13:45:23.590Z",
+      "id": "vjwf1lc"
+    },
+    {
+      "uid": "NahVeZ289XfBrqDsBqg3lmt575k1",
+      "message": "Your maintenance request \"batrooom pipe leak\" is now open.",
+      "read": false,
+      "createdAt": "2026-10-22T13:45:26.956Z",
+      "id": "jdQyjYO"
+    },
+    {
+      "uid": "NahVeZ289XfBrqDsBqg3lmt575k1",
+      "message": "Your maintenance request \"batrooom pipe leak\" is now in-progress.",
+      "read": false,
+      "createdAt": "2026-10-22T13:45:30.774Z",
+      "id": "Se29JC4"
+    },
+    {
+      "uid": "NahVeZ289XfBrqDsBqg3lmt575k1",
+      "message": "Your maintenance request \"batrooom pipe leak\" is now resolved.",
+      "read": false,
+      "createdAt": "2026-10-22T13:45:37.874Z",
+      "id": "xttq1Nb"
     }
   ],
   "planSubscriptions": [
@@ -1987,6 +2100,71 @@
       "paymentId": "",
       "createdAt": "2026-10-21",
       "id": "m_pxiWK"
+    },
+    {
+      "tenantId": "NRuMIIM",
+      "tenantUid": "NahVeZ289XfBrqDsBqg3lmt575k1",
+      "tenantName": "alex",
+      "fromHostelId": "h3",
+      "fromHostelName": "StayInKochi Edappally",
+      "fromRentPerMonth": 9500,
+      "toHostelId": "h5",
+      "toHostelName": "StayInKochi Panampilly",
+      "amount": 500,
+      "status": "cancelled",
+      "paymentId": "",
+      "requestedOn": "2026-10-22",
+      "createdAt": "2026-10-22",
+      "id": "uLxUXJI",
+      "decidedOn": "2026-10-22",
+      "cancelledByTenant": true
+    },
+    {
+      "tenantId": "NRuMIIM",
+      "tenantUid": "NahVeZ289XfBrqDsBqg3lmt575k1",
+      "tenantName": "alex",
+      "fromHostelId": "h3",
+      "fromHostelName": "StayInKochi Edappally",
+      "fromRentPerMonth": 9500,
+      "toHostelId": "h2",
+      "toHostelName": "StayInKochi Vytilla",
+      "amount": 500,
+      "status": "completed",
+      "paymentId": "pay_2ja96qop3qbehke",
+      "requestedOn": "2026-10-22",
+      "createdAt": "2026-10-22",
+      "id": "auvFNBs",
+      "reservedRoomId": "r3",
+      "reservedRoomNumber": "201",
+      "reservedBedId": "b5",
+      "reservedBedNumber": "B",
+      "reservedRentPerMonth": 7000,
+      "decidedOn": "2026-10-22",
+      "paidOn": "2026-10-22",
+      "completedOn": "2026-10-22",
+      "rentSettlement": {
+        "month": "2026-10",
+        "moveDate": "2026-10-22",
+        "daysInMonth": 31,
+        "remainingDays": 10,
+        "fromRent": 9500,
+        "toRent": 7000,
+        "fromCredit": 3065,
+        "toDue": 2258,
+        "balance": -807,
+        "charge": 0,
+        "credit": 807,
+        "fromHostelName": "StayInKochi Edappally",
+        "toHostelName": "StayInKochi Vytilla",
+        "grossCharge": 0,
+        "charged": 0,
+        "creditApplied": 0,
+        "credited": 807,
+        "creditLeft": 807,
+        "movedOn": "2026-10-22"
+      },
+      "rentAdjustment": 0,
+      "totalPaid": 500
     }
   ],
   "vacateRequests": [],
