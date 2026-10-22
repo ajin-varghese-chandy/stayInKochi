@@ -8,7 +8,6 @@ There are three parts to the app:
 
 | Part | Who uses it | What it is |
 | --- | --- | --- |
-| Public site | Anyone | Browse branches, compare rent and beds, send a stay request |
 | Tenant portal | Registered tenants | Pay rent, book food, raise issues, chat, switch or leave a branch |
 | Owner console | The single owner | Manage branches, rooms, beds, tenants, money and requests |
 
@@ -16,16 +15,6 @@ There are three parts to the app:
 
 ## Features
 
-### Public site (no login needed)
-
-- Landing page with a branch search box.
-- Browse all branches and filter by **area, rent, room size, amenity and bed
-  availability**. Sort by rent or free beds.
-- Open a branch to see photos, amenities, rooms, food plans, rent and live bed
-  availability.
-- **Send a stay request** with your details and an optional ID document
-  (JPG, PNG, WEBP or PDF, up to 5 MB).
-- Register and log in with email and password.
 
 ### Tenant portal
 
