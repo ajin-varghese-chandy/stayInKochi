@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ClipboardList, UtensilsCrossed } from 'lucide-react'
+import { UtensilsCrossed } from 'lucide-react'
 import Alert from '../../components/ui/Alert'
 import Button from '../../components/ui/Button'
 import EmptyState from '../../components/ui/EmptyState'
@@ -8,19 +8,14 @@ import PageHeader from '../../components/ui/PageHeader'
 import StatusBadge from '../../components/ui/StatusBadge'
 import Spinner from '../../components/common/Spinner'
 import { selectCurrentUser } from '../../features/auth/authSlice'
-import MealBookingCard from '../../features/food/components/MealBookingCard'
 import SubscriptionCard from '../../features/food/components/SubscriptionCard'
 import {
-  bookMeal,
-  cancelMealBooking,
   cancelFoodSubscription,
   fetchMyFoodBookings,
-  selectBookingsError,
-  selectBookingsLoading,
   selectBookingSaveError,
   selectBookingSaving,
   selectFoodSubscription,
-  selectMyMealBookings,
+  selectMyFoodPayments,
   subscribeToFoodPlan,
 } from '../../features/food/foodBookingSlice'
 import {
@@ -28,26 +23,22 @@ import {
   selectFoodError,
   selectFoodLoading,
   selectFoodPlans,
-  selectMeals,
 } from '../../features/food/foodPlanSlice'
 import { getTenantsByUser } from '../../features/tenants/tenantService'
 import formatRupees from '../../utils/formatRupees'
 
-// Tenant screen for viewing food plans, subscribing, and booking meals.
+// Tenant screen for viewing and subscribing to food plans.
 export default function TenantFoodPage() {
   const dispatch = useDispatch()
   const user = useSelector(selectCurrentUser)
   const plans = useSelector(selectFoodPlans)
-  const meals = useSelector(selectMeals)
   const foodLoading = useSelector(selectFoodLoading)
   const foodError = useSelector(selectFoodError)
 
   const subscription = useSelector(selectFoodSubscription)
-  const bookings = useSelector(selectMyMealBookings)
-  const bookingsLoading = useSelector(selectBookingsLoading)
-  const bookingsError = useSelector(selectBookingsError)
+  const foodPayments = useSelector(selectMyFoodPayments)
   const isSaving = useSelector(selectBookingSaving)
-  const bookingSaveError = useSelector(selectBookingSaveError)
+  const saveError = useSelector(selectBookingSaveError)
 
   // The user's active tenancy tells us which hostel's food they can see.
   const [tenancy, setTenancy] = useState(null)
@@ -87,27 +78,18 @@ export default function TenantFoodPage() {
     dispatch(
       subscribeToFoodPlan({
         hostelId: tenancy.hostelId,
+        hostelName: tenancy.hostelName,
         foodPlanId: foodPlan.id,
         planName: foodPlan.name,
         pricePerMonth: foodPlan.pricePerMonth,
         tenantUid: user.uid,
         tenantName: user.displayName,
+        tenantEmail: user.email,
       }),
-    )
-  }
-
-  function handleBook(meal, date) {
-    dispatch(
-      bookMeal({
-        hostelId: tenancy.hostelId,
-        mealId: meal.id,
-        mealName: meal.name,
-        price: meal.price,
-        date,
-        tenantUid: user.uid,
-        tenantName: user.displayName,
-      }),
-    )
+    ).then(() => {
+      // Refresh so cancelled/failed attempts also show in the payment list.
+      dispatch(fetchMyFoodBookings(user.uid))
+    })
   }
 
   if (tenancyLoading) {
@@ -116,7 +98,7 @@ export default function TenantFoodPage() {
         <PageHeader
           eyebrow="Tenant portal"
           title="Food"
-          description="Meal plans and single-meal bookings at your branch."
+          description="Monthly meal plans at your branch."
         />
         <div className="mt-6">
           <Spinner compact label="Checking your tenancy…" />
@@ -131,13 +113,13 @@ export default function TenantFoodPage() {
         <PageHeader
           eyebrow="Tenant portal"
           title="Food"
-          description="Meal plans and single-meal bookings at your branch."
+          description="Monthly meal plans at your branch."
         />
         <div className="mt-6">
           <EmptyState
             icon={UtensilsCrossed}
             title="Only active tenants can see food plans"
-            hint="Join a branch to subscribe to a monthly plan or book a single meal."
+            hint="Join a branch to subscribe to a monthly meal plan."
             action={
               <Button to="/hostels" variant="secondary">
                 Browse branches
@@ -162,7 +144,7 @@ export default function TenantFoodPage() {
         {foodError && (
           <Alert tone="error">Could not load food data: {foodError}</Alert>
         )}
-        {bookingSaveError && <Alert tone="error">{bookingSaveError}</Alert>}
+        {saveError && <Alert tone="error">{saveError}</Alert>}
 
         {/* Current subscription */}
         <section aria-labelledby="my-plan-heading">
@@ -186,6 +168,23 @@ export default function TenantFoodPage() {
                       /month
                     </span>
                   </p>
+                  {subscription.endsOn && (
+                    <p className="mt-0.5 text-xs text-charcoal/70">
+                      {subscription.cancelAtPeriodEnd
+                        ? `Cancels after ${subscription.endsOn}`
+                        : `Runs until ${subscription.endsOn}`}
+                    </p>
+                  )}
+                  {subscription.paymentId && (
+                    <p className="mt-1 text-xs text-charcoal/55">
+                      Paid
+                      {subscription.amountPaid
+                        ? ` ${formatRupees(subscription.amountPaid)}`
+                        : ''}
+                      {subscription.paidOn ? ` on ${subscription.paidOn}` : ''}
+                      {` · UPI ref ${subscription.paymentId}`}
+                    </p>
+                  )}
                 </div>
 
                 <StatusBadge status={subscription.status ?? 'active'} />
@@ -199,6 +198,47 @@ export default function TenantFoodPage() {
             )}
           </div>
         </section>
+
+        {/* Food plan payments */}
+        {foodPayments.length > 0 && (
+          <section aria-labelledby="food-payments-heading">
+            <h2
+              id="food-payments-heading"
+              className="text-base font-semibold text-charcoal"
+            >
+              Food payments
+            </h2>
+
+            <div className="mt-3 space-y-2">
+              {foodPayments.map((payment) => (
+                <div
+                  key={payment.id}
+                  className="card flex flex-wrap items-center justify-between gap-3 p-4"
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-charcoal">
+                      {payment.planName}
+                    </p>
+                    <p className="mt-0.5 text-xs text-charcoal/55">
+                      {payment.month}
+                      {payment.status === 'paid' && payment.paidOn
+                        ? ` · paid ${payment.paidOn}`
+                        : ` · created ${payment.createdAt ?? ''}`}
+                      {payment.paymentId ? ` · ${payment.paymentId}` : ''}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <span className="text-base font-semibold tabular-nums text-forest">
+                      {formatRupees(payment.amount)}
+                    </span>
+                    <StatusBadge status={payment.status} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Monthly food plans */}
         {!foodLoading && !foodError && (
@@ -223,12 +263,13 @@ export default function TenantFoodPage() {
                     <SubscriptionCard
                       key={foodPlan.id}
                       foodPlan={foodPlan}
+                      subscription={subscription}
                       isActive={subscription?.foodPlanId === foodPlan.id}
                       hasActiveSubscription={Boolean(subscription)}
                       isSaving={isSaving}
                       onSubscribe={() => handleSubscribe(foodPlan)}
                       onUnsubscribe={() =>
-                        dispatch(cancelFoodSubscription(subscription.id))
+                        dispatch(cancelFoodSubscription(subscription))
                       }
                     />
                   ))}
@@ -238,158 +279,6 @@ export default function TenantFoodPage() {
           </section>
         )}
 
-        {/* Individual meal bookings */}
-        {!foodLoading && !foodError && (
-          <section aria-labelledby="single-meals-heading">
-            <h2
-              id="single-meals-heading"
-              className="text-base font-semibold text-charcoal"
-            >
-              Book a single meal
-            </h2>
-
-            <div className="mt-3">
-              {meals.length === 0 ? (
-                <EmptyState
-                  icon={UtensilsCrossed}
-                  title="No single meals right now"
-                  hint="Your branch has not listed individual meals today."
-                />
-              ) : (
-                <div className="grid gap-5 sm:grid-cols-2">
-                  {meals.map((meal) => (
-                    <MealBookingCard
-                      key={meal.id}
-                      meal={meal}
-                      isSaving={isSaving}
-                      onBook={handleBook}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          </section>
-        )}
-
-        {/* My bookings */}
-        <section aria-labelledby="my-bookings-heading">
-          <h2
-            id="my-bookings-heading"
-            className="text-base font-semibold text-charcoal"
-          >
-            My bookings
-          </h2>
-
-          <div className="mt-3">
-            {bookingsLoading && (
-              <Spinner compact label="Loading your bookings…" />
-            )}
-
-            {bookingsError && (
-              <Alert tone="error">
-                Could not load your bookings: {bookingsError}
-              </Alert>
-            )}
-
-            {!bookingsLoading && !bookingsError && bookings.length === 0 && (
-              <EmptyState
-                icon={ClipboardList}
-                title="No bookings yet"
-                hint="Book a single meal above and it will show up here."
-              />
-            )}
-
-            {!bookingsLoading && !bookingsError && bookings.length > 0 && (
-              <>
-                {/* Stacked cards — the mobile view */}
-                <div className="space-y-3 sm:hidden">
-                  {bookings.map((booking) => (
-                    <div key={booking.id} className="card p-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <p className="text-sm font-semibold text-charcoal">
-                            {booking.mealName}
-                          </p>
-                          <p className="mt-0.5 text-xs text-charcoal/70">
-                            {booking.date}
-                          </p>
-                        </div>
-
-                        <StatusBadge status={booking.status} />
-                      </div>
-
-                      <div className="mt-3 flex items-center justify-between gap-3 border-t border-line pt-3">
-                        <p className="text-base font-semibold tabular-nums text-forest">
-                          {formatRupees(booking.price)}
-                        </p>
-
-                        {booking.status === 'booked' && (
-                          <Button
-                            size="sm"
-                            variant="secondary"
-                            onClick={() =>
-                              dispatch(cancelMealBooking(booking.id))
-                            }
-                            disabled={isSaving}
-                          >
-                            Cancel
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Table — from sm up */}
-                <div className="table-wrap card hidden sm:block">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>Meal</th>
-                        <th>Date</th>
-                        <th className="align-right">Amount</th>
-                        <th>Status</th>
-                        <th aria-label="Actions" />
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {bookings.map((booking) => (
-                        <tr key={booking.id}>
-                          <td className="font-medium text-charcoal">
-                            {booking.mealName}
-                          </td>
-                          <td>{booking.date}</td>
-                          <td className="num align-right">
-                            <span className="text-base font-semibold tabular-nums text-forest">
-                              {formatRupees(booking.price)}
-                            </span>
-                          </td>
-                          <td>
-                            <StatusBadge status={booking.status} />
-                          </td>
-                          <td className="align-right">
-                            {booking.status === 'booked' && (
-                              <Button
-                                size="sm"
-                                variant="secondary"
-                                onClick={() =>
-                                  dispatch(cancelMealBooking(booking.id))
-                                }
-                                disabled={isSaving}
-                              >
-                                Cancel
-                              </Button>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </>
-            )}
-          </div>
-        </section>
       </div>
     </section>
   )

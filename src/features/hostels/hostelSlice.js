@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { deleteBooking, getBookingsByHostel, getSubscriptionsByHostel, deleteSubscription } from '../food/foodBookingService'
+import { getSubscriptionsByHostel, deleteSubscription } from '../food/foodBookingService'
 import { deleteFoodPlan, getFoodPlansByHostel } from '../food/foodPlanService'
-import { deleteMeal, getMealsByHostel } from '../food/mealService'
 import { deleteMaintenanceRequest, getMaintenanceRequestsByHostel } from '../maintenance/maintenanceService'
 import { deleteBed, getBedsByHostel } from '../rooms/bedService'
 import { deleteRoom, getRoomsByHostel } from '../rooms/roomService'
@@ -109,10 +108,6 @@ export const deleteHostel = createAsyncThunk(
         () => getMaintenanceRequestsByHostel(hostelId),
         deleteMaintenanceRequest,
       )
-      await deleteAllForHostel(
-        () => getBookingsByHostel(hostelId),
-        deleteBooking,
-      )
 
       // Food plans own their subscriptions, so clear those before the plans.
       const plans = await getFoodPlansByHostel(hostelId)
@@ -120,9 +115,6 @@ export const deleteHostel = createAsyncThunk(
         (await getSubscriptionsByHostel(hostelId)).map((subscription) =>
           deleteSubscription(subscription.id),
         ),
-      )
-      await Promise.allSettled(
-        (await getMealsByHostel(hostelId)).map((meal) => deleteMeal(meal.id)),
       )
       await Promise.allSettled(
         plans.map((plan) => deleteFoodPlan(plan.id)),

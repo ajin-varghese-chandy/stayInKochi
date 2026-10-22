@@ -21,37 +21,40 @@ export function createSubscription(subscription) {
   return api.post('/planSubscriptions', subscription)
 }
 
+export function updateSubscription(subscriptionId, updates) {
+  return api.patch(`/planSubscriptions/${subscriptionId}`, updates)
+}
+
 export function deleteSubscription(subscriptionId) {
   return api.delete(`/planSubscriptions/${subscriptionId}`)
 }
 
-// --- Individual meal bookings ---
+// --- Food plan subscription payments ---
 
-// Every booking across all tenants (owner's financial summary).
-export function getAllBookings() {
-  return api.get('/mealBookings')
+// Older persisted databases may not have this collection yet; treat that as
+// "no payments" instead of breaking the food screens.
+function getFoodPayments(path) {
+  return api.get(path).catch((error) => {
+    if (error.status === 404) return []
+    throw error
+  })
 }
 
-// Every booking made at one hostel (used when deleting that hostel).
-export function getBookingsByHostel(hostelId) {
-  return api.get(`/mealBookings?hostelId=${hostelId}`)
+// Every food payment across all tenants (owner's activity view).
+export function getAllFoodPayments() {
+  return getFoodPayments('/foodPayments')
 }
 
-// Every booking this user has made.
-export function getBookingsByUser(tenantUid) {
-  return api.get(`/mealBookings?tenantUid=${tenantUid}`)
+// Food payments made by one tenant (tenant's food screen).
+export function getFoodPaymentsByUser(tenantUid) {
+  return getFoodPayments(`/foodPayments?tenantUid=${tenantUid}`)
 }
 
-export function createBooking(booking) {
-  return api.post('/mealBookings', booking)
+export function createFoodPayment(payment) {
+  return api.post('/foodPayments', payment)
 }
 
-// Used to cancel a booking (sets status to cancelled).
-export function updateBooking(bookingId, updates) {
-  return api.patch(`/mealBookings/${bookingId}`, updates)
-}
-
-// Remove a booking outright (used when its hostel is deleted).
-export function deleteBooking(bookingId) {
-  return api.delete(`/mealBookings/${bookingId}`)
+// Used to move a food payment from pending to paid/failed/cancelled.
+export function updateFoodPayment(paymentId, updates) {
+  return api.patch(`/foodPayments/${paymentId}`, updates)
 }

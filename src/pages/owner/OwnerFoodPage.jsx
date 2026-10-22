@@ -9,46 +9,46 @@ import Spinner from '../../components/common/Spinner'
 import StatusBadge from '../../components/ui/StatusBadge'
 import FoodPlanCard from '../../features/food/components/FoodPlanCard'
 import FoodPlanForm from '../../features/food/components/FoodPlanForm'
-import MealCard from '../../features/food/components/MealCard'
-import MealForm from '../../features/food/components/MealForm'
 import {
   fetchAllFoodData,
   removeFoodPlan,
-  removeMeal,
   selectFoodError,
   selectFoodPlans,
   selectFoodSaving,
   selectFoodLoading,
-  selectMeals,
 } from '../../features/food/foodPlanSlice'
-import { getAllBookings, getAllSubscriptions } from '../../features/food/foodBookingService'
+import { getAllFoodPayments, getAllSubscriptions } from '../../features/food/foodBookingService'
 import { fetchHostels } from '../../features/hostels/hostelSlice'
+import formatRupees from '../../utils/formatRupees'
 
 const TABS = [
   { key: 'plans', label: 'Food plans' },
-  { key: 'meals', label: 'Individual meals' },
   { key: 'activity', label: 'Activity' },
 ]
 
-// Owner screen for managing food plans and individual meals.
+// A plan is only active while its paid month is still running.
+function isActiveSubscription(subscription) {
+  if (subscription.status !== 'active') return false
+  if (!subscription.endsOn) return true
+  return subscription.endsOn >= new Date().toISOString().slice(0, 10)
+}
+
+// Owner screen for managing food plans.
 export default function OwnerFoodPage() {
   const dispatch = useDispatch()
   const plans = useSelector(selectFoodPlans)
-  const meals = useSelector(selectMeals)
   const isLoading = useSelector(selectFoodLoading)
   const error = useSelector(selectFoodError)
   const isSaving = useSelector(selectFoodSaving)
 
-  // Form states: adding vs editing, for plans and meals separately.
+  // Form state: adding vs editing a plan.
   const [addingPlan, setAddingPlan] = useState(false)
   const [editingPlan, setEditingPlan] = useState(null)
-  const [addingMeal, setAddingMeal] = useState(false)
-  const [editingMeal, setEditingMeal] = useState(null)
 
   // Activity tab
-  const [activeTab, setActiveTab] = useState('plans') // 'plans' | 'meals' | 'activity'
+  const [activeTab, setActiveTab] = useState('plans') // 'plans' | 'activity'
   const [subscriptions, setSubscriptions] = useState([])
-  const [bookings, setBookings] = useState([])
+  const [foodPayments, setFoodPayments] = useState([])
   const [activityLoading, setActivityLoading] = useState(false)
   const [activityError, setActivityError] = useState(null)
 
@@ -72,11 +72,18 @@ export default function OwnerFoodPage() {
     if (activeTab !== 'activity') return
 
     let cancelled = false
-    Promise.all([getAllSubscriptions(), getAllBookings()])
-      .then(([subs, bks]) => {
+    Promise.all([
+      getAllSubscriptions(),
+      getAllFoodPayments(),
+    ])
+      .then(([subs, payments]) => {
         if (cancelled) return
         setSubscriptions(subs)
-        setBookings(bks)
+        setFoodPayments(
+          payments.sort((a, b) =>
+            String(b.createdAt ?? '').localeCompare(String(a.createdAt ?? '')),
+          ),
+        )
         setActivityLoading(false)
       })
       .catch((err) => {
@@ -96,21 +103,14 @@ export default function OwnerFoodPage() {
     }
   }
 
-  function handleDeleteMeal(meal) {
-    if (window.confirm(`Delete meal "${meal.name}"?`)) {
-      dispatch(removeMeal(meal.id))
-    }
-  }
-
   const showPlanForm = addingPlan || editingPlan !== null
-  const showMealForm = addingMeal || editingMeal !== null
 
   return (
     <section>
       <PageHeader
         eyebrow="Owner console"
         title="Food"
-        description="Monthly plans, single meals, and current activity."
+        description="Monthly plans and current activity."
       />
 
       {/* Section tabs */}
@@ -186,57 +186,6 @@ export default function OwnerFoodPage() {
           </section>
         )}
 
-        {/* Individual meals tab */}
-        {activeTab === 'meals' && !isLoading && !error && (
-          <section aria-labelledby="meals-heading">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 id="meals-heading" className="text-base font-semibold text-charcoal">
-                Individual meals
-              </h2>
-              {!showMealForm && (
-                <Button size="sm" onClick={() => setAddingMeal(true)}>
-                  Add meal
-                </Button>
-              )}
-            </div>
-
-            <div className="mt-3 space-y-4">
-              {showMealForm && (
-                <div className="card p-5">
-                  <MealForm
-                    meal={editingMeal}
-                    onDone={() => {
-                      setAddingMeal(false)
-                      setEditingMeal(null)
-                    }}
-                  />
-                </div>
-              )}
-
-              {!showMealForm && meals.length === 0 && (
-                <EmptyState
-                  icon={UtensilsCrossed}
-                  title="No individual meals yet"
-                  hint="Add single meals tenants can book for a specific day."
-                />
-              )}
-
-              {meals.map((meal) => (
-                <MealCard
-                  key={meal.id}
-                  meal={meal}
-                  isSaving={isSaving}
-                  onEdit={() => {
-                    setAddingMeal(false)
-                    setEditingMeal(meal)
-                  }}
-                  onDelete={() => handleDeleteMeal(meal)}
-                />
-              ))}
-            </div>
-          </section>
-        )}
-
         {/* Activity tab */}
         {activeTab === 'activity' && (
           <div className="space-y-8">
@@ -256,18 +205,18 @@ export default function OwnerFoodPage() {
                       Active plan subscriptions
                     </h2>
                     <span className="text-sm text-charcoal/55">
-                      {subscriptions.filter((s) => s.status === 'active').length}
+                      {subscriptions.filter(isActiveSubscription).length}
                     </span>
                   </div>
 
                   <div className="mt-3 space-y-2">
-                    {subscriptions.filter((s) => s.status === 'active').length === 0 && (
+                    {subscriptions.filter(isActiveSubscription).length === 0 && (
                       <p className="text-sm text-charcoal/60">
                         No active subscriptions.
                       </p>
                     )}
                     {subscriptions
-                      .filter((s) => s.status === 'active')
+                      .filter(isActiveSubscription)
                       .map((sub) => (
                         <div
                           key={sub.id}
@@ -281,11 +230,22 @@ export default function OwnerFoodPage() {
                               {sub.planName} · ₹
                               {sub.pricePerMonth?.toLocaleString('en-IN')}/month
                             </p>
+                            {sub.amountPaid ? (
+                              <p className="mt-0.5 text-xs text-charcoal/55">
+                                Paid {formatRupees(sub.amountPaid)}
+                                {sub.paidOn ? ` on ${sub.paidOn}` : ''}
+                                {sub.paymentId ? ` · ${sub.paymentId}` : ''}
+                              </p>
+                            ) : null}
                           </div>
                           <div className="flex items-center gap-2">
                             <StatusBadge status="active" />
                             <span className="text-xs text-charcoal/55">
-                              since {sub.startedOn}
+                              {sub.cancelAtPeriodEnd
+                                ? `cancels ${sub.endsOn}`
+                                : sub.endsOn
+                                  ? `until ${sub.endsOn}`
+                                  : `since ${sub.startedOn}`}
                             </span>
                           </div>
                         </div>
@@ -293,45 +253,53 @@ export default function OwnerFoodPage() {
                   </div>
                 </section>
 
-                <section aria-labelledby="bookings-heading">
+                <section aria-labelledby="food-payments-heading">
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
                     <h2
-                      id="bookings-heading"
+                      id="food-payments-heading"
                       className="text-base font-semibold text-charcoal"
                     >
-                      Meal bookings
+                      Food payments
                     </h2>
                     <span className="text-sm text-charcoal/55">
-                      {bookings.length}
+                      {foodPayments.filter((p) => p.status === 'paid').length}
                     </span>
                   </div>
 
                   <div className="mt-3 space-y-2">
-                    {bookings.length === 0 && (
+                    {foodPayments.length === 0 && (
                       <p className="text-sm text-charcoal/60">
-                        No meal bookings yet.
+                        No food plan payments yet.
                       </p>
                     )}
-                    {[...bookings]
-                      .sort((a, b) => String(b.createdAt ?? '').localeCompare(String(a.createdAt ?? '')))
-                      .map((bk) => (
-                        <div
-                          key={bk.id}
-                          className="card flex flex-wrap items-center justify-between gap-2 p-3"
-                        >
-                          <div className="min-w-0">
-                            <p className="text-sm font-medium text-charcoal">
-                              {bk.tenantName}
-                            </p>
-                            <p className="mt-0.5 text-xs text-charcoal/55">
-                              {bk.mealName} · ₹{bk.price} · {bk.date}
-                            </p>
-                          </div>
-                          <StatusBadge status={bk.status} />
+                    {foodPayments.map((payment) => (
+                      <div
+                        key={payment.id}
+                        className="card flex flex-wrap items-center justify-between gap-2 p-3"
+                      >
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium text-charcoal">
+                            {payment.tenantName}
+                          </p>
+                          <p className="mt-0.5 text-xs text-charcoal/55">
+                            {payment.planName} · {payment.month}
+                            {payment.status === 'paid' && payment.paidOn
+                              ? ` · paid ${payment.paidOn}`
+                              : ''}
+                            {payment.paymentId ? ` · ${payment.paymentId}` : ''}
+                          </p>
                         </div>
-                      ))}
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-semibold tabular-nums text-charcoal">
+                            {formatRupees(payment.amount)}
+                          </span>
+                          <StatusBadge status={payment.status} />
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </section>
+
               </>
             )}
           </div>

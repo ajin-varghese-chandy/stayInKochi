@@ -7,6 +7,7 @@ import formatRupees from '../../../utils/formatRupees'
 // the current plan is cancelled.
 export default function SubscriptionCard({
   foodPlan,
+  subscription,
   isActive,
   hasActiveSubscription,
   isSaving,
@@ -45,21 +46,36 @@ export default function SubscriptionCard({
 
       <div className="mt-4 border-t border-line pt-3">
         {isActive ? (
-          <Button
-            variant="danger"
-            block
-            onClick={onUnsubscribe}
-            disabled={isSaving}
-          >
-            {isSaving ? 'Cancelling...' : 'Cancel plan'}
-          </Button>
+          <>
+            <p className="mb-2 text-xs leading-relaxed text-charcoal/60">
+              {subscription?.cancelAtPeriodEnd
+                ? `Cancellation is scheduled for ${subscription.endsOn}. Meals continue until then.`
+                : subscription?.endsOn
+                  ? `Your plan runs until ${subscription.endsOn}. Cancelling stops it after that date.`
+                  : 'Your plan runs for one month.'}
+            </p>
+            <Button
+              variant="danger"
+              block
+              onClick={onUnsubscribe}
+              disabled={isSaving || subscription?.cancelAtPeriodEnd}
+            >
+              {subscription?.cancelAtPeriodEnd
+                ? `Cancels after ${subscription.endsOn}`
+                : isSaving
+                  ? 'Scheduling cancellation…'
+                  : 'Cancel at end of month'}
+            </Button>
+          </>
         ) : hasActiveSubscription ? (
           <p className="text-sm leading-relaxed text-charcoal/60">
             Cancel your current plan to switch to this one.
           </p>
         ) : (
           <Button block onClick={onSubscribe} disabled={isSaving}>
-            {isSaving ? 'Subscribing...' : 'Subscribe'}
+            {isSaving
+              ? 'Waiting for payment…'
+              : `Pay ${formatRupees(foodPlan.pricePerMonth)} & subscribe`}
           </Button>
         )}
       </div>
