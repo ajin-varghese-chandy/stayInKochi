@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, MapPin } from 'lucide-react'
 import formatRupees from '../../../utils/formatRupees'
+import { hostelCoverPhoto } from '../../../utils/hostelPhotos'
 
 // One branch in the public list.
 //   variant="card"     uniform catalogue card (default) — `meta` renders as a
@@ -8,6 +9,8 @@ import formatRupees from '../../../utils/formatRupees'
 //   variant="feature"  horizontal lead card (landing page) — `meta` renders in
 //                      the body
 export default function HostelCard({ hostel, variant = 'card', meta }) {
+  const cover = hostelCoverPhoto(hostel)
+
   const body = (showMeta) => (
     <div className="flex flex-1 flex-col p-4 sm:p-5">
       <div className="flex items-start justify-between gap-3">
@@ -73,7 +76,7 @@ export default function HostelCard({ hostel, variant = 'card', meta }) {
       >
         <div className="w-full shrink-0 overflow-hidden sm:w-1/2 lg:w-[55%]">
           <img
-            src={hostel.image}
+            src={cover}
             alt={hostel.name}
             className="h-56 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02] sm:h-full sm:min-h-64"
           />
@@ -90,7 +93,7 @@ export default function HostelCard({ hostel, variant = 'card', meta }) {
     >
       <div className="relative overflow-hidden">
         <img
-          src={hostel.image}
+          src={cover}
           alt={hostel.name}
           loading="lazy"
           className="h-44 w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] sm:h-48"

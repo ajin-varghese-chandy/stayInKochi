@@ -28,6 +28,11 @@ The frontend expects `VITE_API_BASE_URL=http://localhost:5000` in the repo-root
   (`file` field; JPG, PNG or WEBP, max 5 MB). Files are written to
   `server/uploads/maintenance/` and returned in the same shape; the tenant
   upkeep form stores only the returned `path` on the request.
+- `POST /uploads/hostels` — multipart upload of up to 8 branch gallery photos
+  (repeated `files` fields; JPG, PNG or WEBP, max 5 MB each). Files are written
+  to `server/uploads/hostels/` and returned as `{ files: [...] }`. The owner
+  console stores the returned paths in the hostel's `images` array and uses the
+  first one as its `image` cover.
 - `GET /uploads/...` — serves the uploaded files
 - `/hostels`, `/rooms`, `/beds`, `/tenants`, `/payments`, `/foodPlans`,
   `/planSubscriptions`, `/stayRequests`,

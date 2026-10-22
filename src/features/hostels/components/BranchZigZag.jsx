@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, BedDouble, MapPin } from 'lucide-react'
 import formatRupees from '../../../utils/formatRupees'
+import { hostelCoverPhoto } from '../../../utils/hostelPhotos'
 
 // Layout maths for the connected path. One row = 100 SVG units tall, every
 // card is 46% of the row wide, so the inner card edges sit at x=46%/54%.
@@ -180,6 +181,7 @@ export default function BranchZigZag({
         {hostels.map((hostel, index) => {
           const flipped = index % 2 === 1
           const free = freeBedsByHostel?.get(String(hostel.id)) ?? 0
+          const cover = hostelCoverPhoto(hostel)
 
           return (
             <li
@@ -204,7 +206,7 @@ export default function BranchZigZag({
               >
                 <div className="relative overflow-hidden">
                   <img
-                    src={hostel.image}
+                    src={cover}
                     alt={hostel.name}
                     loading={index === 0 ? 'eager' : 'lazy'}
                     className="h-44 w-full object-cover transition-transform duration-700 group-hover:scale-[1.03] lg:h-48"

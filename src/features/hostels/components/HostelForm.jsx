@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Alert from '../../../components/ui/Alert'
 import Button from '../../../components/ui/Button'
 import FormField from '../../../components/common/FormField'
+import HostelImageUploader from './HostelImageUploader'
 import {
   clearHostelSaveFeedback,
   createHostel,
@@ -27,6 +28,14 @@ export default function HostelForm({ hostel, onDone }) {
   const [location, setLocation] = useState(hostel?.location ?? '')
   const [description, setDescription] = useState(hostel?.description ?? '')
   const [image, setImage] = useState(hostel?.image ?? '')
+  // Extra gallery photos. The cover also lives in `images` on saved records,
+  // so drop it here to avoid showing it twice in the uploader.
+  const [images, setImages] = useState(() =>
+    (Array.isArray(hostel?.images) ? hostel.images : []).filter(
+      (photo) => photo && photo !== hostel?.image,
+    ),
+  )
+  const [isUploading, setIsUploading] = useState(false)
   const [rentPerMonth, setRentPerMonth] = useState(hostel?.rentPerMonth ?? '')
   const [amenities, setAmenities] = useState(
     (hostel?.amenities ?? []).join(', '),
@@ -43,11 +52,20 @@ export default function HostelForm({ hostel, onDone }) {
   function handleSubmit(event) {
     event.preventDefault()
 
+    // Combine the cover URL with uploaded photos into one de-duplicated
+    // gallery. The first entry is the cover, so an upload can stand in when no
+    // URL was entered.
+    const gallery = [image.trim(), ...images].reduce((list, photo) => {
+      if (photo && !list.includes(photo)) list.push(photo)
+      return list
+    }, [])
+
     const payload = {
       name: `${BRAND_PREFIX}${branchLabel.trim()}`,
       location,
       description,
-      image,
+      image: gallery[0] ?? '',
+      images: gallery,
       rentPerMonth: Number(rentPerMonth),
       amenities: amenities
         .split(',')
@@ -107,10 +125,19 @@ export default function HostelForm({ hostel, onDone }) {
         placeholder="Kakkanad, Kochi"
       />
       <FormField
-        label="Image URL"
+        label="Cover image URL"
         type="url"
         value={image}
         onChange={(event) => setImage(event.target.value)}
+        required={false}
+        hint="Optional if you upload photos below."
+        placeholder="https://…"
+      />
+      <HostelImageUploader
+        images={images}
+        onChange={setImages}
+        onUploadingChange={setIsUploading}
+        disabled={isSaving}
       />
       <FormField
         label="Rent per month (₹)"
@@ -138,8 +165,14 @@ export default function HostelForm({ hostel, onDone }) {
       {saveError && <Alert tone="error">{saveError}</Alert>}
 
       <div className="mt-5 flex justify-end gap-2">
-        <Button type="submit" disabled={isSaving}>
-          {isSaving ? 'Saving...' : hostel ? 'Save changes' : 'Add branch'}
+        <Button type="submit" disabled={isSaving || isUploading}>
+          {isSaving
+            ? 'Saving...'
+            : isUploading
+              ? 'Uploading photos…'
+              : hostel
+                ? 'Save changes'
+                : 'Add branch'}
         </Button>
         <Button type="button" variant="secondary" onClick={onDone}>
           Cancel

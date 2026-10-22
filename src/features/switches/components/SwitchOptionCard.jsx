@@ -1,6 +1,7 @@
 import { BedDouble, Building2, MapPin, MoveRight } from 'lucide-react'
 import Button from '../../../components/ui/Button'
 import formatRupees from '../../../utils/formatRupees'
+import { hostelCoverPhoto } from '../../../utils/hostelPhotos'
 
 // How a branch's rent compares with where the tenant lives right now.
 function rentComparison(rent, currentRent) {
@@ -44,6 +45,7 @@ export default function SwitchOptionCard({
   }
 
   const amenities = hostel.amenities ?? []
+  const cover = hostelCoverPhoto(hostel)
   const roomRents = rooms
     .map((room) => Number(room.rentPerMonth))
     .filter((rent) => Number.isFinite(rent))
@@ -58,9 +60,9 @@ export default function SwitchOptionCard({
 
   return (
     <article className="card flex flex-col overflow-hidden">
-      {hostel.image && (
+      {cover && (
         <img
-          src={hostel.image}
+          src={cover}
           alt={`${hostel.name} branch`}
           loading="lazy"
           className="h-36 w-full object-cover"
