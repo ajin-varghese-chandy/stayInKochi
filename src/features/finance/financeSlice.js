@@ -12,9 +12,10 @@ export const fetchFinancialSummary = createAsyncThunk(
   'finance/fetchFinancialSummary',
   async (_, { rejectWithValue }) => {
     try {
-      const { payments, subscriptions, mealBookings, switchRequests } =
+      const { payments, subscriptions, switchRequests } =
         await getFinanceData()
 
+      const today = new Date().toISOString().slice(0, 10)
       const sum = (items, amountOf) =>
         items.reduce((total, item) => total + (amountOf(item) ?? 0), 0)
 
@@ -27,19 +28,22 @@ export const fetchFinancialSummary = createAsyncThunk(
           payments.filter((payment) => payment.status === 'pending'),
           (payment) => payment.amount,
         ),
-        // Active plans bill monthly; booked meals are one-off charges.
+        // Active plans bill monthly while their paid month is still running.
         food: sum(
-          subscriptions.filter((sub) => sub.status === 'active'),
+          subscriptions.filter(
+            (sub) =>
+              sub.status === 'active' &&
+              (!sub.endsOn || sub.endsOn >= today),
+          ),
           (sub) => sub.pricePerMonth,
-        ) + sum(
-          mealBookings.filter((booking) => booking.status === 'booked'),
-          (booking) => booking.price,
         ),
-        // Fees from switch requests that were actually paid for.
+        // Fees from switch requests that were actually paid for: completed
+        // moves, plus older approved requests that already carry a payment id.
         switchFees: sum(
           switchRequests.filter(
             (request) =>
-              request.status === 'pending' || request.status === 'approved',
+              request.status === 'completed' ||
+              (request.status === 'approved' && Boolean(request.paymentId)),
           ),
           (request) => request.amount,
         ),
