@@ -6,8 +6,8 @@ One owner manages everything; tenants use the app to find a branch, move in, pay
 ## What it does
 
 - **Anyone** — browse the branches, search by area or price, and send a stay request.
-- **Tenants** — see their room and rent status, pay rent, book food plans, raise maintenance requests (with a photo), chat with the owner, and request a switch to another branch.
-- **Owner** — one console for all branches: dashboard, branches, rooms and beds, tenants, stay/switch approvals, payments, food plans, maintenance, and chat.
+- **Tenants** — see their room and rent status, pay rent, book food plans, raise maintenance requests (with a photo), chat with the owner, request a switch to another branch, and give 5 days' notice to vacate their room.
+- **Owner** — one console for all branches: dashboard, branches, rooms and beds, tenants, stay/switch/vacate approvals, payments, food plans, maintenance, and chat.
 
 ## Tech
 
@@ -56,7 +56,7 @@ Anyone who registers in the app becomes a tenant.
 
 ## Data
 
-`server/db.json` holds all the demo data: 6 branches, rooms, beds, tenants, payments, food plans, meals, requests, and notifications — enough to try every screen.
+`server/db.json` holds all the demo data: 6 branches, rooms, beds, tenants, payments, food plans, requests, and notifications — enough to try every screen.
 
 - Records you create in the app are written back to this file.
 - Reset it any time with `git checkout server/db.json`.
@@ -78,8 +78,8 @@ Hosts with an ephemeral filesystem lose records written to `db.json` on restart 
 
 ## Notes
 
-- **Payments** — rent and the branch-switch fee are paid through the card checkout sheet in the app.
-- **Images** — no upload service; wherever a photo is needed, paste a hosted image URL.
+- **Payments** — rent, food plan subscriptions, and the branch-switch fee are paid through the mock UPI checkout sheet in the app. When a branch move crosses different room rents, the unused days at the old branch are credited against the rest of the month at the new branch; any surplus carries forward as rent credit.
+- **Uploads** — tenant verification documents and maintenance photos are uploaded to the API (see `POST /uploads/...` in `server/README.md`); files live under `server/uploads/` and are served back by the same server. Room and branch photography ships with the app.
 
 ## Where things live
 
@@ -88,7 +88,7 @@ src/
   components/   shared UI (navbar, layouts, buttons, dialogs)
   features/     one folder per feature (auth, chat, food, hostels,
                 maintenance, notifications, payments, rooms,
-                stayRequests, switches, tenants) — slice + service + UI
+                stayRequests, switches, tenants, vacates) — slice + service + UI
   pages/        the screens for each route
   routes/       routing and access control
   services/     api (axios), firebase, paymentGateway

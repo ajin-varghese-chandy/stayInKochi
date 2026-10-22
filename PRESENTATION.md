@@ -112,18 +112,19 @@ live. Mention `npm run server` serving `server/db.json`.
 
 **Say:**
 - Payments: full history with search, status filter, **CSV export**.
-- Food: monthly plans + individual meals per branch; activity tab shows
-  active subscriptions and bookings.
+- Food: monthly plans per branch; activity tab shows active subscriptions.
 - Maintenance: status workflow `open → in-progress → resolved`, with the
   photo the tenant attached.
-- Switch requests: tenant pays the fee, owner approves and the tenant record
-  moves branches.
+- Switch requests: owner reserves a free bed at the destination and approves;
+  the tenant then clears the current month's rent, pays the fee plus any
+  prorated rent difference, and the move completes automatically. A surplus
+  becomes credit on the next month's rent.
 - Chat: per-branch group chat + private 1:1, on Firebase Realtime Database;
   broadcast announcements to all tenants or one branch.
 
 **Show in code:**
 - `src/pages/owner/OwnerPaymentsPage.jsx` (CSV export logic)
-- `src/features/food/` — `FoodPlanForm`, `MealForm`, `SubscriptionCard`
+- `src/features/food/` — `FoodPlanForm`, `SubscriptionCard`
 - `src/features/maintenance/maintenanceSlice.js` (status update + notify)
 - `src/features/notifications/notificationService.js` (owner inbox / broadcast)
 - `src/services/razorpay.js`, `src/services/paymentGateway.js`
@@ -146,10 +147,13 @@ live. Mention `npm run server` serving `server/db.json`.
   badge), quick-action tiles, notifications, stay request history.
 - Rent: rent due card + Razorpay checkout (test mode) + payment history with
   receipts.
-- Food: subscribe to a plan or book a single meal.
-- Upkeep: raise an issue with an optional pasted photo URL (no file upload —
-  Cloudinary was removed by design).
-- Switch branch: pay the switch fee → owner approves.
+- Food: subscribe to a monthly plan.
+- Upkeep: raise an issue with an optional photo upload (JPG/PNG/WEBP, up to
+  5 MB) served back by our own API.
+- Switch branch: compare branches by rent, amenities, and live bed counts →
+  request free → owner reserves a bed → clear this month's rent → pay the fee
+  plus any prorated rent difference (unused days are credited, a surplus becomes
+  next month's rent credit) → bed and rent move.
 - Profile: edit name/phone; chat with the owner.
 
 **Show in code:**
@@ -163,8 +167,8 @@ live. Mention `npm run server` serving `server/db.json`.
 1. Overview → tenancy card + quick actions
 2. Pay rent → Razorpay test checkout (card `4111 1111 1111 1111`) → status
    flips to paid
-3. Book a meal / subscribe to a food plan
-4. Raise an issue with a photo URL
+3. Subscribe to a food plan
+4. Raise an issue with a photo upload
 5. Send a chat message to the owner
 
 ---
@@ -175,8 +179,9 @@ live. Mention `npm run server` serving `server/db.json`.
 **Say:**
 - **API**: json-server in its own `server/` folder, serving `server/db.json`
   (13 collections: hostels, rooms, beds,
-  tenants, stayRequests, maintenanceRequests, payments, foodPlans, meals,
-  planSubscriptions, mealBookings, switchRequests, notifications). Started
+  tenants, stayRequests, maintenanceRequests, payments, foodPlans,
+  planSubscriptions, foodPayments, switchRequests, vacateRequests,
+  notifications). Started
   with `npm run server` (keeps `--foreign-key-suffix _ref` — explain why).
 - **Single axios client** `src/services/api.js`: sets base URL, unwraps
   `response.data`, turns errors into UI-ready messages.
