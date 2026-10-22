@@ -10,6 +10,7 @@ import {
   UtensilsCrossed,
 } from 'lucide-react'
 import Button from '../components/ui/Button'
+import { BrandMark } from '../components/ui/Brand'
 import Spinner from '../components/common/Spinner'
 import BranchZigZag from '../features/hostels/components/BranchZigZag'
 import {
@@ -34,7 +35,7 @@ const SERVICES = [
   {
     icon: UtensilsCrossed,
     title: 'Food plans',
-    desc: 'Subscribe to a monthly meal plan at your branch, or book single meals.',
+    desc: 'Subscribe to a monthly meal plan at your branch.',
   },
   {
     icon: MessageSquare,
@@ -185,19 +186,21 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Features — icon, title, one line. No borders, no cards. */}
-      <section className="bg-ivory">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-          <h2 className="display max-w-md text-2xl leading-snug text-charcoal sm:text-3xl">
+      {/* Features — the four statements sit on the ring of one account. */}
+      <section className="bg-ivory md:flex md:min-h-svh md:flex-col md:justify-center">
+        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 md:py-8">
+          <h2 className="hero-title mx-auto max-w-xl text-center text-3xl leading-snug text-charcoal sm:text-4xl">
             Everything in one account
           </h2>
-          <div className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+
+          {/* Small screens — plain rows keep the copy readable. */}
+          <div className="mt-10 grid gap-10 sm:grid-cols-2 md:hidden">
             {SERVICES.map(({ icon: Icon, title, desc }) => (
               <div key={title}>
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sage/70 text-forest">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sage/70 text-forest">
                   <Icon size={20} strokeWidth={1.6} aria-hidden="true" />
                 </span>
-                <h3 className="mt-4 text-base font-semibold text-charcoal">
+                <h3 className="mt-4 text-base font-bold text-charcoal">
                   {title}
                 </h3>
                 <p className="mt-1.5 text-sm leading-relaxed text-charcoal/60">
@@ -206,12 +209,74 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
+
+          {/* md+ — the four features orbit a single circular account. The circle
+              is sized from the viewport height and every element inside is sized
+              in container units, so the whole section stays in one view. */}
+          <div className="relative mx-auto mt-10 hidden aspect-square w-full max-w-[clamp(30rem,calc(100svh-11rem),44rem)] [container-type:inline-size] md:block">
+            <div
+              aria-hidden="true"
+              className="absolute inset-[4%] rounded-full border border-charcoal/10"
+            />
+            <div
+              aria-hidden="true"
+              className="absolute inset-[16%] rounded-full bg-sage/35"
+            />
+
+            {/* Centre — the account itself. */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-[1.6cqw] text-center">
+              <BrandMark className="h-[max(3rem,11.4cqw)] w-[max(3rem,11.4cqw)] shadow-sm" />
+              <span className="display text-[max(0.8rem,2.27cqw)] leading-none text-charcoal/70">
+                StayInKochi
+              </span>
+            </div>
+
+            {SERVICES.map(({ icon: Icon, title, desc }, index) => {
+              const position = [
+                'left-1/2 top-0 w-[45cqw] -translate-x-1/2 flex-col items-center text-center',
+                'right-0 top-1/2 w-[41cqw] -translate-y-1/2 flex-row-reverse items-center text-right',
+                'left-1/2 bottom-0 w-[45cqw] -translate-x-1/2 flex-col-reverse items-center text-center',
+                'left-0 top-1/2 w-[41cqw] -translate-y-1/2 items-center text-left',
+              ][index]
+
+              return (
+                <div
+                  key={title}
+                  className={`absolute flex gap-[2cqw] ${position}`}
+                >
+                  <span className="flex h-[max(2.5rem,8cqw)] w-[max(2.5rem,8cqw)] shrink-0 items-center justify-center rounded-full bg-sage text-forest ring-4 ring-ivory">
+                    <Icon
+                      className="h-[46%] w-[46%]"
+                      strokeWidth={1.6}
+                      aria-hidden="true"
+                    />
+                  </span>
+                  <div>
+                    <h3 className="text-[max(1rem,2.55cqw)] font-bold text-charcoal">
+                      {title}
+                    </h3>
+                    <p className="mt-2 text-[max(0.875rem,2.27cqw)] leading-relaxed text-charcoal/60">
+                      {desc}
+                    </p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
       </section>
 
       {/* Closing band — dark, centred, two actions */}
       <section className="bg-charcoal">
         <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
+          <img
+            src="/footerimage.png"
+            alt="The owner seated in an armchair at home"
+            width="1024"
+            height="1536"
+            loading="lazy"
+            className="mx-auto mb-8 w-full max-w-[16rem] object-contain sm:mb-10 sm:max-w-xs"
+          />
           <h2 className="hero-title text-4xl text-white sm:text-5xl lg:text-6xl">
             Kerivada makale, keri vaa...
           </h2>

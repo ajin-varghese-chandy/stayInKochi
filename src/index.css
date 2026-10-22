@@ -5,9 +5,9 @@
    Design tokens for StayInKochi (Tailwind v4 CSS-first theme).
 
    One typeface for the product: Plus Jakarta Sans (400–800). Display headings
-   use the .display class (bold + tight tracking). The landing hero and closing
-   band are the exception: they use Lilita One, a self-hosted display face
-   (.hero-title).
+   use the .display class (bold + tight tracking). Lilita One, a self-hosted
+   display face (.hero-title), is used for the landing hero, the closing band,
+   and the "Everything in one account" heading.
 
    Palette (used everywhere, no ad-hoc colours):
      Forest    #244C3A  primary brand + important actions
@@ -344,8 +344,9 @@
     letter-spacing: -0.03em;
   }
 
-  /* Landing display face — hero headline and closing band. Lilita One ships a
-     single 400 weight, so no faux bold and no tight tracking. */
+  /* Landing display face — hero headline, closing band, and the features
+     section heading. Lilita One ships a single 400 weight, so no faux bold and
+     no tight tracking. */
   .hero-title {
     font-family: var(--font-hero);
     font-weight: 400;

@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, BedDouble, MapPin } from 'lucide-react'
 import formatRupees from '../../../utils/formatRupees'
@@ -8,6 +9,11 @@ const ROW_UNITS = 100
 const CARD_WIDTH_PCT = 46
 const CARD_INNER_LEFT = CARD_WIDTH_PCT * 10 // 460
 const CARD_INNER_RIGHT = (100 - CARD_WIDTH_PCT) * 10 // 540
+
+// Distance the traveller slides to sit in the empty half of the row. The
+// wrapper is one card wide (46% of the row), so shifting it by 54% of the row
+// equals 54/46 of its own width.
+const IMAGE_SLOT_SHIFT = ((100 - CARD_WIDTH_PCT) / CARD_WIDTH_PCT) * 100 // ≈117.39%
 
 // One swooping S-curve per gap, from the previous card's edge to the next.
 function connectorPath(index) {
@@ -60,6 +66,62 @@ export default function BranchZigZag({
   freeBedsByHostel,
   bedsLoaded = true,
 }) {
+  const itemRefs = useRef([])
+  const imageRef = useRef(null)
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  // Work out which branch sits nearest the pinned traveller, so it can hop
+  // into the empty side of the zig-zag as the next card takes over. Comparing
+  // against the image's own centre lines the switch up with the moment a card
+  // slides in front of it. Scroll work is batched into one animation frame.
+  useEffect(() => {
+    if (hostels.length < 2) return undefined
+
+    let frame = 0
+
+    function updateActiveIndex() {
+      frame = 0
+
+      const imageRect = imageRef.current?.getBoundingClientRect()
+      const pivot = imageRect
+        ? imageRect.top + imageRect.height / 2
+        : window.innerHeight / 2
+
+      let closest = 0
+      let closestDistance = Infinity
+
+      itemRefs.current.forEach((node, index) => {
+        if (!node) return
+        const rect = node.getBoundingClientRect()
+        const distance = Math.abs(rect.top + rect.height / 2 - pivot)
+        if (distance < closestDistance) {
+          closestDistance = distance
+          closest = index
+        }
+      })
+
+      setActiveIndex(closest)
+    }
+
+    function handleScroll() {
+      if (frame) return
+      frame = window.requestAnimationFrame(updateActiveIndex)
+    }
+
+    updateActiveIndex()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleScroll)
+      if (frame) window.cancelAnimationFrame(frame)
+    }
+  }, [hostels.length])
+
+  // Even rows keep the card on the left, so the traveller waits on the right.
+  const imageOnRight = activeIndex % 2 === 0
+
   return (
     <div className="relative">
       {/* The connected route: hidden on mobile, where cards simply stack */}
@@ -83,6 +145,37 @@ export default function BranchZigZag({
         ))}
       </svg>
 
+      {/* The traveller waits in the empty half of the zig-zag, pinned while the
+          list scrolls, then slides across to the other side for the next
+          branch. Desktop only — on mobile the cards simply stack. */}
+      {hostels.length > 1 && (
+        <div
+          className="pointer-events-none absolute inset-0 z-0 hidden sm:block"
+          aria-hidden="true"
+        >
+          <div className="sticky top-24">
+            <div
+              ref={imageRef}
+              className="w-[46%] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none"
+              style={{
+                transform: `translateX(${imageOnRight ? IMAGE_SLOT_SHIFT : 0}%)`,
+              }}
+            >
+              <img
+                src="/movinghero.png"
+                alt=""
+                width="1112"
+                height="1414"
+                loading="lazy"
+                className={`mx-auto w-full max-w-[19rem]   rounded-2xl drop-shadow-[0_24px_32px_rgba(41,45,41,0.18)] transition-transform duration-700 motion-reduce:transition-none ${
+                  imageOnRight ? '' : '-scale-x-100'
+                }`}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       <ol className="relative z-10 flex flex-col gap-6 sm:gap-0">
         {hostels.map((hostel, index) => {
           const flipped = index % 2 === 1
@@ -91,6 +184,9 @@ export default function BranchZigZag({
           return (
             <li
               key={hostel.id}
+              ref={(node) => {
+                itemRefs.current[index] = node
+              }}
               className={`relative flex sm:h-[460px] ${
                 flipped ? 'sm:justify-end' : 'sm:justify-start'
               }`}
