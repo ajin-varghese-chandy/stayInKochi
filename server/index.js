@@ -1,14 +1,4 @@
-// Standalone json-server for the StayInKochi API.
-//
-// The API has its own package.json so it can be installed and deployed on its
-// own, without the React app. The frontend reaches it through the
-// VITE_API_BASE_URL environment variable.
-//
-//   npm start      production (`node index.js`)
-//   npm run dev    local, reloads db.json when the file changes
-//
-// PORT and HOST are read from the environment because hosting providers assign
-// them. DB_FILE optionally points at a persistent disk (see README).
+
 const fs = require('node:fs')
 const path = require('node:path')
 const express = require('express')
