@@ -17,6 +17,7 @@ import DocumentUploader from './DocumentUploader'
 // Rendered inside a card on the branch detail page, so it carries no border.
 export default function StayRequestForm({ hostel }) {
   const [phone, setPhone] = useState('')
+  const [dateOfBirth, setDateOfBirth] = useState('')
   const [message, setMessage] = useState('')
   const [documents, setDocuments] = useState([])
   const [uploading, setUploading] = useState(false)
@@ -45,6 +46,7 @@ export default function StayRequestForm({ hostel }) {
         tenantName: user.displayName,
         tenantEmail: user.email,
         phone,
+        dateOfBirth,
         message,
         documents,
       }),
@@ -77,6 +79,14 @@ export default function StayRequestForm({ hostel }) {
           onChange={(event) => setPhone(event.target.value)}
           autoComplete="tel"
           placeholder="How the owner can reach you"
+        />
+
+        <FormField
+          label="Date of birth"
+          type="date"
+          value={dateOfBirth}
+          onChange={(event) => setDateOfBirth(event.target.value)}
+          autoComplete="bday"
         />
 
         <DocumentUploader

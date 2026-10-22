@@ -113,6 +113,7 @@ export const approveStayRequest = createAsyncThunk(
           name: stayRequest.tenantName,
           email: stayRequest.tenantEmail,
           phone: stayRequest.phone ?? '',
+          dateOfBirth: stayRequest.dateOfBirth ?? '',
           hostelId: stayRequest.hostelId,
           hostelName: stayRequest.hostelName,
           roomId: null, // assigned in the room & bed management phase

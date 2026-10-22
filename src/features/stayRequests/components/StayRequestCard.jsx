@@ -1,4 +1,4 @@
-import { FileText, Mail, Phone } from 'lucide-react'
+import { Cake, FileText, Mail, Phone } from 'lucide-react'
 import Button from '../../../components/ui/Button'
 import StatusBadge from '../../../components/ui/StatusBadge'
 import { documentUrl } from '../documentService'
@@ -25,7 +25,7 @@ export default function StayRequestCard({ request, isDeciding, onApprove, onReje
         <StatusBadge status={request.status} />
       </div>
 
-      {(request.tenantEmail || request.phone) && (
+      {(request.tenantEmail || request.phone || request.dateOfBirth) && (
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-charcoal/70">
           {request.tenantEmail && (
             <span className="inline-flex items-center gap-1.5">
@@ -37,6 +37,12 @@ export default function StayRequestCard({ request, isDeciding, onApprove, onReje
             <span className="inline-flex items-center gap-1.5">
               <Phone size={16} strokeWidth={1.75} aria-hidden="true" />
               {request.phone}
+            </span>
+          )}
+          {request.dateOfBirth && (
+            <span className="inline-flex items-center gap-1.5">
+              <Cake size={16} strokeWidth={1.75} aria-hidden="true" />
+              Born {request.dateOfBirth}
             </span>
           )}
         </div>
