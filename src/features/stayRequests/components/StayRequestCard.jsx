@@ -1,6 +1,7 @@
-import { Mail, Phone } from 'lucide-react'
+import { FileText, Mail, Phone } from 'lucide-react'
 import Button from '../../../components/ui/Button'
 import StatusBadge from '../../../components/ui/StatusBadge'
+import { documentUrl } from '../documentService'
 
 // One stay request. The owner dashboard passes approve/reject handlers; the
 // tenant dashboard omits them and only shows the status.
@@ -45,6 +46,29 @@ export default function StayRequestCard({ request, isDeciding, onApprove, onReje
         <blockquote className="mt-3 border-l-2 border-line pl-3 text-sm leading-relaxed text-charcoal/70">
           {request.message}
         </blockquote>
+      )}
+
+      {request.documents?.length > 0 && (
+        <div className="mt-3">
+          <p className="text-xs font-medium text-charcoal/45">
+            Documents for verification
+          </p>
+          <ul className="mt-1.5 flex flex-wrap gap-2">
+            {request.documents.map((document) => (
+              <li key={document.path ?? document.name}>
+                <a
+                  href={documentUrl(document.path)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex max-w-full items-center gap-1.5 border border-line bg-ivory px-2 py-1 text-xs font-medium text-charcoal transition-colors hover:border-line-strong hover:text-forest"
+                >
+                  <FileText size={13} strokeWidth={1.75} aria-hidden="true" />
+                  <span className="truncate">{document.name}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
 
       {showActions && (

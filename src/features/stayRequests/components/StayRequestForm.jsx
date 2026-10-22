@@ -11,12 +11,15 @@ import {
   selectSaveSuccess,
   submitStayRequest,
 } from '../stayRequestSlice'
+import DocumentUploader from './DocumentUploader'
 
 // Form a signed-in tenant uses to request a stay at one hostel.
 // Rendered inside a card on the branch detail page, so it carries no border.
 export default function StayRequestForm({ hostel }) {
   const [phone, setPhone] = useState('')
   const [message, setMessage] = useState('')
+  const [documents, setDocuments] = useState([])
+  const [uploading, setUploading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
   const dispatch = useDispatch()
@@ -32,6 +35,7 @@ export default function StayRequestForm({ hostel }) {
 
   function handleSubmit(event) {
     event.preventDefault()
+    if (uploading) return
 
     dispatch(
       submitStayRequest({
@@ -42,6 +46,7 @@ export default function StayRequestForm({ hostel }) {
         tenantEmail: user.email,
         phone,
         message,
+        documents,
       }),
     ).then((result) => {
       if (result.meta.requestStatus === 'fulfilled') {
@@ -74,6 +79,13 @@ export default function StayRequestForm({ hostel }) {
           placeholder="How the owner can reach you"
         />
 
+        <DocumentUploader
+          documents={documents}
+          onChange={setDocuments}
+          onUploadingChange={setUploading}
+          disabled={isSaving}
+        />
+
         <label className="block">
           <span className="field-label">Message (optional)</span>
           <textarea
@@ -92,8 +104,17 @@ export default function StayRequestForm({ hostel }) {
         </Alert>
       )}
 
-      <Button type="submit" block disabled={isSaving} className="mt-5">
-        {isSaving ? 'Sending request…' : 'Send stay request'}
+      <Button
+        type="submit"
+        block
+        disabled={isSaving || uploading}
+        className="mt-5"
+      >
+        {uploading
+          ? 'Uploading documents…'
+          : isSaving
+            ? 'Sending request…'
+            : 'Send stay request'}
       </Button>
     </form>
   )

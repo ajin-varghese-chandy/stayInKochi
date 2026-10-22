@@ -119,6 +119,7 @@ export const approveStayRequest = createAsyncThunk(
           bedId: null,
           rentStatus: 'unpaid',
           joinedOn: today(),
+          documents: stayRequest.documents ?? [],
         })
       }
 
