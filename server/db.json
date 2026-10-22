@@ -990,6 +990,28 @@
       "requestedOn": "2026-10-22",
       "id": "3wgaDMS",
       "decidedOn": "2026-10-22"
+    },
+    {
+      "hostelId": "h4",
+      "hostelName": "StayInKochi Kaloor",
+      "tenantUid": "jQHyKQYbLGdvoJA5VHNd0L4PmVM2",
+      "tenantName": "amal",
+      "tenantEmail": "amal2@gmail.com",
+      "phone": "1233423423",
+      "dateOfBirth": "2005-11-10",
+      "message": "",
+      "documents": [
+        {
+          "name": "Untitled.png",
+          "path": "/uploads/tenants/1792691201246-untitled.png",
+          "size": 9470,
+          "mimeType": "image/png",
+          "uploadedAt": "2026-10-22T17:46:41.251Z"
+        }
+      ],
+      "status": "pending",
+      "requestedOn": "2026-10-22",
+      "id": "taRR3xi"
     }
   ],
   "maintenanceRequests": [
@@ -1884,6 +1906,27 @@
       "read": false,
       "createdAt": "2026-10-22T13:45:37.874Z",
       "id": "xttq1Nb"
+    },
+    {
+      "uid": "owner",
+      "message": "alex requested to vacate Room 201 (Bed B) at StayInKochi Vytilla on 2026-10-27 — 5-day notice.",
+      "read": false,
+      "createdAt": "2026-10-22T17:20:10.676Z",
+      "id": "DJldOlg"
+    },
+    {
+      "uid": "owner",
+      "message": "alex withdrew their request to vacate on 2026-10-27.",
+      "read": false,
+      "createdAt": "2026-10-22T17:20:14.678Z",
+      "id": "Q65decd"
+    },
+    {
+      "uid": "owner",
+      "message": "amal requested a stay at StayInKochi Kaloor.",
+      "read": false,
+      "createdAt": "2026-10-22T17:46:44.847Z",
+      "id": "iVPcFiC"
     }
   ],
   "planSubscriptions": [
@@ -2167,6 +2210,25 @@
       "totalPaid": 500
     }
   ],
-  "vacateRequests": [],
+  "vacateRequests": [
+    {
+      "tenantId": "NRuMIIM",
+      "tenantUid": "NahVeZ289XfBrqDsBqg3lmt575k1",
+      "tenantName": "alex",
+      "hostelId": "h2",
+      "hostelName": "StayInKochi Vytilla",
+      "roomId": "r3",
+      "roomNumber": "201",
+      "bedId": "b5",
+      "bedNumber": "B",
+      "noticeDays": 5,
+      "requestedOn": "2026-10-22",
+      "vacateOn": "2026-10-27",
+      "reason": "",
+      "status": "cancelled",
+      "decidedOn": "2026-10-22",
+      "id": 1
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }

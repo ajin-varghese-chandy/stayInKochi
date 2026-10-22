@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { Outlet } from 'react-router-dom'
-import { LogOut } from 'lucide-react'
+import { Link, Outlet, useLocation } from 'react-router-dom'
+import { ArrowLeft, LogOut } from 'lucide-react'
 import Brand from '../ui/Brand'
 import NotificationBell from '../common/NotificationBell'
 import FloatingDock from './FloatingDock'
@@ -14,9 +14,14 @@ import { logout, selectCurrentUser } from '../../features/auth/authSlice'
 export default function TenantLayout() {
   const user = useSelector(selectCurrentUser)
   const dispatch = useDispatch()
+  const { pathname } = useLocation()
 
   const name = user?.displayName ?? user?.email ?? 'Tenant'
   const initial = name.trim().charAt(0).toUpperCase() || 'T'
+
+  // The overview is the portal home; every other tenant route is a sub-page
+  // and gets a back link to it.
+  const isSubPage = pathname.replace(/\/+$/, '') !== '/tenant'
 
   return (
     <div className="flex min-h-screen flex-col bg-ivory">
@@ -54,6 +59,16 @@ export default function TenantLayout() {
 
       <main className="flex-1 px-4 py-6 pb-28 sm:px-6 sm:pt-8 sm:pb-32">
         <div className="mx-auto w-full max-w-5xl">
+          {isSubPage && (
+            <Link
+              to="/tenant"
+              className="link mb-4 inline-flex items-center gap-1.5 text-sm"
+            >
+              <ArrowLeft size={15} strokeWidth={1.75} aria-hidden="true" />
+              Back to overview
+            </Link>
+          )}
+
           <Outlet />
         </div>
       </main>

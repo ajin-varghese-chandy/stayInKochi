@@ -87,6 +87,35 @@ export default function TenantProfilePage() {
       />
 
       <div className="mt-6 space-y-6">
+        {/* Vacate — kept near the top so it is easy to find when a tenant
+            needs to end their stay. */}
+        {tenancy && (
+          <section
+            className="card border-forest/25 bg-sage/40 p-5"
+            aria-labelledby="vacate-heading"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="min-w-0">
+                <p id="vacate-heading" className="eyebrow">
+                  Vacate room
+                </p>
+                <p className="mt-1.5 text-sm leading-relaxed text-charcoal/70">
+                  Planning to leave? Give at least {VACATE_NOTICE_DAYS}{' '}
+                  days&apos; notice and the owner will confirm your move-out.
+                </p>
+              </div>
+
+              <Button
+                to="/tenant/vacate"
+                variant="secondary"
+                className="shrink-0"
+              >
+                Request to vacate
+              </Button>
+            </div>
+          </section>
+        )}
+
         {/* Identity + edit form */}
         <section className="card p-5" aria-labelledby="account-heading">
           <div className="flex items-center justify-between gap-3">
@@ -223,24 +252,6 @@ export default function TenantProfilePage() {
               </Button>
             }
           />
-        )}
-
-        {/* Vacate */}
-        {tenancy && (
-          <section className="card p-5" aria-labelledby="vacate-heading">
-            <p id="vacate-heading" className="eyebrow">
-              Vacate room
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-charcoal/70">
-              Planning to leave? Give at least {VACATE_NOTICE_DAYS} days&apos;
-              notice and the owner will confirm your move-out.
-            </p>
-            <div className="mt-3">
-              <Button to="/tenant/vacate" size="sm" variant="secondary">
-                Request to vacate
-              </Button>
-            </div>
-          </section>
         )}
 
         {/* Sign out */}

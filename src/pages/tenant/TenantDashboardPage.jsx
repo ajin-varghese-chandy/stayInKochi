@@ -1,15 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
-import {
-  ArrowLeftRight,
-  BedDouble,
-  DoorOpen,
-  FileText,
-  IndianRupee,
-  UtensilsCrossed,
-  Wrench,
-} from 'lucide-react'
+import { BedDouble, FileText } from 'lucide-react'
 import Alert from '../../components/ui/Alert'
 import Button from '../../components/ui/Button'
 import EmptyState from '../../components/ui/EmptyState'
@@ -26,45 +17,10 @@ import {
   selectStayRequestsLoading,
 } from '../../features/stayRequests/stayRequestSlice'
 import { getTenantsByUser } from '../../features/tenants/tenantService'
-import { VACATE_NOTICE_DAYS } from '../../features/vacates/vacateSlice'
 import formatRupees from '../../utils/formatRupees'
 
-// The four things a tenant actually does, as one-tap tiles.
-const QUICK_ACTIONS = [
-  {
-    to: '/tenant/payments',
-    icon: IndianRupee,
-    title: 'Pay rent',
-    desc: 'Rent due, payment history & receipts',
-  },
-  {
-    to: '/tenant/food',
-    icon: UtensilsCrossed,
-    title: 'Food plans',
-    desc: 'Monthly meal plans for your branch',
-  },
-  {
-    to: '/tenant/maintenance',
-    icon: Wrench,
-    title: 'Raise an issue',
-    desc: 'Report something that needs fixing',
-  },
-  {
-    to: '/tenant/switch',
-    icon: ArrowLeftRight,
-    title: 'Switch branch',
-    desc: 'Move to another StayInKochi branch',
-  },
-  {
-    to: '/tenant/vacate',
-    icon: DoorOpen,
-    title: 'Vacate room',
-    desc: `Give ${VACATE_NOTICE_DAYS} days' notice to end your stay`,
-  },
-]
-
 // Tenant home base, ordered the way a tenant needs it: tenancy status first,
-// then the quick actions, notifications, and stay request history.
+// then notifications and stay request history.
 export default function TenantDashboardPage() {
   const dispatch = useDispatch()
   const user = useSelector(selectCurrentUser)
@@ -118,29 +74,6 @@ export default function TenantDashboardPage() {
       <div className="mt-6 space-y-6">
         {/* Tenancy status */}
         <TenancyStatus tenancy={tenancy} isLoading={tenancyLoading} />
-
-        {/* Quick actions — only meaningful once there is an active tenancy */}
-        {tenancy && (
-          <nav aria-label="Quick actions" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-            {QUICK_ACTIONS.map(({ to, icon: Icon, title, desc }) => (
-              <Link
-                key={to}
-                to={to}
-                className="card p-4 transition-colors hover:border-forest/40"
-              >
-                <span className="flex h-9 w-9 items-center justify-center rounded-card bg-sage/70 text-forest">
-                  <Icon size={17} strokeWidth={1.75} aria-hidden="true" />
-                </span>
-                <p className="mt-3 text-sm font-semibold text-charcoal">
-                  {title}
-                </p>
-                <p className="mt-1 text-xs leading-relaxed text-charcoal/70">
-                  {desc}
-                </p>
-              </Link>
-            ))}
-          </nav>
-        )}
 
         {/* Notifications */}
         <NotificationInbox recipientId={user?.uid} />
