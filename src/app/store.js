@@ -12,6 +12,7 @@ import roomsReducer from '../features/rooms/roomsSlice'
 import switchReducer from '../features/switches/switchSlice'
 import stayRequestReducer from '../features/stayRequests/stayRequestSlice'
 import tenantReducer from '../features/tenants/tenantSlice'
+import vacateReducer from '../features/vacates/vacateSlice'
 
 // Central Redux store. Add a feature's reducer here as it is built.
 export const store = configureStore({
@@ -24,6 +25,7 @@ export const store = configureStore({
     stayRequests: stayRequestReducer,
     rooms: roomsReducer,
     tenants: tenantReducer,
+    vacates: vacateReducer,
     maintenance: maintenanceReducer,
     payments: paymentReducer,
     switches: switchReducer,

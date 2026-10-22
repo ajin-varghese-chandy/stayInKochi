@@ -25,6 +25,7 @@ import TenantMaintenancePage from '../pages/tenant/TenantMaintenancePage'
 import TenantPaymentsPage from '../pages/tenant/TenantPaymentsPage'
 import TenantProfilePage from '../pages/tenant/TenantProfilePage'
 import TenantSwitchPage from '../pages/tenant/TenantSwitchPage'
+import TenantVacatePage from '../pages/tenant/TenantVacatePage'
 import ProtectedRoute from './ProtectedRoute'
 
 // All app routes, split by shell:
@@ -67,6 +68,7 @@ export default function AppRoutes() {
           <Route path="tenant/maintenance" element={<TenantMaintenancePage />} />
           <Route path="tenant/payments" element={<TenantPaymentsPage />} />
           <Route path="tenant/switch" element={<TenantSwitchPage />} />
+          <Route path="tenant/vacate" element={<TenantVacatePage />} />
           <Route path="tenant/profile" element={<TenantProfilePage />} />
         </Route>
       </Route>

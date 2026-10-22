@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import {
   ArrowLeftRight,
   BedDouble,
+  DoorOpen,
   FileText,
   IndianRupee,
   UtensilsCrossed,
@@ -25,6 +26,7 @@ import {
   selectStayRequestsLoading,
 } from '../../features/stayRequests/stayRequestSlice'
 import { getTenantsByUser } from '../../features/tenants/tenantService'
+import { VACATE_NOTICE_DAYS } from '../../features/vacates/vacateSlice'
 import formatRupees from '../../utils/formatRupees'
 
 // The four things a tenant actually does, as one-tap tiles.
@@ -39,7 +41,7 @@ const QUICK_ACTIONS = [
     to: '/tenant/food',
     icon: UtensilsCrossed,
     title: 'Food plans',
-    desc: 'Monthly meal plans or single meals',
+    desc: 'Monthly meal plans for your branch',
   },
   {
     to: '/tenant/maintenance',
@@ -52,6 +54,12 @@ const QUICK_ACTIONS = [
     icon: ArrowLeftRight,
     title: 'Switch branch',
     desc: 'Move to another StayInKochi branch',
+  },
+  {
+    to: '/tenant/vacate',
+    icon: DoorOpen,
+    title: 'Vacate room',
+    desc: `Give ${VACATE_NOTICE_DAYS} days' notice to end your stay`,
   },
 ]
 
@@ -113,7 +121,7 @@ export default function TenantDashboardPage() {
 
         {/* Quick actions — only meaningful once there is an active tenancy */}
         {tenancy && (
-          <nav aria-label="Quick actions" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <nav aria-label="Quick actions" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {QUICK_ACTIONS.map(({ to, icon: Icon, title, desc }) => (
               <Link
                 key={to}

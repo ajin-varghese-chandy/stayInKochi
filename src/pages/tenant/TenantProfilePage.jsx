@@ -10,6 +10,7 @@ import FormField from '../../components/common/FormField'
 import Spinner from '../../components/common/Spinner'
 import { logout, selectCurrentUser } from '../../features/auth/authSlice'
 import { getTenantsByUser, updateTenant } from '../../features/tenants/tenantService'
+import { VACATE_NOTICE_DAYS } from '../../features/vacates/vacateSlice'
 import formatRupees from '../../utils/formatRupees'
 
 // Tenant screen to view and edit their profile details.
@@ -222,6 +223,24 @@ export default function TenantProfilePage() {
               </Button>
             }
           />
+        )}
+
+        {/* Vacate */}
+        {tenancy && (
+          <section className="card p-5" aria-labelledby="vacate-heading">
+            <p id="vacate-heading" className="eyebrow">
+              Vacate room
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-charcoal/70">
+              Planning to leave? Give at least {VACATE_NOTICE_DAYS} days&apos;
+              notice and the owner will confirm your move-out.
+            </p>
+            <div className="mt-3">
+              <Button to="/tenant/vacate" size="sm" variant="secondary">
+                Request to vacate
+              </Button>
+            </div>
+          </section>
         )}
 
         {/* Sign out */}
