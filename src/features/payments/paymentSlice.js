@@ -50,10 +50,10 @@ export const payRent = createAsyncThunk(
   'payments/payRent',
   async ({ tenant, month }, { rejectWithValue }) => {
     try {
-      const amount = Number(tenant?.rentPerMonth)
+      const monthlyRent = Number(tenant?.rentPerMonth)
 
       // A tenant without a bed has no rent set. Never open a ₹0 checkout.
-      if (!Number.isFinite(amount) || amount <= 0) {
+      if (!Number.isFinite(monthlyRent) || monthlyRent <= 0) {
         return rejectWithValue(
           'No rent has been set for your room yet. Ask the owner to assign you a bed first.',
         )
@@ -63,16 +63,59 @@ export const payRent = createAsyncThunk(
         return rejectWithValue('Choose the month you want to pay for.')
       }
 
-      const payment = await createPayment({
+      // Credit from a mid-month branch move comes off the next rent due.
+      const credit = Math.max(0, Number(tenant.rentCredit) || 0)
+      const creditApplied = Math.min(credit, monthlyRent)
+      const amount = monthlyRent - creditApplied
+      const creditLeft = credit - creditApplied
+      const paidOn = new Date().toISOString().slice(0, 10)
+      const common = {
         hostelId: tenant.hostelId,
         hostelName: tenant.hostelName,
         tenantId: tenant.id,
         tenantUid: tenant.uid,
         tenantName: tenant.name,
-        amount,
+        grossAmount: monthlyRent,
+        creditApplied,
         month,
+        createdAt: paidOn,
+      }
+
+      // The credit covers the whole month: settle it without a checkout.
+      if (amount <= 0) {
+        const settled = await createPayment({
+          ...common,
+          amount: 0,
+          status: 'paid',
+          category: 'rent',
+          note: 'Settled in full with rent credit from a branch move.',
+          paymentId: '',
+          paidOn,
+        })
+
+        await updateTenant(tenant.id, {
+          rentStatus: 'paid',
+          rentCredit: creditLeft,
+        })
+
+        await notify(
+          OWNER_INBOX,
+          `${tenant.name}'s ${month} rent was settled with ${creditApplied.toLocaleString('en-IN')} rent credit.`,
+        )
+
+        return settled
+      }
+
+      const payment = await createPayment({
+        ...common,
+        amount,
         status: 'pending',
-        createdAt: new Date().toISOString().slice(0, 10),
+        category: 'rent',
+        ...(creditApplied > 0
+          ? {
+              note: `${creditApplied.toLocaleString('en-IN')} of this month's rent was covered by branch-move credit.`,
+            }
+          : {}),
       })
 
       let response
@@ -95,15 +138,22 @@ export const payRent = createAsyncThunk(
       const paid = await updatePayment(payment.id, {
         status: 'paid',
         paymentId: response.paymentId ?? '',
-        paidOn: new Date().toISOString().slice(0, 10),
+        paidOn,
       })
 
       // Rent is settled for this tenant until the next month.
-      await updateTenant(tenant.id, { rentStatus: 'paid' })
+      await updateTenant(tenant.id, {
+        rentStatus: 'paid',
+        rentCredit: creditLeft,
+      })
 
       await notify(
         OWNER_INBOX,
-        `${tenant.name} paid ₹${amount.toLocaleString('en-IN')} rent for ${month}.`,
+        `${tenant.name} paid ${amount.toLocaleString('en-IN')} rent for ${month}${
+          creditApplied > 0
+            ? ` (${creditApplied.toLocaleString('en-IN')} covered by rent credit)`
+            : ''
+        }.`,
       )
 
       return paid

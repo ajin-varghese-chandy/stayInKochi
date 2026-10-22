@@ -21,14 +21,6 @@ import {
 import { getTenantsByUser } from '../../features/tenants/tenantService'
 import formatRupees from '../../utils/formatRupees'
 
-// "2026-10" -> "October 2026" for the due-month line.
-function monthLabel(month) {
-  const date = new Date(`${month}-01T00:00:00`)
-  return Number.isNaN(date.getTime())
-    ? month
-    : date.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
-}
-
 // Tenant screen for paying rent and viewing payment history.
 export default function TenantPaymentsPage() {
   const dispatch = useDispatch()
@@ -67,7 +59,15 @@ export default function TenantPaymentsPage() {
   }, [dispatch, user?.uid])
 
   function handlePay(month) {
-    dispatch(payRent({ tenant: tenancy, month }))
+    dispatch(payRent({ tenant: tenancy, month })).then((result) => {
+      if (result.meta.requestStatus !== 'fulfilled') return
+
+      // Paying rent may consume switch credit, so refresh the tenancy instead
+      // of leaving a stale credit balance on screen.
+      getTenantsByUser(user.uid)
+        .then((tenants) => setTenancy(tenants[0] ?? null))
+        .catch(() => {})
+    })
   }
 
   if (tenancyLoading) {
@@ -118,8 +118,6 @@ export default function TenantPaymentsPage() {
       .filter((payment) => payment.status === 'paid')
       .map((payment) => payment.month),
   )
-  const rentAmount = Number(tenancy.rentPerMonth) || 0
-  const hasRent = rentAmount > 0
 
   return (
     <section>
@@ -130,44 +128,6 @@ export default function TenantPaymentsPage() {
       />
 
       <div className="mt-6 space-y-6">
-        {/* Rent due */}
-        <section className="card p-5" aria-label="Rent due">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="min-w-0">
-              <p className="eyebrow">Rent due</p>
-              <p className="mt-2 text-2xl font-semibold tabular-nums text-charcoal">
-                {hasRent ? formatRupees(rentAmount) : 'Rent not set'}
-              </p>
-              <p className="mt-1 text-sm text-charcoal/70">
-                {hasRent
-                  ? `For ${monthLabel(currentMonth)}`
-                  : 'The owner assigns a bed and its rent before you can pay.'}
-              </p>
-            </div>
-
-            {hasRent && (
-              <StatusBadge status={paidThisMonth ? 'paid' : 'unpaid'} />
-            )}
-          </div>
-
-          {hasRent && (
-            <div className="mt-4">
-              <Button
-                size="lg"
-                block
-                onClick={() => handlePay(currentMonth)}
-                disabled={isSaving || paidThisMonth}
-              >
-                {paidThisMonth
-                  ? `Paid for ${monthLabel(currentMonth)}`
-                  : isSaving
-                    ? 'Processing payment…'
-                    : `Pay ${formatRupees(rentAmount)}`}
-              </Button>
-            </div>
-          )}
-        </section>
-
         {saveError && <Alert tone="error">{saveError}</Alert>}
 
         <PaymentSummary
@@ -220,6 +180,12 @@ export default function TenantPaymentsPage() {
                         {formatRupees(payment.amount)}
                       </p>
 
+                      {payment.note && (
+                        <p className="mt-1 text-xs text-charcoal/60">
+                          {payment.note}
+                        </p>
+                      )}
+
                       <p className="mt-1 text-xs text-charcoal/70">
                         {payment.status === 'paid' && payment.paidOn
                           ? `Paid on ${payment.paidOn}`
@@ -247,6 +213,11 @@ export default function TenantPaymentsPage() {
                         <tr key={payment.id}>
                           <td className="font-medium text-charcoal">
                             {payment.month}
+                            {payment.note && (
+                              <span className="block text-xs font-normal text-charcoal/60">
+                                {payment.note}
+                              </span>
+                            )}
                           </td>
                           <td className="num align-right">
                             <span className="text-base font-semibold tabular-nums text-forest">

@@ -20,8 +20,12 @@ export default function PaymentSummary({
 
   // No rent set yet means no bed has been assigned (a fresh approval or a
   // just-approved switch), so there is nothing to charge for.
-  const hasRent = Number(tenant.rentPerMonth) > 0
-  const amount = tenant.rentPerMonth ?? 0
+  const monthlyRent = Number(tenant.rentPerMonth) || 0
+  const hasRent = monthlyRent > 0
+  const credit = Math.max(0, Number(tenant.rentCredit) || 0)
+  const creditApplied = Math.min(credit, monthlyRent)
+  const amount = monthlyRent - creditApplied
+  const settlement = tenant.rentSettlement
   const monthPaid = paidMonths?.has(month) ?? false
 
   return (
@@ -42,11 +46,30 @@ export default function PaymentSummary({
                 Room {tenant.roomNumber ?? '-'} · Bed {tenant.bedNumber ?? '-'}{' '}
                 · {month}
               </p>
+              {creditApplied > 0 && (
+                <p className="mt-0.5 text-sm text-forest">
+                  {formatRupees(creditApplied)} rent credit applied
+                  {credit - creditApplied > 0
+                    ? ` · ${formatRupees(credit - creditApplied)} left`
+                    : ''}
+                </p>
+              )}
               <p className="mt-0.5 text-sm text-charcoal/60">
                 {paidThisMonth
                   ? 'Paid so far this month'
                   : 'Nothing paid yet this month'}
               </p>
+              {settlement?.movedOn && (
+                <p className="mt-2 text-xs leading-relaxed text-charcoal/55">
+                  Rent for {settlement.month} was settled when you moved
+                  {settlement.fromHostelName && settlement.toHostelName
+                    ? ` from ${settlement.fromHostelName} to ${settlement.toHostelName}`
+                    : ''}
+                  {settlement.charged > 0
+                    ? ` — ${formatRupees(settlement.charged)} extra was charged for the remainder of the month.`
+                    : '.'}
+                </p>
+              )}
             </>
           ) : (
             <p className="mt-1.5 text-sm text-charcoal/60">
@@ -84,7 +107,9 @@ export default function PaymentSummary({
                 ? `Paid for ${month}`
                 : isSaving
                   ? 'Processing payment...'
-                  : `Pay ${formatRupees(amount)}`}
+                  : amount === 0
+                    ? `Settle ${month} with credit`
+                    : `Pay ${formatRupees(amount)}`}
             </Button>
           </div>
         </>

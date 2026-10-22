@@ -163,6 +163,11 @@ export default function OwnerPaymentsPage() {
                   ? `paid ${payment.paidOn}`
                   : `created ${payment.createdAt ?? ''}`}
               </p>
+              {payment.note && (
+                <p className="mt-0.5 text-xs text-charcoal/50">
+                  {payment.note}
+                </p>
+              )}
             </div>
 
             <StatusBadge status={payment.status} />
