@@ -39,8 +39,8 @@ export const fetchMyMaintenance = createAsyncThunk(
   },
 )
 
-// Tenant: raise a request. The photo (if any) is a plain image URL pasted by
-// the tenant — no file upload happens.
+// Tenant: raise a request. The photo (if any) was already uploaded by the form,
+// so `imageUrl` is the stored path the API replied with.
 export const submitMaintenanceRequest = createAsyncThunk(
   'maintenance/submitMaintenanceRequest',
   async ({ request, imageUrl }, { rejectWithValue }) => {

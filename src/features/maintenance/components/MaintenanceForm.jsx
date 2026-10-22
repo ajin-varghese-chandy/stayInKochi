@@ -10,13 +10,15 @@ import {
   selectMaintenanceSaving,
   submitMaintenanceRequest,
 } from '../maintenanceSlice'
+import MaintenancePhotoUploader from './MaintenancePhotoUploader'
 
-// Form a tenant uses to raise a maintenance request (photo is optional and is
-// just a pasted image URL).
+// Form a tenant uses to raise a maintenance request. The photo is optional and
+// is uploaded to the API (server/uploads/maintenance) when picked.
 export default function MaintenanceForm({ tenancy }) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [photoUrl, setPhotoUrl] = useState('')
+  const [photo, setPhoto] = useState(null)
+  const [isUploading, setIsUploading] = useState(false)
 
   const dispatch = useDispatch()
   const user = useSelector(selectCurrentUser)
@@ -40,14 +42,14 @@ export default function MaintenanceForm({ tenancy }) {
           title,
           description,
         },
-        imageUrl: photoUrl,
+        imageUrl: photo?.path ?? '',
       }),
     ).then((result) => {
       if (result.meta.requestStatus !== 'fulfilled') return
 
       setTitle('')
       setDescription('')
-      setPhotoUrl('')
+      setPhoto(null)
     })
   }
 
@@ -73,19 +75,17 @@ export default function MaintenanceForm({ tenancy }) {
         />
       </label>
 
-      <FormField
-        label="Photo URL (optional)"
-        type="url"
-        value={photoUrl}
-        onChange={(event) => setPhotoUrl(event.target.value)}
-        required={false}
-        placeholder="https://example.com/photo.jpg"
+      <MaintenancePhotoUploader
+        photo={photo}
+        onChange={setPhoto}
+        onUploadingChange={setIsUploading}
+        disabled={isSaving}
       />
 
       {saveError && <Alert tone="error">{saveError}</Alert>}
 
       <div className="mt-5 flex justify-end gap-2">
-        <Button type="submit" disabled={isSaving}>
+        <Button type="submit" disabled={isSaving || isUploading}>
           {isSaving ? 'Submitting...' : 'Submit request'}
         </Button>
       </div>

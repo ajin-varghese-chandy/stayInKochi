@@ -1,5 +1,6 @@
 import Button from '../../../components/ui/Button'
 import StatusBadge from '../../../components/ui/StatusBadge'
+import { maintenancePhotoUrl } from '../maintenanceService'
 
 // Statuses the owner can move a request between. The current one renders as
 // the active (primary) action.
@@ -38,13 +39,13 @@ export default function MaintenanceCard({
 
       {request.imageUrl && (
         <a
-          href={request.imageUrl}
+          href={maintenancePhotoUrl(request.imageUrl)}
           target="_blank"
           rel="noreferrer"
           className="mt-3 block"
         >
           <img
-            src={request.imageUrl}
+            src={maintenancePhotoUrl(request.imageUrl)}
             alt="Maintenance photo"
             className="h-40 w-full rounded-card border border-line object-cover"
           />
