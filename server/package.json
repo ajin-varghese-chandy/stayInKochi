@@ -12,6 +12,8 @@
     "node": ">=18"
   },
   "dependencies": {
-    "json-server": "^0.17.4"
+    "express": "^4.22.3",
+    "json-server": "^0.17.4",
+    "multer": "^2.5.0"
   }
 }

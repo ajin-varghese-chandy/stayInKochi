@@ -11,8 +11,10 @@ import axios from 'axios'
 // No default Content-Type is set: axios already sends application/json for
 // plain objects and multipart/form-data for FormData (image uploads), so the
 // caller never has to think about it.
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000'
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000',
+  baseURL: API_BASE_URL,
   timeout: 10000,
 })
 

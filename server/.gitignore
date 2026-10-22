@@ -5,3 +5,6 @@ yarn-error.log*
 
 # Written by lowdb while saving; the real data file is db.json.
 *.tmp
+
+# Files uploaded through the API (tenant documents, maintenance photos).
+uploads/
