@@ -279,8 +279,8 @@
       "roomId": "r5",
       "hostelId": "h3",
       "bedNumber": "B",
-      "status": "available",
-      "tenantId": null
+      "status": "occupied",
+      "tenantId": "NRuMIIM"
     },
     {
       "id": "b15",
@@ -728,6 +728,31 @@
       "rentPerMonth": 6000,
       "rentStatus": "unpaid",
       "joinedOn": "2026-09-28"
+    },
+    {
+      "uid": "NahVeZ289XfBrqDsBqg3lmt575k1",
+      "name": "alex",
+      "email": "alex@gmail.com",
+      "phone": "8921619560",
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "roomId": "r5",
+      "bedId": "b14",
+      "rentStatus": "paid",
+      "joinedOn": "2026-10-22",
+      "documents": [
+        {
+          "name": "footerimage.png",
+          "path": "/uploads/tenants/1792675170395-footerimage.png",
+          "size": 2152931,
+          "mimeType": "image/png",
+          "uploadedAt": "2026-10-22T13:19:30.409Z"
+        }
+      ],
+      "id": "NRuMIIM",
+      "roomNumber": "302",
+      "bedNumber": "B",
+      "rentPerMonth": 9500
     }
   ],
   "foodPlans": [
@@ -804,98 +829,6 @@
         "Breakfast",
         "Lunch"
       ]
-    }
-  ],
-  "meals": [
-    {
-      "id": "m1",
-      "hostelId": "h1",
-      "name": "Breakfast",
-      "price": 80
-    },
-    {
-      "id": "m2",
-      "hostelId": "h1",
-      "name": "Lunch",
-      "price": 120
-    },
-    {
-      "id": "m3",
-      "hostelId": "h1",
-      "name": "Dinner",
-      "price": 130
-    },
-    {
-      "id": "m4",
-      "hostelId": "h2",
-      "name": "Lunch",
-      "price": 100
-    },
-    {
-      "id": "m5",
-      "hostelId": "h3",
-      "name": "Breakfast",
-      "price": 80
-    },
-    {
-      "id": "m6",
-      "hostelId": "h3",
-      "name": "Lunch",
-      "price": 120
-    },
-    {
-      "id": "m7",
-      "hostelId": "h3",
-      "name": "Dinner",
-      "price": 130
-    },
-    {
-      "id": "m8",
-      "hostelId": "h4",
-      "name": "Breakfast",
-      "price": 70
-    },
-    {
-      "id": "m9",
-      "hostelId": "h4",
-      "name": "Lunch",
-      "price": 100
-    },
-    {
-      "id": "m10",
-      "hostelId": "h4",
-      "name": "Dinner",
-      "price": 110
-    },
-    {
-      "id": "m11",
-      "hostelId": "h5",
-      "name": "Breakfast",
-      "price": 100
-    },
-    {
-      "id": "m12",
-      "hostelId": "h5",
-      "name": "Lunch",
-      "price": 150
-    },
-    {
-      "id": "m13",
-      "hostelId": "h5",
-      "name": "Dinner",
-      "price": 160
-    },
-    {
-      "id": "m14",
-      "hostelId": "h6",
-      "name": "Breakfast",
-      "price": 60
-    },
-    {
-      "id": "m15",
-      "hostelId": "h6",
-      "name": "Lunch",
-      "price": 90
     }
   ],
   "stayRequests": [
@@ -1012,6 +945,28 @@
       "status": "approved",
       "requestedOn": "2026-09-03",
       "decidedOn": "2026-09-05"
+    },
+    {
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "tenantUid": "NahVeZ289XfBrqDsBqg3lmt575k1",
+      "tenantName": "alex",
+      "tenantEmail": "alex@gmail.com",
+      "phone": "8921619560",
+      "message": "need rommmy twinn",
+      "documents": [
+        {
+          "name": "footerimage.png",
+          "path": "/uploads/tenants/1792675170395-footerimage.png",
+          "size": 2152931,
+          "mimeType": "image/png",
+          "uploadedAt": "2026-10-22T13:19:30.409Z"
+        }
+      ],
+      "status": "approved",
+      "requestedOn": "2026-10-22",
+      "id": "3wgaDMS",
+      "decidedOn": "2026-10-22"
     }
   ],
   "maintenanceRequests": [
@@ -1499,6 +1454,20 @@
       "id": "OuyAi3k",
       "paymentId": "pay_3dfkim69t95sh65",
       "paidOn": "2026-10-21"
+    },
+    {
+      "hostelId": "h3",
+      "hostelName": "StayInKochi Edappally",
+      "tenantId": "NRuMIIM",
+      "tenantUid": "NahVeZ289XfBrqDsBqg3lmt575k1",
+      "tenantName": "alex",
+      "amount": 9500,
+      "month": "2026-10",
+      "status": "paid",
+      "createdAt": "2026-10-22",
+      "id": "3Uph8Xu",
+      "paymentId": "pay_188ev9j16cjljjg",
+      "paidOn": "2026-10-22"
     }
   ],
   "notifications": [
@@ -1774,6 +1743,34 @@
       "read": false,
       "createdAt": "2026-10-21T18:47:41.236Z",
       "id": "mrDtWT-"
+    },
+    {
+      "uid": "owner",
+      "message": "ajin paid ₹3,000 for the Full Meal Plan food plan.",
+      "read": false,
+      "createdAt": "2026-10-22T12:09:02.534Z",
+      "id": "M5fYXPn"
+    },
+    {
+      "uid": "owner",
+      "message": "alex requested a stay at StayInKochi Edappally.",
+      "read": false,
+      "createdAt": "2026-10-22T13:19:43.569Z",
+      "id": "lF5d0PK"
+    },
+    {
+      "uid": "NahVeZ289XfBrqDsBqg3lmt575k1",
+      "message": "Your stay request for StayInKochi Edappally was approved.",
+      "read": false,
+      "createdAt": "2026-10-22T13:20:08.439Z",
+      "id": "9-No2bD"
+    },
+    {
+      "uid": "owner",
+      "message": "alex paid ₹9,500 rent for 2026-10.",
+      "read": false,
+      "createdAt": "2026-10-22T13:22:02.311Z",
+      "id": "LdTn7qk"
     }
   ],
   "planSubscriptions": [
@@ -1855,114 +1852,36 @@
       "startedOn": "2026-09-28"
     }
   ],
-  "mealBookings": [
-    {
-      "id": "mb1",
-      "hostelId": "h1",
-      "mealId": "m2",
-      "mealName": "Lunch",
-      "price": 120,
-      "date": "2026-02-15",
-      "tenantUid": "firebase-uid-1",
-      "tenantName": "Arun Das",
-      "status": "booked",
-      "createdAt": "2026-02-14"
-    },
+  "foodPayments": [
     {
       "hostelId": "h1",
-      "mealId": "m1",
-      "mealName": "Breakfast",
-      "price": 80,
-      "date": "2026-10-19",
+      "hostelName": "StayInKochi Kakkanad",
       "tenantUid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
       "tenantName": "ajin",
+      "foodPlanId": "f1",
+      "planName": "Full Meal Plan",
+      "amount": 3000,
+      "month": "2026-10",
       "status": "cancelled",
-      "createdAt": "2026-10-19",
-      "id": "xBBOuY4wqhU"
-    },
-    {
-      "id": "mb3",
-      "hostelId": "h3",
-      "mealId": "m6",
-      "mealName": "Lunch",
-      "price": 120,
-      "date": "2026-10-19",
-      "tenantUid": "demo-uid-10",
-      "tenantName": "Neha Menon",
-      "status": "booked",
-      "createdAt": "2026-10-18"
-    },
-    {
-      "id": "mb4",
-      "hostelId": "h3",
-      "mealId": "m7",
-      "mealName": "Dinner",
-      "price": 130,
-      "date": "2026-10-18",
-      "tenantUid": "demo-uid-12",
-      "tenantName": "Fathima Rasheed",
-      "status": "booked",
-      "createdAt": "2026-10-17"
-    },
-    {
-      "id": "mb5",
-      "hostelId": "h4",
-      "mealId": "m9",
-      "mealName": "Lunch",
-      "price": 100,
-      "date": "2026-10-19",
-      "tenantUid": "demo-uid-14",
-      "tenantName": "Anjali Rajan",
-      "status": "booked",
-      "createdAt": "2026-10-18"
-    },
-    {
-      "id": "mb6",
-      "hostelId": "h5",
-      "mealId": "m12",
-      "mealName": "Lunch",
-      "price": 150,
-      "date": "2026-10-17",
-      "tenantUid": "demo-uid-18",
-      "tenantName": "Aparna Thomas",
-      "status": "cancelled",
-      "createdAt": "2026-10-16"
-    },
-    {
-      "id": "mb7",
-      "hostelId": "h6",
-      "mealId": "m15",
-      "mealName": "Lunch",
-      "price": 90,
-      "date": "2026-10-19",
-      "tenantUid": "demo-uid-20",
-      "tenantName": "Sanjay Varma",
-      "status": "booked",
-      "createdAt": "2026-10-18"
-    },
-    {
-      "id": "mb8",
-      "hostelId": "h4",
-      "mealId": "m8",
-      "mealName": "Breakfast",
-      "price": 70,
-      "date": "2026-10-18",
-      "tenantUid": "demo-uid-16",
-      "tenantName": "Diya Krishna",
-      "status": "booked",
-      "createdAt": "2026-10-17"
+      "paymentId": "",
+      "paidOn": "",
+      "createdAt": "2026-10-22",
+      "id": 1
     },
     {
       "hostelId": "h1",
-      "mealId": "m1",
-      "mealName": "Breakfast",
-      "price": 80,
-      "date": "2026-10-21",
+      "hostelName": "StayInKochi Kakkanad",
       "tenantUid": "n0Hcq1AtLQfQTd8cZzLhqPXJsca2",
       "tenantName": "ajin",
-      "status": "booked",
-      "createdAt": "2026-10-21",
-      "id": "bisJQJ2"
+      "foodPlanId": "f1",
+      "planName": "Full Meal Plan",
+      "amount": 3000,
+      "month": "2026-10",
+      "status": "paid",
+      "paymentId": "pay_eusm24epcljzpud",
+      "paidOn": "2026-10-22",
+      "createdAt": "2026-10-22",
+      "id": 2
     }
   ],
   "switchRequests": [
@@ -2070,5 +1989,6 @@
       "id": "m_pxiWK"
     }
   ],
+  "vacateRequests": [],
   "$schema": "./node_modules/json-server/schema.json"
 }
