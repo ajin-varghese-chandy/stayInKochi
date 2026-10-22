@@ -73,7 +73,7 @@
   }
 
   body {
-    background-color: var(--color-ivory);
+    background-color: white;
     color: var(--color-charcoal);
     font-family: var(--font-sans);
     font-synthesis-weight: none;

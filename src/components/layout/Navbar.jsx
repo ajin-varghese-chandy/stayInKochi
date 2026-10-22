@@ -41,7 +41,7 @@ export default function Navbar() {
   )
 
   return (
-    <header className="px-3 pt-3 sm:px-4">
+    <header className="px-3 pt-3 sm:px-4 mb-3 bg-white">
       <nav className="topbar mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-3 px-3 sm:px-4">
         <Brand tone="light" markSize="h-6 w-6" />
 
