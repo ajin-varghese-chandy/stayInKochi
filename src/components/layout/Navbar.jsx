@@ -37,11 +37,6 @@ export default function Navbar() {
           {user.role === 'owner' ? 'Owner console' : 'My stay'}
         </NavLink>
       )}
-      {!user && (
-        <NavLink to="/login" className={linkClass}>
-          Login
-        </NavLink>
-      )}
     </>
   )
 
