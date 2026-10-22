@@ -24,7 +24,8 @@ export default function BedRow({ bed, assignableTenants, isSaving, onAssign, onF
     }
   }
 
-  // Available beds offer assignment; occupied beds can be freed.
+  // Available beds offer assignment; reserved beds are held for a switch;
+  // occupied beds can be freed.
   let actions
   if (bed.status === 'available') {
     actions =
@@ -53,6 +54,13 @@ export default function BedRow({ bed, assignableTenants, isSaving, onAssign, onF
       ) : (
         <span className="text-sm text-charcoal/55">No tenants to assign</span>
       )
+  } else if (bed.status === 'reserved') {
+    actions = (
+      <span className="text-sm text-charcoal/55">
+        Held for{' '}
+        {occupant ? `${occupant.name}'s switch` : 'a switch request'}
+      </span>
+    )
   } else {
     actions = (
       <Button size="sm" variant="secondary" onClick={() => onFree(bed)} disabled={isSaving}>

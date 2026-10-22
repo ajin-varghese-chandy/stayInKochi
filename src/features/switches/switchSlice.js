@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { openCheckout } from '../../services/paymentGateway'
 import { notify, OWNER_INBOX } from '../notifications/notificationService'
-import { updateBed } from '../rooms/bedService'
+import { createPayment, getPaymentsByUser } from '../payments/paymentService'
+import { getBedsByRoom, updateBed } from '../rooms/bedService'
 import { getTenantsByUser, updateTenant } from '../tenants/tenantService'
 import {
   createSwitchRequest,
@@ -9,17 +10,28 @@ import {
   getSwitchRequestsByUser,
   updateSwitchRequest,
 } from './switchService'
+import {
+  applyRentCredit,
+  computeSwitchSettlement,
+  monthRangeLabel,
+} from './switchSettlement'
 
 // Flat fee a tenant pays to move from one hostel to another.
 export const SWITCH_FEE_RUPEES = 500
 
 const today = () => new Date().toISOString().slice(0, 10)
 
+const formatMoney = (amount) =>
+  `₹${Number(amount ?? 0).toLocaleString('en-IN')}`
+
+// Statuses that mean the tenant already has a move in progress.
+const ACTIVE_STATUSES = ['pending', 'approved']
+
 const initialState = {
   items: [], // switch requests for the current view (tenant: mine, owner: all)
   isLoading: false,
   error: null,
-  isSaving: false, // payment / approve / reject in progress
+  isSaving: false, // request / approve / pay / reject in progress
   saveError: null,
 }
 
@@ -47,16 +59,12 @@ export const fetchAllSwitches = createAsyncThunk(
   },
 )
 
-// Tenant: pay the switching fee, then lodge the request for owner approval.
-//   1. record the request as unpaid
-//   2. open the payment sheet
-//   3. mark it pending (paid) on success, cancelled otherwise
+// Tenant: ask to move. This costs nothing yet — the owner first checks the
+// destination and reserves a free bed before any money changes hands.
 export const requestHostelSwitch = createAsyncThunk(
   'switches/requestHostelSwitch',
-  async ({ tenant, toHostel, amount }, { rejectWithValue }) => {
+  async ({ tenant, toHostel }, { rejectWithValue }) => {
     try {
-      const fee = Number(amount)
-
       if (!tenant?.id || !tenant?.uid) {
         return rejectWithValue(
           'Your tenancy could not be found. Reload the page and try again.',
@@ -67,9 +75,19 @@ export const requestHostelSwitch = createAsyncThunk(
         return rejectWithValue('Choose a branch to switch to.')
       }
 
-      // Never record an unpaid request for a free/undefined fee.
-      if (!Number.isFinite(fee) || fee <= 0) {
-        return rejectWithValue('The switch fee could not be calculated.')
+      if (String(toHostel.id) === String(tenant.hostelId)) {
+        return rejectWithValue('You already live at this branch.')
+      }
+
+      // One move at a time, so two reservations can never be open at once.
+      const existing = await getSwitchRequestsByUser(tenant.uid)
+      const active = existing.find((item) =>
+        ACTIVE_STATUSES.includes(item.status),
+      )
+      if (active) {
+        return rejectWithValue(
+          'You already have a switch in progress. Finish or cancel it before requesting another.',
+        )
       }
 
       const request = await createSwitchRequest({
@@ -78,90 +96,82 @@ export const requestHostelSwitch = createAsyncThunk(
         tenantName: tenant.name,
         fromHostelId: tenant.hostelId,
         fromHostelName: tenant.hostelName,
+        fromRentPerMonth: tenant.rentPerMonth ?? null,
         toHostelId: toHostel.id,
         toHostelName: toHostel.name,
-        amount: fee,
-        status: 'unpaid',
-        paymentId: '',
-        createdAt: today(),
-      })
-
-      let response
-      try {
-        response = await openCheckout({
-          amountInRupees: fee,
-          description: `Switch to ${toHostel.name}`,
-          payer: { name: tenant.name, email: tenant.email },
-        })
-      } catch (error) {
-        await updateSwitchRequest(request.id, { status: 'cancelled' })
-        return rejectWithValue(error.message)
-      }
-
-      if (!response) {
-        await updateSwitchRequest(request.id, { status: 'cancelled' })
-        return rejectWithValue('Payment was cancelled.')
-      }
-
-      const pending = await updateSwitchRequest(request.id, {
+        amount: SWITCH_FEE_RUPEES,
         status: 'pending',
-        paymentId: response.paymentId ?? '',
-        paidOn: today(),
+        paymentId: '',
+        requestedOn: today(),
+        createdAt: today(),
       })
 
       await notify(
         OWNER_INBOX,
-        `${tenant.name} paid the switch fee to move to ${toHostel.name}.`,
+        `${tenant.name} asked to switch from ${tenant.hostelName} to ${toHostel.name}. Reserve a bed or decline the request.`,
       )
 
-      return pending
+      return request
     } catch (error) {
       return rejectWithValue(error.message)
     }
   },
 )
 
-// Owner: approve a paid switch. This frees the old bed and moves the tenant to
-// the new hostel (a bed there is assigned afterwards from the rooms screen).
+// Owner: approve a pending request and reserve a specific free bed at the
+// destination. The tenant keeps their current bed until they pay and move, so
+// nobody is left without a room while the request is being settled.
 export const approveSwitch = createAsyncThunk(
   'switches/approveSwitch',
-  async (switchRequest, { rejectWithValue }) => {
+  async ({ switchRequest, room, bed }, { rejectWithValue }) => {
     try {
-      const tenants = await getTenantsByUser(switchRequest.tenantUid)
-      // Prefer the exact tenant record the fee was paid for; fall back to the
-      // user's first record for older requests that did not store tenantId.
-      const tenant =
-        tenants.find(
-          (item) => String(item.id) === String(switchRequest.tenantId),
-        ) ?? tenants[0]
-
-      if (!tenant) {
-        return rejectWithValue('The tenant record for this switch no longer exists.')
+      if (switchRequest?.status !== 'pending') {
+        return rejectWithValue('This request is no longer waiting for approval.')
       }
 
-      if (tenant.bedId) {
-        await updateBed(tenant.bedId, { status: 'available', tenantId: null })
+      if (!room?.id || !bed?.id) {
+        return rejectWithValue('Choose a room and bed to reserve.')
       }
 
-      await updateTenant(tenant.id, {
-        hostelId: switchRequest.toHostelId,
-        hostelName: switchRequest.toHostelName,
-        roomId: null,
-        bedId: null,
-        roomNumber: null,
-        bedNumber: null,
-        rentPerMonth: null,
-        rentStatus: 'unpaid',
+      // Re-check the bed against the server: another tenant may have taken it
+      // while the owner had the page open.
+      const beds = await getBedsByRoom(room.id)
+      const target = beds.find((item) => String(item.id) === String(bed.id))
+
+      if (!target) {
+        return rejectWithValue(`Bed ${bed.bedNumber} no longer exists.`)
+      }
+
+      if (String(target.hostelId) !== String(switchRequest.toHostelId)) {
+        return rejectWithValue('That bed belongs to a different branch.')
+      }
+
+      if (target.status !== 'available') {
+        return rejectWithValue(
+          `Bed ${target.bedNumber} in room ${room.roomNumber} is no longer free. Choose another bed.`,
+        )
+      }
+
+      // Hold the bed. The public availability count treats anything that is
+      // not "available" as taken, so reserved beds immediately stop showing up.
+      await updateBed(target.id, {
+        status: 'reserved',
+        tenantId: switchRequest.tenantId,
       })
 
       const approved = await updateSwitchRequest(switchRequest.id, {
         status: 'approved',
+        reservedRoomId: room.id,
+        reservedRoomNumber: room.roomNumber,
+        reservedBedId: target.id,
+        reservedBedNumber: target.bedNumber,
+        reservedRentPerMonth: room.rentPerMonth,
         decidedOn: today(),
       })
 
       await notify(
         switchRequest.tenantUid,
-        `Your switch to ${switchRequest.toHostelName} was approved. Ask the owner to assign you a bed.`,
+        `Your switch to ${switchRequest.toHostelName} was approved. Room ${room.roomNumber}, bed ${target.bedNumber} is held for you. Clear this month’s rent if it is still due, then pay the ${formatMoney(switchRequest.amount)} switch fee plus any prorated rent difference to complete the move.`,
       )
 
       return approved
@@ -171,19 +181,300 @@ export const approveSwitch = createAsyncThunk(
   },
 )
 
-// Owner: reject a switch request.
-export const rejectSwitch = createAsyncThunk(
-  'switches/rejectSwitch',
+// Tenant: pay the fee for an approved switch. Payment is the point of no
+// return: the old bed is released and the reserved bed becomes theirs.
+export const paySwitchFee = createAsyncThunk(
+  'switches/paySwitchFee',
   async (switchRequest, { rejectWithValue }) => {
     try {
+      if (switchRequest?.status !== 'approved') {
+        return rejectWithValue('This switch is not ready for payment yet.')
+      }
+
+      if (!switchRequest.reservedBedId || !switchRequest.reservedRoomId) {
+        return rejectWithValue(
+          'No bed is reserved for this switch. Ask the owner to reserve one first.',
+        )
+      }
+
+      const tenants = await getTenantsByUser(switchRequest.tenantUid)
+      const tenant =
+        tenants.find(
+          (item) => String(item.id) === String(switchRequest.tenantId),
+        ) ?? tenants[0]
+
+      if (!tenant) {
+        return rejectWithValue('The tenant record for this switch no longer exists.')
+      }
+
+      // The reservation must still be valid before taking any money.
+      const beds = await getBedsByRoom(switchRequest.reservedRoomId)
+      const bed = beds.find(
+        (item) => String(item.id) === String(switchRequest.reservedBedId),
+      )
+
+      if (!bed || bed.status !== 'reserved') {
+        return rejectWithValue(
+          'Your reserved bed is no longer held. Ask the owner to reserve another one.',
+        )
+      }
+
+      if (bed.tenantId && String(bed.tenantId) !== String(tenant.id)) {
+        return rejectWithValue(
+          'That bed is reserved for someone else. Ask the owner to review this switch.',
+        )
+      }
+
+      // Switch fee and the mid-month rent difference are settled together.
+      const fee = Number(switchRequest.amount) || SWITCH_FEE_RUPEES
+
+      const settlement = computeSwitchSettlement({
+        fromRent: tenant.rentPerMonth,
+        toRent: switchRequest.reservedRentPerMonth,
+      })
+
+      if (!settlement) {
+        return rejectWithValue(
+          'Rent for this move could not be calculated. Ask the owner to check both branches’ room rents.',
+        )
+      }
+
+      // Dues at the current branch must be clear before a move, otherwise the
+      // unused-days credit would be calculated against rent that was never paid.
+      const tenantPayments = await getPaymentsByUser(tenant.uid)
+      const monthCleared = tenantPayments.some(
+        (payment) =>
+          payment.status === 'paid' && payment.month === settlement.month,
+      )
+
+      if (!monthCleared) {
+        return rejectWithValue(
+          `Pay your ${monthRangeLabel(settlement)} rent before moving. Once this month is cleared, the unused days are credited against the new branch.`,
+        )
+      }
+
+      // Any credit already on the account reduces what is due now.
+      const rent = applyRentCredit(settlement.charge, tenant.rentCredit)
+      const rentCharge = rent.amountDue
+      const creditLeft = rent.creditLeft + settlement.credit
+      const totalDue = fee + rentCharge
+
+      let response
+      try {
+        response = await openCheckout({
+          amountInRupees: totalDue,
+          description:
+            rentCharge > 0
+              ? `Switch to ${switchRequest.toHostelName} + rent difference`
+              : `Switch to ${switchRequest.toHostelName}`,
+          payer: { name: tenant.name, email: tenant.email },
+        })
+      } catch (error) {
+        return rejectWithValue(error.message)
+      }
+
+      if (!response) {
+        // Keep the reservation: the tenant can reopen the payment sheet.
+        return rejectWithValue(
+          'Payment was cancelled. Your bed is still reserved — try again when ready.',
+        )
+      }
+
+      const settlementRecord = {
+        ...settlement,
+        fromHostelName: switchRequest.fromHostelName,
+        toHostelName: switchRequest.toHostelName,
+        grossCharge: settlement.charge,
+        charged: rentCharge,
+        creditApplied: rent.creditApplied,
+        credited: settlement.credit,
+        creditLeft,
+        movedOn: today(),
+      }
+
+      // Record the rent difference separately so the rent history explains why
+      // the moving month does not equal the new monthly rent.
+      if (rentCharge > 0) {
+        await createPayment({
+          hostelId: switchRequest.toHostelId,
+          hostelName: switchRequest.toHostelName,
+          tenantId: tenant.id,
+          tenantUid: tenant.uid,
+          tenantName: tenant.name,
+          amount: rentCharge,
+          grossAmount: settlement.charge,
+          creditApplied: rent.creditApplied,
+          month: settlement.month,
+          status: 'paid',
+          category: 'rent-adjustment',
+          note: `Mid-month move from ${switchRequest.fromHostelName} to ${switchRequest.toHostelName} — ${settlement.remainingDays} days at the new rent.`,
+          switchRequestId: switchRequest.id,
+          paymentId: response.paymentId ? `${response.paymentId}-rent` : '',
+          createdAt: today(),
+          paidOn: today(),
+        })
+      }
+
+      // Move the tenant. The old bed is only freed once the fee is paid.
+      if (tenant.bedId && String(tenant.bedId) !== String(bed.id)) {
+        await updateBed(tenant.bedId, { status: 'available', tenantId: null })
+      }
+
+      await updateBed(bed.id, { status: 'occupied', tenantId: tenant.id })
+
+      await updateTenant(tenant.id, {
+        hostelId: switchRequest.toHostelId,
+        hostelName: switchRequest.toHostelName,
+        roomId: switchRequest.reservedRoomId,
+        roomNumber: switchRequest.reservedRoomNumber,
+        bedId: bed.id,
+        bedNumber: bed.bedNumber,
+        rentPerMonth: switchRequest.reservedRentPerMonth ?? tenant.rentPerMonth,
+        rentStatus: 'paid',
+        rentCredit: creditLeft,
+        rentSettlement: settlementRecord,
+        movedOn: today(),
+      })
+
+      const completed = await updateSwitchRequest(switchRequest.id, {
+        status: 'completed',
+        paymentId: response.paymentId ?? '',
+        paidOn: today(),
+        completedOn: today(),
+        rentSettlement: settlementRecord,
+        rentAdjustment: rentCharge,
+        totalPaid: totalDue,
+      })
+
+      await notify(
+        OWNER_INBOX,
+        `${tenant.name} paid ${formatMoney(totalDue)} and moved to ${switchRequest.toHostelName} — room ${switchRequest.reservedRoomNumber}, bed ${bed.bedNumber}. Switch fee ${formatMoney(fee)}${
+          rentCharge > 0
+            ? `, rent difference ${formatMoney(rentCharge)}`
+            : ''
+        }.`,
+      )
+
+      const creditLine =
+        creditLeft > 0
+          ? ` ${formatMoney(creditLeft)} rent credit will be applied to your next rent.`
+          : ''
+
+      await notify(
+        switchRequest.tenantUid,
+        `You are now at ${switchRequest.toHostelName} — room ${switchRequest.reservedRoomNumber}, bed ${bed.bedNumber}. Your old bed has been released.${
+          rentCharge > 0
+            ? ` ${formatMoney(rentCharge)} was charged for the rent difference this month.`
+            : ''
+        }${creditLine}`,
+      )
+
+      return completed
+    } catch (error) {
+      return rejectWithValue(error.message)
+    }
+  },
+)
+
+// Owner: decline a pending request. Nothing was reserved, so there is nothing
+// to release.
+export const rejectSwitch = createAsyncThunk(
+  'switches/rejectSwitch',
+  async ({ switchRequest, reason = '' }, { rejectWithValue }) => {
+    try {
+      if (switchRequest?.status !== 'pending') {
+        return rejectWithValue('This request is no longer waiting for approval.')
+      }
+
       const updated = await updateSwitchRequest(switchRequest.id, {
         status: 'rejected',
         decidedOn: today(),
+        decisionNote: reason.trim(),
       })
 
       await notify(
         switchRequest.tenantUid,
-        `Your switch to ${switchRequest.toHostelName} was rejected.`,
+        `Your switch to ${switchRequest.toHostelName} was declined.${
+          reason.trim() ? ` Reason: ${reason.trim()}` : ''
+        }`,
+      )
+
+      return updated
+    } catch (error) {
+      return rejectWithValue(error.message)
+    }
+  },
+)
+
+// Owner: release a bed held for an approved request that the tenant has not
+// paid for, so it can be offered to another tenant.
+export const releaseSwitchReservation = createAsyncThunk(
+  'switches/releaseSwitchReservation',
+  async ({ switchRequest, reason = '' }, { rejectWithValue }) => {
+    try {
+      if (switchRequest?.status !== 'approved') {
+        return rejectWithValue('Only an approved switch can have its bed released.')
+      }
+
+      if (switchRequest.reservedBedId) {
+        try {
+          await updateBed(switchRequest.reservedBedId, {
+            status: 'available',
+            tenantId: null,
+          })
+        } catch {
+          // The bed may already have been freed; the request should still close.
+        }
+      }
+
+      const updated = await updateSwitchRequest(switchRequest.id, {
+        status: 'cancelled',
+        decidedOn: today(),
+        decisionNote: reason.trim(),
+      })
+
+      await notify(
+        switchRequest.tenantUid,
+        `Your switch to ${switchRequest.toHostelName} was closed because the fee was not paid. The reserved bed has been released.`,
+      )
+
+      return updated
+    } catch (error) {
+      return rejectWithValue(error.message)
+    }
+  },
+)
+
+// Tenant: withdraw a request. An approved request releases its reserved bed.
+export const cancelSwitch = createAsyncThunk(
+  'switches/cancelSwitch',
+  async (switchRequest, { rejectWithValue }) => {
+    try {
+      if (!ACTIVE_STATUSES.includes(switchRequest?.status)) {
+        return rejectWithValue('Only a request in progress can be cancelled.')
+      }
+
+      if (switchRequest.reservedBedId) {
+        try {
+          await updateBed(switchRequest.reservedBedId, {
+            status: 'available',
+            tenantId: null,
+          })
+        } catch {
+          // The bed may already have been freed or removed; cancelling the
+          // request must still go through.
+        }
+      }
+
+      const updated = await updateSwitchRequest(switchRequest.id, {
+        status: 'cancelled',
+        decidedOn: today(),
+        cancelledByTenant: true,
+      })
+
+      await notify(
+        OWNER_INBOX,
+        `${switchRequest.tenantName} cancelled the switch to ${switchRequest.toHostelName}.`,
       )
 
       return updated
@@ -233,14 +524,7 @@ const switchSlice = createSlice({
       })
       .addCase(requestHostelSwitch.fulfilled, (state, action) => {
         state.isSaving = false
-        const index = state.items.findIndex(
-          (item) => item.id === action.payload.id,
-        )
-        if (index === -1) {
-          state.items.unshift(action.payload)
-        } else {
-          state.items[index] = action.payload
-        }
+        state.items.unshift(action.payload)
       })
       .addCase(requestHostelSwitch.rejected, (state, action) => {
         state.isSaving = false
@@ -258,6 +542,18 @@ const switchSlice = createSlice({
         state.isSaving = false
         state.saveError = action.payload
       })
+      .addCase(paySwitchFee.pending, (state) => {
+        state.isSaving = true
+        state.saveError = null
+      })
+      .addCase(paySwitchFee.fulfilled, (state, action) => {
+        state.isSaving = false
+        replaceRequest(state.items, action.payload)
+      })
+      .addCase(paySwitchFee.rejected, (state, action) => {
+        state.isSaving = false
+        state.saveError = action.payload
+      })
       .addCase(rejectSwitch.pending, (state) => {
         state.isSaving = true
         state.saveError = null
@@ -267,6 +563,30 @@ const switchSlice = createSlice({
         replaceRequest(state.items, action.payload)
       })
       .addCase(rejectSwitch.rejected, (state, action) => {
+        state.isSaving = false
+        state.saveError = action.payload
+      })
+      .addCase(cancelSwitch.pending, (state) => {
+        state.isSaving = true
+        state.saveError = null
+      })
+      .addCase(cancelSwitch.fulfilled, (state, action) => {
+        state.isSaving = false
+        replaceRequest(state.items, action.payload)
+      })
+      .addCase(cancelSwitch.rejected, (state, action) => {
+        state.isSaving = false
+        state.saveError = action.payload
+      })
+      .addCase(releaseSwitchReservation.pending, (state) => {
+        state.isSaving = true
+        state.saveError = null
+      })
+      .addCase(releaseSwitchReservation.fulfilled, (state, action) => {
+        state.isSaving = false
+        replaceRequest(state.items, action.payload)
+      })
+      .addCase(releaseSwitchReservation.rejected, (state, action) => {
         state.isSaving = false
         state.saveError = action.payload
       })

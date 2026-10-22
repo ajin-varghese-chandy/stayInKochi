@@ -24,7 +24,6 @@ import {
 import { getBedsByHostel } from '../features/rooms/bedService'
 import { getRoomsByHostel } from '../features/rooms/roomService'
 import { getFoodPlansByHostel } from '../features/food/foodPlanService'
-import { getMealsByHostel } from '../features/food/mealService'
 import { getTenantsByUser } from '../features/tenants/tenantService'
 import formatRupees from '../utils/formatRupees'
 import hostelPhotos from '../utils/hostelPhotos'
@@ -47,7 +46,6 @@ export default function HostelDetailsPage() {
   const [rooms, setRooms] = useState([])
   const [beds, setBeds] = useState([])
   const [foodPlans, setFoodPlans] = useState([])
-  const [meals, setMeals] = useState([])
 
   // A signed-in tenant's existing tenancy decides which UI to show below:
   // already living here, or living elsewhere (switch instead of request).
@@ -61,7 +59,6 @@ export default function HostelDetailsPage() {
     getRoomsByHostel(hostelId).then(setRooms).catch(() => setRooms([]))
     getBedsByHostel(hostelId).then(setBeds).catch(() => setBeds([]))
     getFoodPlansByHostel(hostelId).then(setFoodPlans).catch(() => setFoodPlans([]))
-    getMealsByHostel(hostelId).then(setMeals).catch(() => setMeals([]))
 
     return () => {
       dispatch(clearSelectedHostel())
@@ -156,10 +153,16 @@ export default function HostelDetailsPage() {
     primaryAction = (
       <>
         <Alert tone="info">
-          You live at <strong>{tenancy.hostelName}</strong>. Moving here is a
-          hostel switch, approved by the owner after a small fee.
+          You live at <strong>{tenancy.hostelName}</strong>. Requesting a move
+          here is free — the owner reserves a bed, then you pay the small
+          switch fee to complete it.
         </Alert>
-        <Button to="/tenant/switch" block className="mt-3">
+        <Button
+          to="/tenant/switch"
+          state={{ switchToHostelId: hostel.id }}
+          block
+          className="mt-3"
+        >
           Switch to this hostel
         </Button>
       </>
@@ -326,7 +329,7 @@ export default function HostelDetailsPage() {
           {/* Food */}
           <div>
             <h2 className="text-base font-semibold text-charcoal">Food here</h2>
-            {foodPlans.length === 0 && meals.length === 0 ? (
+            {foodPlans.length === 0 ? (
               <p className="mt-3 text-sm text-charcoal/60">
                 No food plan has been published for this branch yet.
               </p>
@@ -356,15 +359,6 @@ export default function HostelDetailsPage() {
                     </p>
                   </div>
                 ))}
-
-                {meals.length > 0 && (
-                  <p className="text-sm text-charcoal/65">
-                    Single meals:{' '}
-                    {meals
-                      .map((meal) => `${meal.name} ${formatRupees(meal.price)}`)
-                      .join(' · ')}
-                  </p>
-                )}
               </div>
             )}
           </div>

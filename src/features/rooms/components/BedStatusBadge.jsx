@@ -4,6 +4,7 @@ import StatusBadge from '../../../components/ui/StatusBadge'
 // shared StatusBadge map.
 const STATUS_TONES = {
   available: 'success',
+  reserved: 'warning',
   occupied: 'neutral',
   maintenance: 'danger',
 }

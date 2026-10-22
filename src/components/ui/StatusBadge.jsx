@@ -20,6 +20,7 @@ const TONE_BY_STATUS = {
   processing: 'warning',
   unpaid: 'warning',
   requested: 'warning',
+  reserved: 'warning',
   unread: 'warning',
 
   // danger
