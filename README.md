@@ -185,14 +185,17 @@ src/
                 each has a slice (state), a service (API), and components
   pages/        screens for each route
   routes/       routes and role protection
-  services/     axios client, Firebase setup, mock payment gateway
+  services/     axios client, Cloudinary uploads, Firebase setup,
+                mock payment gateway
   utils/        helpers (rupee formatting, branch photos)
 
 server/
-  index.js      Express + json-server + upload endpoints
+  index.js      json-server REST API
   db.json       demo data
-  uploads/      tenant documents and maintenance photos
 ```
+
+Uploads (ID documents, maintenance photos, branch photos) go directly from the
+browser to Cloudinary. The API only stores the returned URLs.
 
 Routes are split into three groups:
 
@@ -215,6 +218,11 @@ Build with `npm run build` and deploy the `dist/` folder to any static host
 
 Set `VITE_API_BASE_URL` to your deployed API URL before building.
 
+Create an **unsigned** upload preset in the Cloudinary dashboard, then set
+`VITE_CLOUDINARY_CLOUD_NAME` and `VITE_CLOUDINARY_UPLOAD_PRESET` so uploads work.
+If the preset needs PDFs (ID documents), allow PDF in its allowed formats and
+turn on **Settings → Security → Allow delivery of PDF and ZIP files**.
+
 ### API
 
 The `server/` folder is a standalone Node app with its own `package.json`.
@@ -229,10 +237,9 @@ The `server/` folder is a standalone Node app with its own `package.json`.
 Optional environment variables:
 
 - `DB_FILE` — path to a persistent `db.json` (otherwise the bundled one is used)
-- `UPLOAD_DIR` — path to a persistent folder for uploaded files
 
-Hosts with an ephemeral filesystem will lose new records and uploads on restart,
-which is fine for a demo but not for real use. See `server/README.md` for details.
+Hosts with an ephemeral filesystem will lose new records on restart, which is
+fine for a demo but not for real use. See `server/README.md` for details.
 
 ---
 
@@ -242,7 +249,7 @@ which is fine for a demo but not for real use. See `server/README.md` for detail
   it is not connected to UPI, Razorpay or any bank.
 - **One owner only.** Owner access is granted solely by matching
   `VITE_OWNER_EMAIL`; there is no owner sign-up screen.
-- **Uploads** are limited to 5 MB and stored under `server/uploads/`
-  (documents: JPG/PNG/WEBP/PDF; maintenance photos: JPG/PNG/WEBP).
+- **Uploads** go straight from the browser to Cloudinary. Files are limited to
+  5 MB (documents: JPG/PNG/WEBP/PDF; photos: JPG/PNG/WEBP).
 - **The API is a demo backend.** json-server is easy to replace with a real
   backend later, but it has no pagination, auth rules or concurrency handling.

@@ -1,19 +1,13 @@
 import api, { API_BASE_URL } from '../../services/api'
+import { uploadFile } from '../../services/cloudinary'
 
-// Maintenance photos are uploaded to the API, which writes them to
-// `server/uploads/maintenance` and replies with `{ name, path, size, … }`.
-// Only the path is stored on the request, so db.json stays small.
+// The photo goes straight to Cloudinary; the request stores its URL.
 export function uploadMaintenancePhoto(file) {
-  const formData = new FormData()
-  formData.append('file', file)
-
-  // Uploads can take longer than the client's normal request timeout.
-  return api.post('/uploads/maintenance', formData, { timeout: 30000 })
+  return uploadFile(file, 'stayinkochi/maintenance')
 }
 
-// Photos are stored as root-relative paths ("/uploads/maintenance/…"), so
-// resolve them against the API host. Absolute URLs (older records) pass
-// through untouched.
+// New uploads are absolute Cloudinary URLs. Older records may still use
+// root-relative paths, so resolve those against the API host.
 export function maintenancePhotoUrl(storedPath) {
   if (!storedPath) return ''
   if (/^https?:\/\//i.test(storedPath)) return storedPath

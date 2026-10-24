@@ -18,7 +18,8 @@ npm run server     # terminal 1 — json-server on :5000
 npm run dev        # terminal 2 — Vite on :5173
 ```
 
-- `.env` filled in (Firebase keys, `VITE_OWNER_EMAIL`, `VITE_RAZORPAY_KEY_ID`)
+- `.env` filled in (Firebase keys, `VITE_OWNER_EMAIL`, `VITE_RAZORPAY_KEY_ID`,
+  `VITE_CLOUDINARY_CLOUD_NAME`, `VITE_CLOUDINARY_UPLOAD_PRESET`)
 - Two browser profiles ready:
   - **Owner**: the account matching `VITE_OWNER_EMAIL`
   - **Tenant**: any registered user (or a demo tenant with an approved tenancy)
@@ -40,7 +41,7 @@ books food → raises an issue → owner resolves it → tenant switches branch.
 - Problem: hostel/PG management across multiple Kochi branches — tenants,
   rent, food, upkeep, switches — all under one owner. One app, two roles.
 - Tech stack: React 19 + Vite, Redux Toolkit, React Router 7, Tailwind CSS 4,
-  Firebase Auth + Realtime DB, json-server REST, Razorpay.
+  Firebase Auth + Realtime DB, json-server REST, Cloudinary uploads, Razorpay.
 - Three shells: public site, owner console, tenant portal — each with its own
   layout, protected by role-based routing.
 - Feature-folder architecture: every domain owns `slice` (state + thunks),
@@ -88,20 +89,20 @@ live. Mention `npm run server` serving `server/db.json`.
 **Say:**
 - Owner dashboard: financial summary (rent collected/pending, food income,
   switch fees) + notification inbox + announcements.
-- Branch CRUD — brand name auto-prefixed ("StayInKochi …"), image is a pasted
-  URL, amenities comma-separated.
+- Branch CRUD — brand name auto-prefixed ("StayInKochi …"), cover image can be
+  pasted or uploaded, amenities comma-separated.
 - Rooms & beds per branch: add rooms, free/occupied bed states, assign a
   tenant to a bed.
 - Tenants list: search, reset rent status, check out.
 
 **Show in code:**
 - `src/pages/owner/OwnerDashboardPage.jsx`, `OwnerHostelsPage.jsx`
-- `src/features/hostels/components/HostelForm.jsx` (image URL field)
+- `src/features/hostels/components/HostelForm.jsx` (cover URL + gallery upload)
 - `src/features/rooms/` — `roomsSlice`, `roomService`, `BedRow`, `RoomForm`
 - `src/features/finance/FinancialSummary.jsx`
 
 **Demo:**
-1. Add a branch (paste an image URL) → it appears in the public list
+1. Add a branch (paste an image URL or upload photos) → it appears in the public list
 2. Add a room to it → assign a tenant to a bed
 3. Dashboard financial cards
 
@@ -189,10 +190,13 @@ live. Mention `npm run server` serving `server/db.json`.
   async, selectors exported per slice; optimistic-free, simple flow.
 - **Notifications**: written to json-server, read per recipient with unread
   counts — powers the bell, inbox, and broadcast.
+- **Uploads**: the browser sends ID documents, maintenance photos and branch
+  gallery photos straight to Cloudinary with an unsigned preset; only the
+  returned URLs are saved in `db.json`, so the API stays file-free.
 - **Quality**: ESLint config, `npm run build` clean, Tailwind design tokens
   in `src/index.css` (one font, one palette, no ad-hoc colors).
-- **Future scope**: real file uploads, backend signature verification for
-  Razorpay, pagination, PWA/offline, admin analytics.
+- **Future scope**: backend signature verification for Razorpay, pagination,
+  PWA/offline, admin analytics.
 
 **Show in code:**
 - `server/db.json` (open it — show the seed size), `src/services/api.js`
@@ -225,8 +229,9 @@ live. Mention `npm run server` serving `server/db.json`.
 
 - *Why json-server?* — no backend to build for a frontend-focused project;
   realistic REST shape, swappable for a real API later.
-- *Why no file uploads?* — images are pasted URLs; keeps the app backend-free
-  and the data model simple.
+- *How do uploads work?* — the browser posts ID documents, maintenance photos
+  and branch photos to Cloudinary with an unsigned preset and saves the URLs;
+  no file ever touches the API server.
 - *Is Razorpay real?* — test mode only; production needs signature
   verification on a server (honest known limitation).
 - *Role security?* — Firebase Auth + `requiredRole` in `ProtectedRoute`;

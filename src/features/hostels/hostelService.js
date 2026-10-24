@@ -1,4 +1,5 @@
 import api from '../../services/api'
+import { uploadFiles } from '../../services/cloudinary'
 
 // Fetch every hostel for the public browse list.
 export function getHostels() {
@@ -10,16 +11,10 @@ export function getHostel(hostelId) {
   return api.get(`/hostels/${hostelId}`)
 }
 
-// Owner: upload one or more gallery photos for a branch. The API writes them to
-// `server/uploads/hostels` and replies with `{ files: [{ name, path, … }] }`.
+// Owner: upload gallery photos straight to Cloudinary. Each item in the
+// returned array has a `path` which is the public Cloudinary URL.
 export function uploadHostelImages(files) {
-  const formData = new FormData()
-  files.forEach((file) => formData.append('files', file))
-
-  // Uploads can take longer than the client's normal request timeout.
-  return api
-    .post('/uploads/hostels', formData, { timeout: 60000 })
-    .then((response) => response.files ?? [])
+  return uploadFiles(files, 'stayinkochi/hostels')
 }
 
 // Owner: add a hostel.

@@ -13,7 +13,7 @@ import {
 import MaintenancePhotoUploader from './MaintenancePhotoUploader'
 
 // Form a tenant uses to raise a maintenance request. The photo is optional and
-// is uploaded to the API (server/uploads/maintenance) when picked.
+// is uploaded to Cloudinary when picked.
 export default function MaintenanceForm({ tenancy }) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')

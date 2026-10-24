@@ -5,7 +5,7 @@ import {
   uploadMaintenancePhoto,
 } from '../maintenanceService'
 
-const MAX_BYTES = 5 * 1024 * 1024 // 5 MB, same limit as the API
+const MAX_BYTES = 5 * 1024 * 1024 // 5 MB limit
 const ACCEPT = 'image/jpeg,image/png,image/webp'
 const ACCEPTED_TYPES = ACCEPT.split(',')
 
@@ -16,8 +16,8 @@ function fileSize(bytes) {
     : `${Math.max(1, Math.round(bytes / 1024))} KB`
 }
 
-// Optional photo for a maintenance request. The file is uploaded to the API as
-// soon as it is picked; the request then only stores the returned path.
+// Optional photo for a maintenance request. The file goes straight to
+// Cloudinary as soon as it is picked; the request then stores the returned URL.
 export default function MaintenancePhotoUploader({
   photo,
   onChange,

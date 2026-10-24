@@ -4,12 +4,12 @@ import hostelImageUrl from '../../../utils/hostelImageUrl'
 import { uploadHostelImages } from '../hostelService'
 
 const MAX_PHOTOS = 8
-const MAX_BYTES = 5 * 1024 * 1024 // 5 MB, same limit as the API
+const MAX_BYTES = 5 * 1024 * 1024 // 5 MB limit
 const ACCEPT = 'image/jpeg,image/png,image/webp'
 const ACCEPTED_TYPES = ACCEPT.split(',')
 
-// Gallery photos for a branch. Files are uploaded to the API as soon as they
-// are picked; the hostel record then only stores the returned paths.
+// Gallery photos for a branch. Files go straight to Cloudinary as soon as they
+// are picked; the hostel record then only stores the returned URLs.
 export default function HostelImageUploader({
   images = [],
   onChange,

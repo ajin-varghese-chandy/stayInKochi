@@ -1,18 +1,14 @@
-import api, { API_BASE_URL } from '../../services/api'
+import { API_BASE_URL } from '../../services/api'
+import { uploadFile } from '../../services/cloudinary'
 
-// Verification documents (ID cards and the like) are uploaded straight to the
-// API, which writes them to `server/uploads/tenants` and replies with the
-// details we keep on the stay request.
+// Verification documents go straight to Cloudinary. The stay request keeps
+// the returned details, and `path` is the public Cloudinary URL.
 export function uploadVerificationDocument(file) {
-  const formData = new FormData()
-  formData.append('file', file)
-
-  // Uploads can take longer than the client's normal request timeout.
-  return api.post('/uploads/tenants', formData, { timeout: 30000 })
+  return uploadFile(file, 'stayinkochi/tenants')
 }
 
-// The API stores a root-relative path ("/uploads/tenants/…"). Resolve it
-// against the API host, not the React app's own origin.
+// New uploads are already absolute Cloudinary URLs. Older records may still
+// use root-relative paths, so those are resolved against the API host.
 export function documentUrl(storedPath) {
   if (!storedPath) return ''
   if (/^https?:\/\//i.test(storedPath)) return storedPath

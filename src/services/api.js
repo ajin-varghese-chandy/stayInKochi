@@ -9,8 +9,7 @@ import axios from 'axios'
 // single record, and null for the body-less 204 that DELETE returns.
 //
 // No default Content-Type is set: axios already sends application/json for
-// plain objects and multipart/form-data for FormData (image uploads), so the
-// caller never has to think about it.
+// plain objects, so the caller never has to think about it.
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000'
 
 const api = axios.create({

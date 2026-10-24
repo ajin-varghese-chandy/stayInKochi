@@ -6,7 +6,7 @@ import {
 } from '../documentService'
 
 const MAX_FILES = 3
-const MAX_BYTES = 5 * 1024 * 1024 // 5 MB, same limit as the API
+const MAX_BYTES = 5 * 1024 * 1024 // 5 MB limit
 const ACCEPT = 'image/jpeg,image/png,image/webp,application/pdf'
 const ACCEPTED_TYPES = ACCEPT.split(',')
 
@@ -17,8 +17,8 @@ function fileSize(bytes) {
     : `${Math.max(1, Math.round(bytes / 1024))} KB`
 }
 
-// Uploads ID/verification documents for a stay request. Files are sent to the
-// API as soon as they are picked, so the request only stores their URLs.
+// Uploads ID/verification documents for a stay request. Files go straight to
+// Cloudinary as soon as they are picked, so the request only stores their URLs.
 export default function DocumentUploader({
   documents = [],
   onChange,

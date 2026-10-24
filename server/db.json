@@ -359,8 +359,8 @@
       "roomId": "r9",
       "hostelId": "h4",
       "bedNumber": "B",
-      "status": "available",
-      "tenantId": null
+      "status": "occupied",
+      "tenantId": "dU2_3FT"
     },
     {
       "id": "b25",
@@ -391,8 +391,8 @@
       "roomId": "r11",
       "hostelId": "h5",
       "bedNumber": "B",
-      "status": "available",
-      "tenantId": null
+      "status": "occupied",
+      "tenantId": "sb_DXrS"
     },
     {
       "id": "b29",
@@ -743,7 +743,7 @@
       "documents": [
         {
           "name": "footerimage.png",
-          "path": "/uploads/tenants/1792675170395-footerimage.png",
+          "path": "https://res.cloudinary.com/dsqhlwr6g/image/upload/v1792843064/stayinkochi/ucrcfsipzdlegapazpot.png",
           "size": 2152931,
           "mimeType": "image/png",
           "uploadedAt": "2026-10-22T13:19:30.409Z"
@@ -776,6 +776,59 @@
         "movedOn": "2026-10-22"
       },
       "movedOn": "2026-10-22"
+    },
+    {
+      "uid": "jQHyKQYbLGdvoJA5VHNd0L4PmVM2",
+      "name": "amal",
+      "email": "amal2@gmail.com",
+      "phone": "1233423423",
+      "dateOfBirth": "2005-11-10",
+      "hostelId": "h4",
+      "hostelName": "StayInKochi Kaloor",
+      "roomId": "r9",
+      "bedId": "b24",
+      "rentStatus": "unpaid",
+      "joinedOn": "2026-10-24",
+      "documents": [
+        {
+          "name": "Untitled.png",
+          "path": "https://res.cloudinary.com/dsqhlwr6g/image/upload/v1792843067/stayinkochi/bllosdw7lethgswxiqks.png",
+          "size": 9470,
+          "mimeType": "image/png",
+          "uploadedAt": "2026-10-22T17:46:41.251Z"
+        }
+      ],
+      "id": "dU2_3FT",
+      "roomNumber": "201",
+      "bedNumber": "B",
+      "rentPerMonth": 8000
+    },
+    {
+      "uid": "enMINF6wpPhvPCnUjuBjIxe7FR62",
+      "name": "amal",
+      "email": "amal@gmai.com",
+      "phone": "1234455633",
+      "dateOfBirth": "2006-11-24",
+      "hostelId": "h5",
+      "hostelName": "StayInKochi Panampilly",
+      "roomId": "r11",
+      "bedId": "b28",
+      "rentStatus": "paid",
+      "joinedOn": "2026-10-24",
+      "documents": [
+        {
+          "name": "d84c390a03_e216aff851.webp",
+          "path": "https://res.cloudinary.com/dsqhlwr6g/image/upload/v1792842875/stayinkochi/zfwqd7u72wkd80g99buk.webp",
+          "size": 102196,
+          "mimeType": "image/webp",
+          "uploadedAt": "2026-10-24T11:54:36.890Z"
+        }
+      ],
+      "id": "sb_DXrS",
+      "roomNumber": "2",
+      "bedNumber": "B",
+      "rentPerMonth": 11500,
+      "rentCredit": 0
     }
   ],
   "foodPlans": [
@@ -980,7 +1033,7 @@
       "documents": [
         {
           "name": "footerimage.png",
-          "path": "/uploads/tenants/1792675170395-footerimage.png",
+          "path": "https://res.cloudinary.com/dsqhlwr6g/image/upload/v1792843064/stayinkochi/ucrcfsipzdlegapazpot.png",
           "size": 2152931,
           "mimeType": "image/png",
           "uploadedAt": "2026-10-22T13:19:30.409Z"
@@ -1003,15 +1056,39 @@
       "documents": [
         {
           "name": "Untitled.png",
-          "path": "/uploads/tenants/1792691201246-untitled.png",
+          "path": "https://res.cloudinary.com/dsqhlwr6g/image/upload/v1792843067/stayinkochi/bllosdw7lethgswxiqks.png",
           "size": 9470,
           "mimeType": "image/png",
           "uploadedAt": "2026-10-22T17:46:41.251Z"
         }
       ],
-      "status": "pending",
+      "status": "approved",
       "requestedOn": "2026-10-22",
-      "id": "taRR3xi"
+      "id": "taRR3xi",
+      "decidedOn": "2026-10-24"
+    },
+    {
+      "hostelId": "h5",
+      "hostelName": "StayInKochi Panampilly",
+      "tenantUid": "enMINF6wpPhvPCnUjuBjIxe7FR62",
+      "tenantName": "amal",
+      "tenantEmail": "amal@gmai.com",
+      "phone": "1234455633",
+      "dateOfBirth": "2006-11-24",
+      "message": "rfdsfsdfsf ds",
+      "documents": [
+        {
+          "name": "d84c390a03_e216aff851.webp",
+          "path": "https://res.cloudinary.com/dsqhlwr6g/image/upload/v1792842875/stayinkochi/zfwqd7u72wkd80g99buk.webp",
+          "size": 102196,
+          "mimeType": "image/webp",
+          "uploadedAt": "2026-10-24T11:54:36.890Z"
+        }
+      ],
+      "status": "approved",
+      "requestedOn": "2026-10-24",
+      "id": "gOfSfbM",
+      "decidedOn": "2026-10-24"
     }
   ],
   "maintenanceRequests": [
@@ -1133,11 +1210,23 @@
       "tenantName": "alex",
       "title": "batrooom pipe leak",
       "description": "batrooom pipe leak",
-      "imageUrl": "/uploads/maintenance/1792676708305-hero1.png",
+      "imageUrl": "https://res.cloudinary.com/dsqhlwr6g/image/upload/v1792843072/stayinkochi/ie7mfkbpxjkokyf67r6s.png",
       "status": "resolved",
       "createdAt": "2026-10-22T13:45:09.818Z",
       "id": "cCQQnzR",
       "updatedAt": "2026-10-22T13:45:37.834Z"
+    },
+    {
+      "hostelId": "h5",
+      "hostelName": "StayInKochi Panampilly",
+      "tenantUid": "enMINF6wpPhvPCnUjuBjIxe7FR62",
+      "tenantName": "amal",
+      "title": "dasd",
+      "description": "dasdsada",
+      "imageUrl": "https://res.cloudinary.com/dsqhlwr6g/image/upload/v1792843719/stayinkochi/ipq8rx49il89u13aernw.png",
+      "status": "open",
+      "createdAt": "2026-10-24T12:08:42.510Z",
+      "id": "LA2Ala7"
     }
   ],
   "payments": [
@@ -1526,6 +1615,23 @@
       "id": "3Uph8Xu",
       "paymentId": "pay_188ev9j16cjljjg",
       "paidOn": "2026-10-22"
+    },
+    {
+      "hostelId": "h5",
+      "hostelName": "StayInKochi Panampilly",
+      "tenantId": "sb_DXrS",
+      "tenantUid": "enMINF6wpPhvPCnUjuBjIxe7FR62",
+      "tenantName": "amal",
+      "grossAmount": 11500,
+      "creditApplied": 0,
+      "month": "2026-10",
+      "createdAt": "2026-10-24",
+      "amount": 11500,
+      "status": "paid",
+      "category": "rent",
+      "id": "KWKNFm9",
+      "paymentId": "pay_gt5mve0l4anuarb",
+      "paidOn": "2026-10-24"
     }
   ],
   "notifications": [
@@ -1927,6 +2033,55 @@
       "read": false,
       "createdAt": "2026-10-22T17:46:44.847Z",
       "id": "iVPcFiC"
+    },
+    {
+      "uid": "owner",
+      "message": "amal requested a stay at StayInKochi Panampilly.",
+      "read": false,
+      "createdAt": "2026-10-24T11:54:40.366Z",
+      "id": "zvcxR7C"
+    },
+    {
+      "uid": "jQHyKQYbLGdvoJA5VHNd0L4PmVM2",
+      "message": "Your stay request for StayInKochi Kaloor was approved.",
+      "read": false,
+      "createdAt": "2026-10-24T12:06:34.589Z",
+      "id": "iIeWtDn"
+    },
+    {
+      "uid": "enMINF6wpPhvPCnUjuBjIxe7FR62",
+      "message": "Your stay request for StayInKochi Panampilly was approved.",
+      "read": false,
+      "createdAt": "2026-10-24T12:06:46.044Z",
+      "id": "iU-PrEt"
+    },
+    {
+      "uid": "owner",
+      "message": "amal paid 11,500 rent for 2026-10.",
+      "read": false,
+      "createdAt": "2026-10-24T12:08:11.487Z",
+      "id": "fjr1wAJ"
+    },
+    {
+      "uid": "owner",
+      "message": "amal reported: dasd.",
+      "read": false,
+      "createdAt": "2026-10-24T12:08:42.537Z",
+      "id": "nGhlpzM"
+    },
+    {
+      "uid": "owner",
+      "message": "amal asked to switch from StayInKochi Panampilly to StayInKochi Aluva. Reserve a bed or decline the request.",
+      "read": false,
+      "createdAt": "2026-10-24T12:09:25.541Z",
+      "id": "2XP60m9"
+    },
+    {
+      "uid": "owner",
+      "message": "amal cancelled the switch to StayInKochi Aluva.",
+      "read": false,
+      "createdAt": "2026-10-24T12:09:33.916Z",
+      "id": "aNF_nqM"
     }
   ],
   "planSubscriptions": [
@@ -2208,6 +2363,24 @@
       },
       "rentAdjustment": 0,
       "totalPaid": 500
+    },
+    {
+      "tenantId": "sb_DXrS",
+      "tenantUid": "enMINF6wpPhvPCnUjuBjIxe7FR62",
+      "tenantName": "amal",
+      "fromHostelId": "h5",
+      "fromHostelName": "StayInKochi Panampilly",
+      "fromRentPerMonth": 11500,
+      "toHostelId": "h6",
+      "toHostelName": "StayInKochi Aluva",
+      "amount": 500,
+      "status": "cancelled",
+      "paymentId": "",
+      "requestedOn": "2026-10-24",
+      "createdAt": "2026-10-24",
+      "id": "BVy_tsV",
+      "decidedOn": "2026-10-24",
+      "cancelledByTenant": true
     }
   ],
   "vacateRequests": [
