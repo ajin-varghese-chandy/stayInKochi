@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { FileText } from 'lucide-react'
+import { FileText, ChevronDown } from 'lucide-react'
 import Alert from '../../components/ui/Alert'
 import Button from '../../components/ui/Button'
 import EmptyState from '../../components/ui/EmptyState'
@@ -39,6 +39,7 @@ export default function OwnerDashboardPage() {
   const [broadcasting, setBroadcasting] = useState(false)
   const [broadcastResult, setBroadcastResult] = useState(null)
   const [hostels, setHostels] = useState([])
+  const [requestsOpen, setRequestsOpen] = useState(false)
 
   useEffect(() => {
     dispatch(fetchAllStayRequests())
@@ -109,7 +110,7 @@ export default function OwnerDashboardPage() {
           </div>
         </section>
 
-        <NotificationInbox recipientId={OWNER_INBOX} />
+        <NotificationInbox recipientId={OWNER_INBOX} collapsible defaultOpen={false} />
 
         {/* Broadcast announcement */}
         <section aria-labelledby="announcement-heading">
@@ -171,16 +172,29 @@ export default function OwnerDashboardPage() {
         {/* Stay requests */}
         <section aria-labelledby="stay-requests-heading">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2
-              id="stay-requests-heading"
-              className="text-base font-semibold text-charcoal"
-            >
-              Stay requests
+            <h2 id="stay-requests-heading" className="text-base font-semibold text-charcoal">
+              <button
+                type="button"
+                onClick={() => setRequestsOpen((open) => !open)}
+                aria-expanded={requestsOpen}
+                aria-controls="stay-requests-panel"
+                className="flex items-center gap-2 text-left"
+              >
+                Stay requests
+                <ChevronDown
+                  size={16}
+                  strokeWidth={1.75}
+                  aria-hidden="true"
+                  className={`text-charcoal/50 transition-transform duration-200 ${
+                    requestsOpen ? '' : '-rotate-90'
+                  }`}
+                />
+              </button>
             </h2>
             <span className="text-sm text-charcoal/55">{pendingCount} pending</span>
           </div>
 
-          <div className="mt-3 space-y-4">
+          <div id="stay-requests-panel" className="mt-3 space-y-4" hidden={!requestsOpen}>
             {isLoading && <Spinner compact label="Loading stay requests…" />}
 
             {error && (
