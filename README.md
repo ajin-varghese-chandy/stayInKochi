@@ -63,7 +63,7 @@ There are three parts to the app:
 - **Frontend:** React 19, Vite 8, Tailwind CSS 4, React Router 7
 - **State:** Redux Toolkit (one slice per feature)
 - **Auth and chat:** Firebase Authentication + Firebase Realtime Database
-- **API:** json-server + Express in `server/`, with data in `server/db.json`
+- **API:** json-server
 - **HTTP:** axios
 - **Icons:** lucide-react
 

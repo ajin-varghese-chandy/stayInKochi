@@ -1,15 +1,6 @@
 import axios from 'axios'
 
-// One axios client for the json-server REST API (`npm run server`).
-// Every feature service talks to the backend through it, so the base URL and
-// error handling live in one place.
-//
-// The response interceptor unwraps `response.data`, so a service function
-// resolves with the payload itself: an array for collections, an object for a
-// single record, and null for the body-less 204 that DELETE returns.
-//
-// No default Content-Type is set: axios already sends application/json for
-// plain objects, so the caller never has to think about it.
+
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000'
 
 const api = axios.create({
@@ -17,9 +8,8 @@ const api = axios.create({
   timeout: 10000,
 })
 
-// axios rejects on any non-2xx status, which the old fetch wrapper did not.
-// Translate its errors into the short, human-readable messages the UI shows
-// in Alerts, keeping the original status on the error for callers that care.
+
+
 function toFriendlyError(error) {
   if (error.response) {
     const { status, data } = error.response

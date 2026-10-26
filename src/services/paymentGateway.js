@@ -1,14 +1,3 @@
-// Mock UPI checkout for StayInKochi. No bank or gateway is involved: the sheet
-// simulates a collect request and settles it locally.
-//
-// openCheckout() opens the payment sheet (components/common/PaymentSheet) and
-// resolves once the payer is done with it:
-//   resolves with { paymentId } when the payment goes through
-//   resolves with null when the sheet is dismissed before paying
-//   rejects if there is nothing to charge, or if the sheet is not mounted
-//
-// A checkout must never be left pending: an unresolved payment would leave a
-// switch request stuck at "unpaid" and block the tenant from trying again.
 
 let activeCheckout = null
 let openListener = null
