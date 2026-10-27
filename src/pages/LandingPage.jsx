@@ -318,7 +318,7 @@ export default function LandingPage() {
       <section className="bg-charcoal">
         <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
           <img
-            src="https://i.ibb.co/CKTLmbDZ/file-00000000f87c820887171b2653595e7f.png"
+            src="https://i.ibb.co/4w1fF2WV/hostel-irregular-collage.jpg"
             alt="Hostel shared-living spaces, rooms, and common areas"
             width="1024"
             height="1536"
