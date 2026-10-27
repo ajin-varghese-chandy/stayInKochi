@@ -136,57 +136,50 @@ export default function LandingPage() {
           </p>
         </div>
 
-        {/* Hero branch locator — live locations replace the editorial photo */}
+        {/* Minimal SVG-style branch map — labels and location pins only */}
         <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
-          <div aria-hidden="true" className="absolute -inset-3 rounded-[2rem] bg-sage/45 rotate-2" />
-          <div className="relative overflow-hidden rounded-[1.75rem] border border-line bg-ivory shadow-[0_28px_60px_-28px_rgba(25,45,33,0.3)]">
-            <div className="relative overflow-hidden bg-forest px-6 pb-7 pt-6 text-white sm:px-8 sm:pt-8">
-              <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.12]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '18px 18px' }} />
-              <div className="relative flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/65">StayInKochi · Locations</p>
-                  <h2 className="display mt-2 text-2xl leading-tight sm:text-3xl">Find your place in Kochi.</h2>
-                  <p className="mt-2 max-w-sm text-sm leading-relaxed text-white/70">Explore our branches by area and choose the location that works for you.</p>
-                </div>
-                <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-white/10">
-                  <MapPin size={23} strokeWidth={1.7} aria-hidden="true" />
-                </span>
-              </div>
-              <div className="relative mt-5 flex items-center gap-2 text-xs text-white/75">
-                <span className="size-2 rounded-full bg-[#b9d9b2] shadow-[0_0_0_4px_rgba(185,217,178,0.14)]" />
-                {hostels.length} {hostels.length === 1 ? 'branch' : 'branches'} listed
-              </div>
-            </div>
-            <div className="p-3 sm:p-4">
-              {isLoading && hostels.length === 0 ? (
-                <div className="flex min-h-40 items-center justify-center"><Spinner label="Loading branch locations…" /></div>
-              ) : hostels.length > 0 ? (
-                <ul className="divide-y divide-line">
-                  {hostels.slice(0, 5).map((hostel, index) => (
-                    <li key={hostel.id}>
-                      <Link to={`/hostels/${hostel.id}`} className="group flex items-center gap-3 rounded-xl px-3 py-3.5 transition-colors hover:bg-white">
-                        <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-forest/10 bg-sage/55 text-forest">
-                          <MapPin size={17} strokeWidth={1.8} aria-hidden="true" />
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="block truncate text-sm font-semibold text-charcoal group-hover:text-forest">{hostel.name}</span>
-                          <span className="mt-0.5 block truncate text-xs text-charcoal/55">{hostel.location || 'Kochi, Kerala'}</span>
-                        </span>
-                        <span className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-charcoal/35">{String(index + 1).padStart(2, '0')}</span>
-                        <ArrowRight size={15} className="shrink-0 text-forest/60 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="px-4 py-8 text-center text-sm text-charcoal/55">Branch locations will appear here once published.</p>
+          <div className="absolute inset-4 rounded-full bg-sage/35 blur-3xl" aria-hidden="true" />
+          <div className="relative">
+            <svg
+              viewBox="0 0 560 500"
+              role="img"
+              aria-label={`Branch locations: ${hostels.map((hostel) => hostel.name).join(', ')}`}
+              className="h-auto w-full overflow-visible"
+            >
+              <defs>
+                <pattern id="branch-map-dots" width="18" height="18" patternUnits="userSpaceOnUse">
+                  <circle cx="1.5" cy="1.5" r="1.2" fill="var(--color-forest)" opacity="0.14" />
+                </pattern>
+              </defs>
+              <rect width="560" height="500" rx="28" fill="url(#branch-map-dots)" />
+              <path d="M42 370 C95 330 105 250 175 255 S250 350 310 290 S390 150 500 160" fill="none" stroke="var(--color-forest)" strokeWidth="2" strokeDasharray="5 9" strokeLinecap="round" opacity="0.32" />
+              <path d="M105 85 C170 120 205 170 280 155 S390 75 460 90" fill="none" stroke="var(--color-forest)" strokeWidth="1.5" strokeDasharray="3 8" strokeLinecap="round" opacity="0.2" />
+              {hostels.slice(0, 6).map((hostel, index) => {
+                const positions = [
+                  { x: 105, y: 105, tx: 105, ty: 78, anchor: 'middle' },
+                  { x: 280, y: 155, tx: 280, ty: 128, anchor: 'middle' },
+                  { x: 460, y: 90, tx: 460, ty: 63, anchor: 'middle' },
+                  { x: 175, y: 255, tx: 175, ty: 286, anchor: 'middle' },
+                  { x: 310, y: 290, tx: 310, ty: 321, anchor: 'middle' },
+                  { x: 450, y: 390, tx: 450, ty: 421, anchor: 'middle' },
+                ]
+                const point = positions[index]
+                return (
+                  <Link key={hostel.id} to={`/hostels/${hostel.id}`} aria-label={hostel.name}>
+                    <g className="cursor-pointer" role="link">
+                      <circle cx={point.x} cy={point.y} r="25" fill="var(--color-sage)" opacity="0.45" />
+                      <circle cx={point.x} cy={point.y} r="17" fill="var(--color-forest)" />
+                      <path d={`M ${point.x} ${point.y + 8} C ${point.x - 2} ${point.y + 4}, ${point.x - 8} ${point.y - 2}, ${point.x - 8} ${point.y - 7} A 8 8 0 1 1 ${point.x + 8} ${point.y - 7} C ${point.x + 8} ${point.y - 2}, ${point.x + 2} ${point.y + 4}, ${point.x} ${point.y + 8} Z`} fill="white" />
+                      <circle cx={point.x} cy={point.y - 7} r="2.5" fill="var(--color-forest)" />
+                      <text x={point.tx} y={point.ty} textAnchor={point.anchor} fill="var(--color-charcoal)" fontSize="13" fontWeight="600" className="select-none">{hostel.name.length > 22 ? `${hostel.name.slice(0, 20)}…` : hostel.name}</text>
+                    </g>
+                  </Link>
+                )
+              })}
+              {hostels.length === 0 && !isLoading && (
+                <text x="280" y="250" textAnchor="middle" fill="var(--color-charcoal)" fontSize="15">Branch locations</text>
               )}
-              {hostels.length > 5 && (
-                <Link to="/hostels" className="mt-2 flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-forest transition-colors hover:bg-white">
-                  View all {hostels.length} branches <ArrowRight size={15} aria-hidden="true" />
-                </Link>
-              )}
-            </div>
+            </svg>
           </div>
         </div>
       </section>
