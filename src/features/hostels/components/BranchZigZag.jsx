@@ -86,7 +86,7 @@ function BranchStayPanel({ hostel }) {
             <Button to="/login" state={{ from: { pathname: `/hostels/${hostel.id}` } }} block className="mt-4">Sign in to request <ArrowUpRight size={15} aria-hidden="true" /></Button>
           </>
         ) : user.role === 'tenant' ? (
-          <StayRequestForm hostel={hostel} />
+          <StayRequestForm key={hostel.id} hostel={hostel} />
         ) : (
           <p className="text-sm leading-relaxed text-charcoal/65">Stay requests are available from tenant accounts. Sign in with a tenant account to request this branch.</p>
         )}
@@ -276,7 +276,7 @@ export default function BranchZigZag({
       </svg>
 
       {hostels.length > 0 && (
-        <div className="pointer-events-none absolute inset-0 z-20 hidden sm:block" aria-hidden="true">
+        <div className="pointer-events-none absolute inset-0 z-20 hidden sm:block">
           <div className="sticky top-24 flex justify-center">
             <div className="pointer-events-auto w-[46%] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
               style={{ transform: `translateX(${travellerOnRight ? IMAGE_SLIDE : 0}%)` }}>
