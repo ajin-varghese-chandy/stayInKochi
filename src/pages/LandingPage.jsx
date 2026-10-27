@@ -152,8 +152,25 @@ export default function LandingPage() {
                 </pattern>
               </defs>
               <rect width="560" height="500" rx="28" fill="url(#branch-map-dots)" />
-              <path d="M42 370 C95 330 105 250 175 255 S250 350 310 290 S390 150 500 160" fill="none" stroke="var(--color-forest)" strokeWidth="2" strokeDasharray="5 9" strokeLinecap="round" opacity="0.32" />
-              <path d="M105 85 C170 120 205 170 280 155 S390 75 460 90" fill="none" stroke="var(--color-forest)" strokeWidth="1.5" strokeDasharray="3 8" strokeLinecap="round" opacity="0.2" />
+              {hostels.length > 1 && (
+                <path
+                  d={hostels.slice(0, 6).map((_, index) => {
+                    const points = [
+                      [105, 105], [280, 155], [460, 90],
+                      [175, 255], [310, 290], [450, 390],
+                    ]
+                    const [x, y] = points[index]
+                    return `${index === 0 ? 'M' : 'L'} ${x} ${y}`
+                  }).join(' ')}
+                  fill="none"
+                  stroke="var(--color-forest)"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeDasharray="5 7"
+                  opacity="0.48"
+                />
+              )}
               {hostels.slice(0, 6).map((hostel, index) => {
                 const positions = [
                   { x: 105, y: 105, tx: 105, ty: 78, anchor: 'middle' },
