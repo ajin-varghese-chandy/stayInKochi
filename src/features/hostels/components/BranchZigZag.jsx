@@ -275,11 +275,14 @@ export default function BranchZigZag({
         ))}
       </svg>
 
-      {hostels.length > 0 && (
-        <div className="pointer-events-none absolute inset-0 z-20 hidden sm:block">
-          <div className="sticky top-24 flex justify-center">
-            <div className="pointer-events-auto w-[46%] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
-              style={{ transform: `translateX(${travellerOnRight ? IMAGE_SLIDE : 0}%)` }}>
+      {hostels.length > 1 && (
+        <div className="pointer-events-none absolute inset-0 z-0 hidden sm:block">
+          <div className="sticky top-24">
+            <div
+              ref={travellerRef}
+              className="pointer-events-auto w-[46%] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none"
+              style={{ transform: `translateX(${travellerOnRight ? IMAGE_SLIDE : 0}%)` }}
+            >
               <BranchStayPanel hostel={hostels[activeIndex] ?? hostels[0]} />
             </div>
           </div>
