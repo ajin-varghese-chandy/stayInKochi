@@ -318,8 +318,8 @@ export default function LandingPage() {
       <section className="bg-charcoal">
         <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
           <img
-            src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=85"
-            alt="Calm, contemporary shared living interior"
+            src="https://i.ibb.co/CKTLmbDZ/file-00000000f87c820887171b2653595e7f.png"
+            alt="Hostel shared-living spaces, rooms, and common areas"
             width="1024"
             height="1536"
             loading="lazy"
