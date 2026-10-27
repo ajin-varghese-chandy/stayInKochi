@@ -135,20 +135,20 @@ export default function LandingPage() {
           </p>
         </div>
 
-        {/* Arrival photo — a cut-out, so it sits inside a soft verandah arch */}
+        {/* Hero photography — an editorial interior image framed by a soft verandah arch */}
         <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
           <div
             aria-hidden="true"
             className="absolute inset-x-4 top-8 bottom-0 rounded-t-[999px] rounded-b-card bg-sage/70"
           />
           <img
-            src="/hero1.png"
-            alt="Two young men arriving in Kochi with their bags"
+            src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=1400&q=85"
+            alt="Warm, thoughtfully designed shared living space"
             width="926"
             height="521"
             loading="eager"
             fetchPriority="high"
-            className="relative z-10 w-full drop-shadow-[0_22px_32px_rgba(41,45,41,0.16)]"
+            className="relative z-10 aspect-[4/5] w-full rounded-t-[48%] object-cover object-center shadow-[0_28px_60px_-28px_rgba(25,45,33,0.45)]"
           />
         </div>
       </section>
@@ -270,12 +270,12 @@ export default function LandingPage() {
       <section className="bg-charcoal">
         <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
           <img
-            src="/footerimage.png"
-            alt="The owner seated in an armchair at home"
+            src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=85"
+            alt="Calm, contemporary shared living interior"
             width="1024"
             height="1536"
             loading="lazy"
-            className="mx-auto mb-8 w-full max-w-[16rem] object-contain sm:mb-10 sm:max-w-xs"
+            className="mx-auto mb-8 aspect-[4/3] w-full max-w-2xl rounded-2xl object-cover shadow-2xl sm:mb-10"
           />
           <h2 className="hero-title text-4xl text-white sm:text-5xl lg:text-6xl">
             Kerivada makale, keri vaa...
