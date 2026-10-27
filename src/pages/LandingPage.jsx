@@ -6,6 +6,7 @@ import {
   Building2,
   IndianRupee,
   MessageSquare,
+  MapPin,
   Search,
   UtensilsCrossed,
 } from 'lucide-react'
@@ -135,21 +136,58 @@ export default function LandingPage() {
           </p>
         </div>
 
-        {/* Hero photography — an editorial interior image framed by a soft verandah arch */}
+        {/* Hero branch locator — live locations replace the editorial photo */}
         <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
-          <div
-            aria-hidden="true"
-            className="absolute inset-x-4 top-8 bottom-0 rounded-t-[999px] rounded-b-card bg-sage/70"
-          />
-          <img
-            src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=1400&q=85"
-            alt="Warm, thoughtfully designed shared living space"
-            width="926"
-            height="521"
-            loading="eager"
-            fetchPriority="high"
-            className="relative z-10 aspect-[4/5] w-full rounded-t-[48%] object-cover object-center shadow-[0_28px_60px_-28px_rgba(25,45,33,0.45)]"
-          />
+          <div aria-hidden="true" className="absolute -inset-3 rounded-[2rem] bg-sage/45 rotate-2" />
+          <div className="relative overflow-hidden rounded-[1.75rem] border border-line bg-ivory shadow-[0_28px_60px_-28px_rgba(25,45,33,0.3)]">
+            <div className="relative overflow-hidden bg-forest px-6 pb-7 pt-6 text-white sm:px-8 sm:pt-8">
+              <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.12]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '18px 18px' }} />
+              <div className="relative flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/65">StayInKochi · Locations</p>
+                  <h2 className="display mt-2 text-2xl leading-tight sm:text-3xl">Find your place in Kochi.</h2>
+                  <p className="mt-2 max-w-sm text-sm leading-relaxed text-white/70">Explore our branches by area and choose the location that works for you.</p>
+                </div>
+                <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-white/10">
+                  <MapPin size={23} strokeWidth={1.7} aria-hidden="true" />
+                </span>
+              </div>
+              <div className="relative mt-5 flex items-center gap-2 text-xs text-white/75">
+                <span className="size-2 rounded-full bg-[#b9d9b2] shadow-[0_0_0_4px_rgba(185,217,178,0.14)]" />
+                {hostels.length} {hostels.length === 1 ? 'branch' : 'branches'} listed
+              </div>
+            </div>
+            <div className="p-3 sm:p-4">
+              {isLoading && hostels.length === 0 ? (
+                <div className="flex min-h-40 items-center justify-center"><Spinner label="Loading branch locations…" /></div>
+              ) : hostels.length > 0 ? (
+                <ul className="divide-y divide-line">
+                  {hostels.slice(0, 5).map((hostel, index) => (
+                    <li key={hostel.id}>
+                      <Link to={`/hostels/${hostel.id}`} className="group flex items-center gap-3 rounded-xl px-3 py-3.5 transition-colors hover:bg-white">
+                        <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-forest/10 bg-sage/55 text-forest">
+                          <MapPin size={17} strokeWidth={1.8} aria-hidden="true" />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-sm font-semibold text-charcoal group-hover:text-forest">{hostel.name}</span>
+                          <span className="mt-0.5 block truncate text-xs text-charcoal/55">{hostel.location || 'Kochi, Kerala'}</span>
+                        </span>
+                        <span className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-charcoal/35">{String(index + 1).padStart(2, '0')}</span>
+                        <ArrowRight size={15} className="shrink-0 text-forest/60 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="px-4 py-8 text-center text-sm text-charcoal/55">Branch locations will appear here once published.</p>
+              )}
+              {hostels.length > 5 && (
+                <Link to="/hostels" className="mt-2 flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-forest transition-colors hover:bg-white">
+                  View all {hostels.length} branches <ArrowRight size={15} aria-hidden="true" />
+                </Link>
+              )}
+            </div>
+          </div>
         </div>
       </section>
 
