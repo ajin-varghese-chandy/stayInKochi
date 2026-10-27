@@ -253,12 +253,12 @@ export default function BranchZigZag({
               }}
             >
               <img
-                src="/movinghero.png"
+                src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=85"
                 alt=""
-                width="1112"
-                height="1414"
+                width="900"
+                height="1200"
                 loading="lazy"
-                className={`mx-auto w-full max-w-[19rem] rounded-2xl drop-shadow-[0_24px_32px_rgba(41,45,41,0.18)] transition-transform duration-700 motion-reduce:transition-none ${
+                className={`mx-auto aspect-[3/4] w-full max-w-[19rem] rounded-2xl object-cover drop-shadow-[0_24px_32px_rgba(41,45,41,0.18)] transition-transform duration-700 motion-reduce:transition-none ${
                   travellerOnRight ? '' : '-scale-x-100'
                 }`}
               />
