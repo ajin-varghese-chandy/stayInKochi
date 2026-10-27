@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, BedDouble, MapPin } from 'lucide-react'
+import { useSelector } from 'react-redux'
+import { ArrowRight, BedDouble, MapPin, ArrowUpRight } from 'lucide-react'
 import formatRupees from '../../../utils/formatRupees'
 import { hostelCoverPhoto } from '../../../utils/hostelPhotos'
+import { selectCurrentUser } from '../../auth/authSlice'
+import StayRequestForm from '../../stayRequests/components/StayRequestForm'
+import Button from '../../../components/ui/Button'
 
 const ROW_UNITS = 100
 const CARD_WIDTH = 46
@@ -56,6 +60,38 @@ function AvailabilityBadge({ freeBeds, loaded }) {
       <span className="size-1.5 rounded-full bg-success" aria-hidden="true" />
       {freeBeds} {freeBeds === 1 ? 'bed' : 'beds'} free
     </span>
+  )
+}
+
+function BranchStayPanel({ hostel }) {
+  const user = useSelector(selectCurrentUser)
+
+  if (!hostel) return null
+
+  return (
+    <div className="mx-auto w-full max-w-[19rem] overflow-hidden rounded-2xl border border-line bg-white shadow-[0_24px_60px_-32px_rgba(20,40,28,0.42)]">
+      <div className="bg-forest px-5 py-5 text-white">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/65">Your next stay</p>
+        <h3 className="mt-2 text-xl font-semibold leading-snug">Request a stay</h3>
+        <p className="mt-1.5 text-sm leading-relaxed text-white/75">{hostel.name}</p>
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/15 pt-3">
+          <span className="flex min-w-0 items-center gap-1.5 text-xs text-white/75"><MapPin size={13} aria-hidden="true" /><span className="truncate">{hostel.location}</span></span>
+          <span className="shrink-0 text-sm font-semibold">{formatRupees(hostel.rentPerMonth)}<span className="font-normal text-white/65">/mo</span></span>
+        </div>
+      </div>
+      <div className="p-5">
+        {!user ? (
+          <>
+            <p className="text-sm leading-relaxed text-charcoal/65">Sign in to send a stay request for this branch. The owner reviews every request before confirming a bed.</p>
+            <Button to="/login" state={{ from: { pathname: `/hostels/${hostel.id}` } }} block className="mt-4">Sign in to request <ArrowUpRight size={15} aria-hidden="true" /></Button>
+          </>
+        ) : user.role === 'tenant' ? (
+          <StayRequestForm hostel={hostel} />
+        ) : (
+          <p className="text-sm leading-relaxed text-charcoal/65">Stay requests are available from tenant accounts. Sign in with a tenant account to request this branch.</p>
+        )}
+      </div>
+    </div>
   )
 }
 
@@ -239,29 +275,12 @@ export default function BranchZigZag({
         ))}
       </svg>
 
-      {hostels.length > 1 && (
-        <div
-          className="pointer-events-none absolute inset-0 z-0 hidden sm:block"
-          aria-hidden="true"
-        >
-          <div className="sticky top-24">
-            <div
-              ref={travellerRef}
-              className="w-[46%] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none"
-              style={{
-                transform: `translateX(${travellerOnRight ? IMAGE_SLIDE : 0}%)`,
-              }}
-            >
-              <img
-                src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=85"
-                alt=""
-                width="900"
-                height="1200"
-                loading="lazy"
-                className={`mx-auto aspect-[3/4] w-full max-w-[19rem] rounded-2xl object-cover drop-shadow-[0_24px_32px_rgba(41,45,41,0.18)] transition-transform duration-700 motion-reduce:transition-none ${
-                  travellerOnRight ? '' : '-scale-x-100'
-                }`}
-              />
+      {hostels.length > 0 && (
+        <div className="pointer-events-none absolute inset-0 z-20 hidden sm:block" aria-hidden="true">
+          <div className="sticky top-24 flex justify-center">
+            <div className="pointer-events-auto w-[46%] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
+              style={{ transform: `translateX(${travellerOnRight ? IMAGE_SLIDE : 0}%)` }}>
+              <BranchStayPanel hostel={hostels[activeIndex] ?? hostels[0]} />
             </div>
           </div>
         </div>
